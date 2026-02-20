@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "millenaire-new-age",
+	"version": "${version}",
+	"name": "Millenaire New Age",
+	"description": "A living civilizations mod. Villages with cultures, AI villagers, economy, quests and dynamic buildings.",
+	"authors": [
+		"mat37dev"
+	],
+	"contact": {
+		"sources": "https://github.com/mat37dev/millenaire-new-age"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/millenaire-new-age/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.mat37dev.MillenaireNewAge"
+		],
+		"client": [
+			"com.mat37dev.MillenaireNewAgeClient"
+		],
+		"fabric-datagen": [
+			"com.mat37dev.MillenaireNewAgeDataGenerator"
+		]
+	},
+	"mixins": [
+		"millenaire-new-age.mixins.json",
+		{
+			"config": "millenaire-new-age.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.10",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
