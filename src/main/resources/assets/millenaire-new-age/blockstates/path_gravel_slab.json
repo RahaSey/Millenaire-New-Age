@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "millenaire-new-age:block/path_gravel_slab" },
+    "type=top":    { "model": "millenaire-new-age:block/path_gravel_slab_top" },
+    "type=double": { "model": "millenaire-new-age:block/path_gravel" }
+  }
+}

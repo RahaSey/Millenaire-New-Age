@@ -1,0 +1,1 @@
+{ "parent": "minecraft:block/outer_stairs", "textures": { "bottom": "millenaire-new-age:block/cooked_brick", "top": "millenaire-new-age:block/cooked_brick", "side": "millenaire-new-age:block/cooked_brick" } }

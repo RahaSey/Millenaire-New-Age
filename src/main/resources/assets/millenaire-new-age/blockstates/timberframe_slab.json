@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "millenaire-new-age:block/timberframe_slab" },
+    "type=double":  { "model": "millenaire-new-age:block/timberframe" },
+    "type=top":     { "model": "millenaire-new-age:block/timberframe_slab_top" }
+  }
+}

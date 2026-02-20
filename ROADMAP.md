@@ -104,6 +104,8 @@ Réparation : villageois (automatique, lent) ou joueur (rapide, coûte des maté
 4. **Séparation client/serveur** — stricte dès le départ
 5. **OldSource = documentation** — lire pour comprendre, réécrire proprement
 6. **Commits sémantiques** — `feat:`, `fix:`, `refactor:`, `doc:`
+7. **Indépendance OldSource** — toute texture/asset récupéré depuis OldSource est immédiatement copié dans `src/main/resources/` du projet. OldSource doit pouvoir être supprimé à tout moment sans casser le mod.
+8. **Internationalisation continue** — chaque texte visible par le joueur (bloc, item, GUI, message) est localisé en `en_us` ET `fr_fr` dès son ajout. Jamais de texte en dur hors fichier lang.
 
 ---
 
@@ -136,14 +138,14 @@ Phase 16 │ Polish, tests & release                     │ ~2 semaines
 **Objectif :** Projet Fabric qui démarre dans MC 1.21.10, base de code propre en place.
 
 ### 0.1 — Environnement
-- [ ] Vérifier JDK 21 (`java --version`)
-- [ ] Télécharger Fabric MDK pour MC 1.21.10
-- [ ] Importer dans IntelliJ, vérifier `runClient` et `runServer`
+- [x] Vérifier JDK 21 (`java --version`)
+- [x] Télécharger Fabric MDK pour MC 1.21.10
+- [x] Importer dans IntelliJ, vérifier `runClient` et `runServer`
 
 ### 0.2 — Configuration du projet
-- [ ] `gradle.properties` : `mod_id=millenaire_new_age`, version, group
-- [ ] `fabric.mod.json` : metadata, entrypoints, dependencies
-- [ ] Dépendances `build.gradle` : `fabric-api`, `cloth-config`, `cardinal-components-api`
+- [x] `gradle.properties` : `mod_id=millenaire_new_age`, version, group
+- [x] `fabric.mod.json` : metadata, entrypoints, dependencies
+- [x] Dépendances `build.gradle` : `fabric-api`, `cloth-config`, `cardinal-components-api`
 
 ### 0.3 — Structure de packages
 ```
@@ -182,12 +184,12 @@ com.mat37dev/
 ```
 
 ### 0.4 — Configuration & logging
-- [ ] `MillConfig.java` (Cloth Config) : rayon villages, fréquence gen, debug
-- [ ] Logger dédié `LogManager.getLogger("millenaire-new-age")`
+- [x] `MillConfig.java` (Cloth Config) : rayon villages, fréquence gen, debug
+- [x] Logger dédié `LogManager.getLogger("millenaire-new-age")`
 
 ### 0.5 — Git
-- [ ] `.gitignore` configuré (`.gradle/`, `run/`, `build/`)
-- [ ] Commit initial + tag `v0.1.0-alpha`
+- [x] `.gitignore` configuré (`.gradle/`, `run/`, `build/`)
+- [x] Commit initial + tag `v0.1.0-alpha`
 
 **Livrable :** Mod démarre, log "Millenaire: New Age initialized" visible.
 
@@ -235,9 +237,10 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 - [ ] Blé (utilise le vanilla, pas de bloc custom nécessaire)
 
 ### 1.6 — Assets visuels
-- [ ] Récupérer et adapter textures depuis OldSource
-- [ ] `blockstates/*.json`, `models/block/*.json`, `models/item/*.json`
-- [ ] `lang/fr_fr.json` et `lang/en_us.json` (normands uniquement pour l'instant)
+- [x] Récupérer et importer textures depuis OldSource (indépendance complète)
+- [x] `blockstates/*.json`, `models/block/*.json`, `models/item/*.json`
+- [x] `lang/en_us.json` — noms anglais de tous les blocs Phase 1
+- [x] `lang/fr_fr.json` — noms français de tous les blocs Phase 1
 
 **Livrable :** Onglet créatif normand complet, tous les blocs/items affichés.
 **Tag :** `v0.2.0-alpha`
@@ -768,8 +771,8 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 
 | Phase | Statut | Tag |
 |-------|--------|-----|
-| 0 — Setup | 🔴 À faire | v0.1.0 |
-| 1 — Assets Normands | 🔴 À faire | v0.2.0 |
+| 0 — Setup | 🟢 Terminé | v0.1.0 |
+| 1 — Assets Normands | 🟡 En cours | v0.2.0 |
 | 2 — Architecture données | 🔴 À faire | v0.3.0 |
 | 3 — Système civilisations | 🔴 À faire | v0.4.0 |
 | 4 — Types villages & génération | 🔴 À faire | v0.5.0 |
