@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": { "model": "millenaire-new-age:block/cooked_brick_slab" },
-    "type=double":  { "model": "millenaire-new-age:block/cooked_brick" },
-    "type=top":     { "model": "millenaire-new-age:block/cooked_brick_slab_top" }
-  }
-}

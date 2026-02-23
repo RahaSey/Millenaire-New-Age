@@ -1,1 +1,0 @@
-{ "parent": "minecraft:block/slab_top", "textures": { "bottom": "millenaire-new-age:block/timberframe", "top": "millenaire-new-age:block/timberframe", "side": "millenaire-new-age:block/timberframe" } }

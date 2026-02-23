@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": { "model": "millenaire-new-age:block/mud_brick_slab" },
-    "type=double":  { "model": "millenaire-new-age:block/mud_brick" },
-    "type=top":     { "model": "millenaire-new-age:block/mud_brick_slab_top" }
-  }
-}

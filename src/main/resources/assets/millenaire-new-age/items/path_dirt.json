@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "millenaire-new-age:block/path_dirt" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "millenaire-new-age:item/path_dirt"
+  }
+}

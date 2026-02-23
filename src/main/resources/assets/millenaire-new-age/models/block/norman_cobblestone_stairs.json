@@ -1,1 +1,0 @@
-{ "parent": "minecraft:block/stairs", "textures": { "bottom": "millenaire-new-age:block/norman_cobblestone", "top": "millenaire-new-age:block/norman_cobblestone", "side": "millenaire-new-age:block/norman_cobblestone" } }

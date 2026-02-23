@@ -1,1 +1,0 @@
-{ "parent": "minecraft:block/slab", "textures": { "bottom": "millenaire-new-age:block/thatch_top", "top": "millenaire-new-age:block/thatch_top", "side": "millenaire-new-age:block/thatch_side" } }

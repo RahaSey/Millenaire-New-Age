@@ -1,1 +1,0 @@
-{ "parent": "minecraft:block/outer_stairs", "textures": { "bottom": "millenaire-new-age:block/norman_bricks", "top": "millenaire-new-age:block/norman_bricks", "side": "millenaire-new-age:block/norman_bricks" } }

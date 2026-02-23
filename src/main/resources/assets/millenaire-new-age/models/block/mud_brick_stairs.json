@@ -1,1 +1,0 @@
-{ "parent": "minecraft:block/stairs", "textures": { "bottom": "millenaire-new-age:block/mud_brick", "top": "millenaire-new-age:block/mud_brick", "side": "millenaire-new-age:block/mud_brick" } }

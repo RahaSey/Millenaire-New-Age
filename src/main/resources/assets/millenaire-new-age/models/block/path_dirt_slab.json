@@ -1,1 +1,7 @@
-{ "parent": "minecraft:block/slab", "textures": { "bottom": "millenaire-new-age:block/path_dirt_top", "top": "millenaire-new-age:block/path_dirt_top", "side": "millenaire-new-age:block/path_dirt_side" } }
+{
+  "parent": "millenaire-new-age:block/path_bottom",
+  "textures": {
+    "sideblock": "millenaire-new-age:block/path_dirt_side",
+    "topblock": "millenaire-new-age:block/path_dirt_top"
+  }
+}
