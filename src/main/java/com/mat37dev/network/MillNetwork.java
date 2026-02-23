@@ -4,9 +4,11 @@ import com.mat37dev.MillenaireNewAge;
 import com.mat37dev.creator.StructurePlacerItem;
 import com.mat37dev.creator.StructureSaveManager;
 import com.mat37dev.init.MillItems;
+import com.mat37dev.village.VillagePlacer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,13 +23,15 @@ public class MillNetwork {
 
     public static void registerServerPayloads() {
         // S→C
-        PayloadTypeRegistry.playS2C().register(StructurePreviewPayload.ID,  StructurePreviewPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(StructureRotationPayload.ID, StructureRotationPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(OpenStructureListPayload.ID, OpenStructureListPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(StructurePreviewPayload.ID,       StructurePreviewPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(StructureRotationPayload.ID,      StructureRotationPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenStructureListPayload.ID,      OpenStructureListPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenVillageCreationPayload.ID,    OpenVillageCreationPayload.CODEC);
 
         // C→S
-        PayloadTypeRegistry.playC2S().register(SelectStructurePayload.ID,   SelectStructurePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(DeleteStructurePayload.ID,   DeleteStructurePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(SelectStructurePayload.ID,        SelectStructurePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(DeleteStructurePayload.ID,        DeleteStructurePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(CreateVillagePayload.ID,          CreateVillagePayload.CODEC);
     }
 
     public static void registerServerHandlers() {
@@ -53,6 +57,18 @@ public class MillNetwork {
                     List<String> updatedList = StructureSaveManager.listStructures(ctx.server());
                     ServerPlayNetworking.send(player, new OpenStructureListPayload(updatedList));
                 });
+            }
+        );
+
+        // C→S : création d'un village
+        ServerPlayNetworking.registerGlobalReceiver(CreateVillagePayload.ID,
+            (payload, ctx) -> {
+                ServerPlayer player = ctx.player();
+                String civId         = payload.civId();
+                String villageTypeId = payload.villageTypeId();
+                net.minecraft.core.BlockPos goldPos = payload.goldPos();
+
+                ctx.server().execute(() -> handleCreateVillage(player, civId, villageTypeId, goldPos));
             }
         );
     }
@@ -103,6 +119,34 @@ public class MillNetwork {
         player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
             "§a[MNA] Structure '§f" + structureId + "§a' sélectionnée. Clic droit pour placer, Shift+clic pour tourner."
         ));
+    }
+
+    private static void handleCreateVillage(ServerPlayer player,
+                                             String civId, String villageTypeId,
+                                             net.minecraft.core.BlockPos goldPos) {
+        ServerLevel level = player.level();
+
+        // Vérifier la distance avec les villages existants
+        String spacingError = com.mat37dev.village.VillagePlacer.checkSpacing(level, goldPos);
+        if (spacingError != null) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c[MNA] " + spacingError));
+            return;
+        }
+
+        VillagePlacer.placeVillage(player.level().getServer(), level, civId, villageTypeId, goldPos)
+            .ifPresentOrElse(
+                village -> player.sendSystemMessage(
+                    net.minecraft.network.chat.Component.literal(
+                        "§a[MNA] Village '§f" + village.getName()
+                        + "§a' créé (" + village.getBuildings().size() + " bâtiments)."
+                    )
+                ),
+                () -> player.sendSystemMessage(
+                    net.minecraft.network.chat.Component.literal(
+                        "§c[MNA] Échec de la création du village."
+                    )
+                )
+            );
     }
 
     public static Vec3i computeSizePublic(List<net.minecraft.core.BlockPos> blocks) {

@@ -333,37 +333,78 @@ public class Building {
 
 **Objectif :** Des villages normands de différents types apparaissent dans le monde.
 **Référence OldSource :** `common/world/` — algorithme de placement.
+**Stratégie :** 3 étapes séquentielles — création manuelle → persistance → génération automatique.
 
-### 3.1 — Schémas de structures normands
-- [x] Créer les structures NBT pour chaque bâtiment normand
-- [x] `StructurePlacer.java` — pose un schéma avec rotation + terrassement
+### 3.1 — Outils créateur (✅ implémenté — voir Phase 10)
+- [x] Structures NBT enregistrées (4 bâtiments normands : castle_t1, forest_t1, guard_t1, lumberjack_t1)
+- [x] `StructureScannerItem` — sélection de zone (Pos1/Pos2)
+- [x] `StructurePlacerItem` — placement fantôme + rotation + placement réel
+- [x] `StructureSaveManager` — sauvegarde/chargement/liste des structures
+- [x] Preview fantôme client-side (vrais blocs semi-transparents)
 
-### 3.2 — Algorithme de placement de village
-- [ ] Sélection biome selon civilisation
-- [ ] Distance minimale entre villages (configurable)
-- [ ] Détection terrain plat (rayon configurable)
-- [ ] Orientation village selon terrain
+### 3.2 — Création manuelle de village (Baguette d'Invocation) ✅ Implémenté
+**Objectif :** Créer un village en jeu via item + GUI.
 
-### 3.3 — Génération des types de villages
-- [ ] **Hameau** (3-5 bâtiments) : mairie + maisons uniquement, pas de murs
-- [ ] **Village** (8-15 bâtiments) : bâtiments variés, éventuellement mur partiel
-- [ ] **Bourg** (20+ bâtiments) : complet, murs, marché
-- [ ] **Forteresse** (militaire) : murs épais, tours, peu de civils
-- [ ] **Monastère** (religieux) : bâtiments spécifiques, moine-type
-- [ ] Algorithme de sélection du type selon biome et chance
+#### Config (`mods/MillenaireNewAge/config/village_config.json`)
+- [x] `VillageConfig.java` — lecture/écriture du fichier config JSON
+- [x] Config par défaut créée au premier lancement (village_size, village_spacing, max_villagers, building_spacing)
+- [x] Dossier `mods/MillenaireNewAge/` = répertoire racine du mod
 
-### 3.4 — Worldgen Fabric
-- [ ] Enregistrement Structure/Feature Fabric pour les villages
-- [ ] Placement au chunkload (éviter conflits de génération)
-- [ ] Bâtiment ancre en premier (mairie), puis développement progressif
+#### Item `WandOfSummoningItem`
+- [x] Clic droit sur bloc d'or → ouvre le GUI de création de village
+- [x] Envoi payload S→C avec la liste des civilisations disponibles
+- [x] Vérification `villageSpacing` — message d'erreur rouge si trop proche
+- [x] Bloc d'or supprimé après création
 
-### 3.5 — Commandes de debug village
-- [ ] `/mna village list` — liste des villages du monde
-- [ ] `/mna village spawn <civilization> [type]` — forcer un village
-- [ ] `/mna village tp <nom_ou_id>` — téléporter
-- [ ] `/mna village info` — infos sur le village le plus proche
+#### GUI `VillageCreationScreen`
+- [x] Onglets par civilisation (un onglet = une civilisation chargée)
+- [x] Dans chaque onglet : liste des types de villages avec infos (nb bâtiments, murailles)
+- [x] Bouton "Créer" → envoie `CreateVillagePayload` au serveur
+- [x] Bouton "Annuler" → ferme le GUI sans action
 
-**Livrable :** Villages normands de différents types générés naturellement.
+#### `VillagePlacer.java`
+- [x] Reçoit : civilisation, type de village, position centrale (bloc d'or)
+- [x] Détermine les bâtiments à placer (requis + aléatoire parmi optionnels)
+- [x] Tri par proximity (CENTER → NEAR → FAR), centrage du bâtiment principal sur le bloc d'or
+- [x] `TerrainAdapter` — nivelle le terrain (creuse / remblaye / nettoie végétation)
+- [x] Place chaque bâtiment via `StructureSaveManager.placeStructure()`
+- [x] Crée les instances `Village` + `Building` et les enregistre dans `VillageManager`
+- [x] Indicateur de nom flottant (ArmorStand invisible + nom en jaune gras)
+- [x] `normans.json` mis à jour : fortress utilise les 4 structures enregistrées
+
+#### Réseau
+- [x] `OpenVillageCreationPayload` (S→C) — liste des civilisations pour le GUI
+- [x] `CreateVillagePayload` (C→S) — demande de création (civ + type + pos)
+
+#### Test : forteresse normande
+- [x] 4 bâtiments placés autour du bloc d'or cliqué
+- [x] Instance `Village` créée et accessible via `VillageManager`
+- [x] Messages de confirmation en jeu
+
+### 3.3 — Persistance des villages
+**Objectif :** Les villages survivent au redémarrage du monde.
+
+- [ ] Vérifier sérialisation complète `Village` + `Building` via Cardinal Components
+- [ ] Test : créer un village → quitter → recharger → village toujours présent
+- [ ] Commandes de debug :
+  - [ ] `/mna village list` — liste tous les villages du monde courant
+  - [ ] `/mna village info` — infos sur le village le plus proche du joueur
+  - [ ] `/mna village tp <id>` — téléporter vers un village
+  - [ ] `/mna village remove <id>` — supprimer un village (debug)
+
+### 3.4 — Génération naturelle (Worldgen Fabric)
+**Objectif :** Villages générés automatiquement selon le biome.
+
+- [ ] Algorithme de sélection biome/civilisation
+- [ ] Distance minimale entre villages (lire `village_spacing` depuis config)
+- [ ] Détection terrain plat (rayon = `village_size / 2`)
+- [ ] Enregistrement Structure/Feature Fabric
+- [ ] Placement au chunkload (sans conflits de génération)
+- [ ] `normans:hamlet` dans biomes plaines/forêt
+- [ ] `normans:village` dans biomes plaines/prairie
+- [ ] `normans:fortress` dans biomes collines/montagne
+
+**Livrable :** Villages normands générés naturellement + persistants + créables manuellement.
 **Tag :** `v0.4.0-alpha`
 
 ---
@@ -768,14 +809,14 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 | 0 — Setup | 🟢 Terminé | v0.1.0 |
 | 1 — Architecture données | 🟢 Terminé | v0.2.0 |
 | 2 — Système civilisations | 🟢 Terminé | v0.3.0 |
-| 3 — Types villages & génération | 🔴 À faire | v0.4.0 |
+| 3 — Types villages & génération | 🟡 En cours (3.1 ✅) | v0.4.0 |
 | 4 — Assets Normands | 🟡 En cours | v0.5.0 |
 | 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
 | 6 — IA & comportements | 🔴 À faire | v0.7.0 |
 | 7 — Santé bâtiments & construction | 🔴 À faire | v0.8.0 |
 | 8 — Économie & commerce | 🔴 À faire | v0.9.0 |
 | 9 — Quêtes | 🔴 À faire | v0.10.0 |
-| 10 — Creator Mode | 🔴 À faire | v0.11.0 |
+| 10 — Creator Mode | 🟡 En cours (Bloc A terminé) | v0.11.0 |
 | 11 — Interfaces utilisateur | 🔴 À faire | v0.12.0 |
 | 12 — Réseau & multijoueur | 🔴 À faire | v0.13.0 |
 | 13 — Avancements | 🔴 À faire | v0.14.0 |

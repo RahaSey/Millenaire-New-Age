@@ -3,7 +3,9 @@ package com.mat37dev;
 import com.mat37dev.client.creator.CreatorClientState;
 import com.mat37dev.client.creator.StructureListScreen;
 import com.mat37dev.client.creator.StructurePreviewRenderer;
+import com.mat37dev.client.gui.VillageCreationScreen;
 import com.mat37dev.network.OpenStructureListPayload;
+import com.mat37dev.network.OpenVillageCreationPayload;
 import com.mat37dev.network.StructurePreviewPayload;
 import com.mat37dev.network.StructureRotationPayload;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,6 +39,15 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(OpenStructureListPayload.ID, (payload, ctx) ->
             ctx.client().execute(() ->
                 Minecraft.getInstance().setScreen(new StructureListScreen(payload.structureIds()))
+            )
+        );
+
+        // S→C : ouvrir le GUI de création de village
+        ClientPlayNetworking.registerGlobalReceiver(OpenVillageCreationPayload.ID, (payload, ctx) ->
+            ctx.client().execute(() ->
+                Minecraft.getInstance().setScreen(
+                    new VillageCreationScreen(payload.goldPos(), payload.civilizations())
+                )
             )
         );
     }

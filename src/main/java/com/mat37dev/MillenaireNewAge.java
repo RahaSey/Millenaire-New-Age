@@ -1,6 +1,7 @@
 package com.mat37dev;
 
 import com.mat37dev.command.MillCommands;
+import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureScannerItem;
 import com.mat37dev.data.CivilizationLoader;
 import com.mat37dev.init.MillBlocks;
@@ -11,6 +12,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionResult;
@@ -36,6 +38,9 @@ public class MillenaireNewAge implements ModInitializer {
         // Chargeurs de données (datapacks)
         ResourceManagerHelper.get(PackType.SERVER_DATA)
                 .registerReloadListener(new CivilizationLoader());
+
+        // Config village (chargée au démarrage du serveur)
+        ServerLifecycleEvents.SERVER_STARTED.register(VillageConfig::load);
 
         // Commandes debug
         CommandRegistrationCallback.EVENT.register(

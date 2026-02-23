@@ -22,6 +22,10 @@
   "gui.millenaire-new-age.structure_list.place": "Place",
   "gui.millenaire-new-age.structure_list.close": "Close",
 
+  "gui.millenaire-new-age.village_creation.title":  "Create a Village",
+  "gui.millenaire-new-age.village_creation.create": "Create",
+  "gui.millenaire-new-age.village_creation.cancel": "Cancel",
+
   "structure.millenaire-new-age.normans.guard_t1": "Normans Guard (Tier 1)",
   "structure.millenaire-new-age.normans.castle_t1": "Normans Castle (Tier 1)",
   "structure.millenaire-new-age.normans.lumberjack_t1": "Normans Lumberjack (Tier 1)",
