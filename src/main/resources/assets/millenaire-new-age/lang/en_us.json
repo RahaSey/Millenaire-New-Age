@@ -13,5 +13,17 @@
   "item.millenaire-new-age.dirt_wall":         "Dirt Wall",
 
   "item.millenaire-new-age.wand_of_summoning": "Wand of Summoning",
-  "item.millenaire-new-age.wand_of_negation":  "Wand of Negation"
+  "item.millenaire-new-age.wand_of_negation":  "Wand of Negation",
+
+  "item.millenaire-new-age.structure_scanner": "Structure Scanner",
+  "item.millenaire-new-age.structure_placer":  "Structure Placer",
+
+  "gui.millenaire-new-age.structure_list.title": "Saved Structures",
+  "gui.millenaire-new-age.structure_list.place": "Place",
+  "gui.millenaire-new-age.structure_list.close": "Close",
+
+  "structure.millenaire-new-age.normans.guard_t1": "Normans Guard (Tier 1)",
+  "structure.millenaire-new-age.normans.castle_t1": "Normans Castle (Tier 1)",
+  "structure.millenaire-new-age.normans.lumberjack_t1": "Normans Lumberjack (Tier 1)",
+  "structure.millenaire-new-age.normans.forest_t1": "Normans Forest (Tier 1)"
 }

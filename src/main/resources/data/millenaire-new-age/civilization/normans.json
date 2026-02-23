@@ -1,0 +1,185 @@
+{
+  "id": "normans",
+  "display_name": "Normands",
+  "language": {
+    "id": "normans",
+    "male_first_names": [
+      "Guillaume", "Henri", "Robert", "Richard", "Roger",
+      "Tancrede", "Bohémond", "Renaud", "Geoffroy", "Foulques"
+    ],
+    "female_first_names": [
+      "Mathilde", "Emma", "Adèle", "Cécile", "Constance",
+      "Aliénor", "Béatrice", "Sybille", "Marguerite", "Agnès"
+    ],
+    "last_names": [
+      "de Hauteville", "de Boulogne", "de Warenne", "Bigod",
+      "de Beaumont", "de Clare", "Talbot", "de Gournay"
+    ],
+    "village_names": [
+      "Caen", "Rouen", "Bayeux", "Falaise", "Cherbourg",
+      "Lisieux", "Évreux", "Argentan", "Alençon", "Coutances",
+      "Avranches", "Mortain", "Vire", "Saint-Lô", "Valognes"
+    ]
+  },
+  "compatible_biomes": [
+    "minecraft:plains",
+    "minecraft:forest",
+    "minecraft:meadow",
+    "minecraft:sunflower_plains"
+  ],
+  "village_types": [
+    {
+      "id": "normans:hamlet",
+      "display_name": "Hameau Normand",
+      "min_buildings": 3,
+      "max_buildings": 5,
+      "required_building_ids": ["normans:townhall"],
+      "optional_building_ids": ["normans:house", "normans:farm"],
+      "has_walls": false,
+      "villager_type_ids": ["normans:farmer", "normans:chief"]
+    },
+    {
+      "id": "normans:village",
+      "display_name": "Village Normand",
+      "min_buildings": 8,
+      "max_buildings": 15,
+      "required_building_ids": ["normans:townhall"],
+      "optional_building_ids": [
+        "normans:house", "normans:farm",
+        "normans:forge", "normans:chapel"
+      ],
+      "has_walls": false,
+      "villager_type_ids": [
+        "normans:farmer", "normans:blacksmith",
+        "normans:guard", "normans:chief"
+      ]
+    },
+    {
+      "id": "normans:fortress",
+      "display_name": "Forteresse Normande",
+      "min_buildings": 6,
+      "max_buildings": 10,
+      "required_building_ids": ["normans:keep", "normans:barracks"],
+      "optional_building_ids": ["normans:house", "normans:chapel"],
+      "has_walls": true,
+      "villager_type_ids": ["normans:guard", "normans:chief", "normans:farmer"]
+    }
+  ],
+  "building_types": [
+    {
+      "id": "normans:townhall",
+      "display_name": "Mairie Normande",
+      "structure_id": "millenaire-new-age:normans/townhall",
+      "max_health": 200,
+      "max_residents": 2,
+      "required": true
+    },
+    {
+      "id": "normans:house",
+      "display_name": "Maison Normande",
+      "structure_id": "millenaire-new-age:normans/house",
+      "max_health": 100,
+      "max_residents": 4,
+      "required": false
+    },
+    {
+      "id": "normans:farm",
+      "display_name": "Ferme Normande",
+      "structure_id": "millenaire-new-age:normans/farm",
+      "max_health": 80,
+      "max_residents": 2,
+      "required": false
+    },
+    {
+      "id": "normans:forge",
+      "display_name": "Forge Normande",
+      "structure_id": "millenaire-new-age:normans/forge",
+      "max_health": 120,
+      "max_residents": 1,
+      "required": false
+    },
+    {
+      "id": "normans:chapel",
+      "display_name": "Chapelle Normande",
+      "structure_id": "millenaire-new-age:normans/chapel",
+      "max_health": 150,
+      "max_residents": 1,
+      "required": false
+    },
+    {
+      "id": "normans:keep",
+      "display_name": "Donjon Normand",
+      "structure_id": "millenaire-new-age:normans/keep",
+      "max_health": 400,
+      "max_residents": 4,
+      "required": false
+    },
+    {
+      "id": "normans:barracks",
+      "display_name": "Caserne Normande",
+      "structure_id": "millenaire-new-age:normans/barracks",
+      "max_health": 200,
+      "max_residents": 6,
+      "required": false
+    }
+  ],
+  "villager_types": [
+    {
+      "id": "normans:farmer",
+      "display_name": "Paysan",
+      "behaviors": ["farm", "wander", "sleep"]
+    },
+    {
+      "id": "normans:blacksmith",
+      "display_name": "Forgeron",
+      "behaviors": ["smith", "wander", "sleep"]
+    },
+    {
+      "id": "normans:guard",
+      "display_name": "Garde",
+      "behaviors": ["patrol", "defend", "sleep"]
+    },
+    {
+      "id": "normans:chief",
+      "display_name": "Chef de Village",
+      "behaviors": ["supervise", "wander", "sleep"]
+    },
+    {
+      "id": "normans:merchant",
+      "display_name": "Marchand",
+      "behaviors": ["trade", "wander", "sleep"]
+    }
+  ],
+  "trade_goods": [
+    {
+      "id": "normans:wheat",
+      "category": "agriculture",
+      "base_price": 3
+    },
+    {
+      "id": "normans:bread",
+      "category": "food",
+      "base_price": 6
+    },
+    {
+      "id": "normans:stone_brick",
+      "category": "construction",
+      "base_price": 4
+    },
+    {
+      "id": "normans:iron_tool",
+      "category": "crafting",
+      "base_price": 20
+    },
+    {
+      "id": "normans:wool",
+      "category": "textile",
+      "base_price": 5
+    }
+  ],
+  "known_crops": [
+    "minecraft:wheat",
+    "minecraft:carrot",
+    "minecraft:potato"
+  ]
+}

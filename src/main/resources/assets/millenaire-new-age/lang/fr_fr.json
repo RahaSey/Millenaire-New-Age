@@ -13,5 +13,17 @@
   "item.millenaire-new-age.dirt_wall":         "Pisé",
 
   "item.millenaire-new-age.wand_of_summoning": "Baguette d'invocation",
-  "item.millenaire-new-age.wand_of_negation":  "Baguette de négation"
+  "item.millenaire-new-age.wand_of_negation":  "Baguette de négation",
+
+  "item.millenaire-new-age.structure_scanner": "Baguette d'Arpentage",
+  "item.millenaire-new-age.structure_placer":  "Baguette de Placement",
+
+  "gui.millenaire-new-age.structure_list.title": "Structures sauvegardées",
+  "gui.millenaire-new-age.structure_list.place": "Placer",
+  "gui.millenaire-new-age.structure_list.close": "Fermer",
+
+  "structure.millenaire-new-age.normans.guard_t1": "Garde Normand (Niveau 1)",
+  "structure.millenaire-new-age.normans.castle_t1": "Château Normand (Niveau 1)",
+  "structure.millenaire-new-age.normans.lumberjack_t1": "Bûcheron Normand (Niveau 1)",
+  "structure.millenaire-new-age.normans.forest_t1": "Forêt Normande (Niveau 1)"
 }

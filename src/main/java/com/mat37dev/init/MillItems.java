@@ -1,6 +1,8 @@
 package com.mat37dev.init;
 
 import com.mat37dev.MillenaireNewAge;
+import com.mat37dev.creator.StructurePlacerItem;
+import com.mat37dev.creator.StructureScannerItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -28,8 +30,15 @@ public class MillItems {
     // TOOLS — Wands (pure Items)
     // =========================================================================
 
-    public static final Item WAND_OF_SUMMONING = registerItem("wand_of_summoning", Item::new);
-    public static final Item WAND_OF_NEGATION  = registerItem("wand_of_negation",  Item::new);
+    public static final Item WAND_OF_SUMMONING  = registerItem("wand_of_summoning",  Item::new);
+    public static final Item WAND_OF_NEGATION   = registerItem("wand_of_negation",   Item::new);
+
+    // =========================================================================
+    // CREATOR TOOLS — Baguettes créateur
+    // =========================================================================
+
+    public static final Item STRUCTURE_SCANNER = registerItem("structure_scanner", StructureScannerItem::new);
+    public static final Item STRUCTURE_PLACER  = registerItem("structure_placer",  StructurePlacerItem::new);
 
     // =========================================================================
     // Helpers

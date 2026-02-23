@@ -98,8 +98,8 @@ Réparation : villageois (automatique, lent) ou joueur (rapide, coûte des maté
 - Revue des blocages avant le sprint suivant
 
 ### Règles
-1. **Normands d'abord** — ils définissent le template de tout le reste
-2. **Moteur avant contenu** — les systèmes génériques précèdent le remplissage
+1. **Moteur avant contenu** — les systèmes génériques précèdent le remplissage
+2. **Normands d'abord** — ils définissent le template de tout le reste (une fois le moteur prêt)
 3. **Data-driven** — tout ce qui peut être en JSON l'est
 4. **Séparation client/serveur** — stricte dès le départ
 5. **OldSource = documentation** — lire pour comprendre, réécrire proprement
@@ -113,10 +113,10 @@ Réparation : villageois (automatique, lent) ou joueur (rapide, coûte des maté
 
 ```
 Phase 0  │ Setup & Infrastructure de base              │ ~2 semaines
-Phase 1  │ Assets Normands (blocs, items, textures)    │ ~3 semaines
-Phase 2  │ Architecture des entités de données         │ ~2 semaines
-Phase 3  │ Système de civilisations (datapack)         │ ~3 semaines
-Phase 4  │ Types de villages & génération monde        │ ~4 semaines
+Phase 1  │ Architecture des entités de données         │ ~2 semaines
+Phase 2  │ Système de civilisations (datapack)         │ ~3 semaines
+Phase 3  │ Types de villages & génération monde        │ ~4 semaines
+Phase 4  │ Assets Normands (Blocs, Items, Textures)    │ ~4 semaines
 Phase 5  │ Entité Villageois & rendu                   │ ~3 semaines
 Phase 6  │ IA & comportements (améliorée)              │ ~5 semaines
 Phase 7  │ Santé des bâtiments & construction dyn.     │ ~3 semaines
@@ -195,64 +195,12 @@ com.mat37dev/
 
 ---
 
-## Phase 1 — Assets Normands
-
-**Objectif :** Tous les blocs, items et textures normands enregistrés et visibles en jeu.
-Cette phase définit le **template visuel** pour toutes les futures civilisations.
-
-### 1.1 — Infrastructure d'enregistrement
-- [ ] Registres Fabric (`MillBlocks`, `MillItems`)
-- [ ] Onglet créatif "Millenaire: New Age" avec icône
-- [ ] Pattern de registre propre, documenté (futur template pour add-ons)
-
-### 1.2 — Blocs normands (depuis OldSource)
-- [ ] Briques normandes (pierre, calcaire, variantes)
-- [ ] Bois normand (chêne, variantes de planches)
-- [ ] Blocs décoratifs (rosaces, moulures, bardages)
-- [ ] Bloc de chemin (terre battue)
-- [ ] Blocs fonctionnels : foyer, coffre verrouillé, lit de village
-
-### 1.3 — Items génériques (réutilisables par toutes civilisations)
-Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
-- [ ] `generic_grain` — céréale générique (retexturable)
-- [ ] `generic_bread` — pain générique
-- [ ] `generic_fruit` — fruit générique
-- [ ] `generic_vegetable` — légume générique
-- [ ] `generic_cloth` — tissu générique
-- [ ] `generic_leather_item` — cuir travaillé générique
-- [ ] `generic_tool_wood` / `generic_tool_stone` — outils génériques
-- [ ] `parchment` — parchemin (quêtes, livres)
-- [ ] `travel_book` — livre de voyage
-- [ ] `debug_wand` — baguette de debug (mode créateur)
-
-### 1.4 — Items normands spécifiques
-- [ ] Blé, pain normand, fromage
-- [ ] Cidre (pomme, variantes)
-- [ ] Équipements de soldat normand
-- [ ] Bannière normande
-
-### 1.5 — Blocs agricoles normands
-- [ ] Pommier (sapling + arbre + feuilles de fruits)
-- [ ] Vigne (grimpe sur murs)
-- [ ] Blé (utilise le vanilla, pas de bloc custom nécessaire)
-
-### 1.6 — Assets visuels
-- [x] Récupérer et importer textures depuis OldSource (indépendance complète)
-- [x] `blockstates/*.json`, `models/block/*.json`, `models/item/*.json`
-- [x] `lang/en_us.json` — noms anglais de tous les blocs Phase 1
-- [x] `lang/fr_fr.json` — noms français de tous les blocs Phase 1
-
-**Livrable :** Onglet créatif normand complet, tous les blocs/items affichés.
-**Tag :** `v0.2.0-alpha`
-
----
-
-## Phase 2 — Architecture des Entités de Données
+## Phase 1 — Architecture des Entités de Données
 
 **Objectif :** Les classes Java qui représentent les concepts de civilisation, village, bâtiment.
 Ces classes sont le **squelette** sur lequel tout le reste s'appuie.
 
-### 2.1 — Civilization (données immuables, chargées depuis JSON)
+### 1.1 — Civilization (données immuables, chargées depuis JSON)
 ```java
 public record Civilization(
     String id,
@@ -265,15 +213,15 @@ public record Civilization(
     List<String> knownCrops
 ) {}
 ```
-- [ ] `Civilization.java`
-- [ ] `VillageType.java` (hameau, village, bourg, forteresse, monastère)
-- [ ] `BuildingType.java` (mairie, maison, forge, ferme, tour, mur...)
-- [ ] `VillagerTypeDef.java` (paysan, forgeron, garde, chef, marchand...)
-- [ ] `CultureLanguage.java` (pools de noms, dialogues)
-- [ ] `TradeGoodDef.java`
-- [ ] `CivilizationRegistry.java` — registre des civilisations chargées
+- [x] `Civilization.java`
+- [x] `VillageType.java` (hameau, village, bourg, forteresse, monastère)
+- [x] `BuildingType.java` (mairie, maison, forge, ferme, tour, mur...)
+- [x] `VillagerTypeDef.java` (paysan, forgeron, garde, chef, marchand...)
+- [x] `CultureLanguage.java` (pools de noms, dialogues)
+- [x] `TradeGoodDef.java`
+- [x] `CivilizationRegistry.java` — registre des civilisations chargées
 
-### 2.2 — Village (état runtime, persisté)
+### 1.2 — Village (état runtime, persisté)
 ```java
 public class Village {
     UUID id;
@@ -288,11 +236,11 @@ public class Village {
     VillageState state;                // GROWING | STABLE | THREATENED | ABANDONED
 }
 ```
-- [ ] `Village.java`
-- [ ] `VillageState.java` (enum)
-- [ ] `ResourceStock.java` (stocks agrégés par catégorie)
+- [x] `Village.java`
+- [x] `VillageState.java` (enum)
+- [x] `ResourceStock.java` (stocks agrégés par catégorie)
 
-### 2.3 — Building (état runtime, persisté)
+### 1.3 — Building (état runtime, persisté)
 ```java
 public class Building {
     UUID id;
@@ -306,29 +254,29 @@ public class Building {
     List<UUID> residentIds;
 }
 ```
-- [ ] `Building.java`
-- [ ] `BuildingState.java` (enum + méthodes utilitaires)
-- [ ] `StructureTemplate.java` (wrapper autour des NBT Minecraft)
+- [x] `Building.java`
+- [x] `BuildingState.java` (enum + méthodes utilitaires)
+- [x] `MillStructureTemplate.java` (wrapper léger — placement Phase 3)
 
-### 2.4 — Persistance (Cardinal Components)
-- [ ] Composant `WorldVillageData` → liste de tous les villages du monde
-- [ ] Sérialisation/désérialisation NBT complète
-- [ ] `VillageManager.java` — accès statique, tick, hibernation
+### 1.4 — Persistance (Cardinal Components)
+- [x] Composant `WorldVillageData` → liste de tous les villages du monde
+- [x] Sérialisation/désérialisation avec `ValueInput`/`ValueOutput` (MC 1.21.10)
+- [x] `VillageManager.java` — accès statique, tick placeholder
 
-### 2.5 — Tests unitaires (optionnel mais recommandé)
-- [ ] Test de sérialisation/désérialisation NBT
+### 1.5 — Tests unitaires (optionnel mais recommandé)
+- [ ] Test de sérialisation/désérialisation
 - [ ] Test de registry des civilisations
 
 **Livrable :** Classes compilées, log de debug affichant les structures de données.
-**Tag :** `v0.3.0-alpha`
+**Tag :** `v0.2.0-alpha`
 
 ---
 
-## Phase 3 — Système de Civilisations (Datapack)
+## Phase 2 — Système de Civilisations (Datapack)
 
 **Objectif :** Charger les civilisations depuis des datapacks. Normands intégrés comme référence.
 
-### 3.1 — Format JSON des civilisations
+### 2.1 — Format JSON des civilisations
 ```json
 // data/millenaire_new_age/civilizations/normans.json
 {
@@ -355,55 +303,48 @@ public class Building {
   "villager_types": ["normans:farmer", "normans:blacksmith", "normans:guard", "normans:chief"]
 }
 ```
-- [ ] Définir et documenter le schéma JSON complet pour :
-  - `civilizations/*.json`
-  - `village_types/<civilization>/<type>.json`
-  - `building_types/<civilization>/<type>.json`
-  - `villager_types/<civilization>/<type>.json`
-  - `quests/<civilization>/<id>.json`
-  - `languages/<civilization>.json`
+- [x] Schéma JSON embarqué dans `civilization/<id>.json` : language, village_types, building_types, villager_types, trade_goods, known_crops
+  - Note : format actuel = types embarqués dans la civilisation. Refactorisable en fichiers séparés si besoin.
 
-### 3.2 — Chargeur datapack (ResourceReloadListener)
-- [ ] `CivilizationLoader.java` — lit tous les fichiers JSON au chargement des ressources
-- [ ] Support multi-datapacks (plusieurs civilisations en parallèle)
-- [ ] Validation et messages d'erreur clairs
-- [ ] API publique : `MilenaireApi.registerCivilization(...)` pour les mods compagnons
+### 2.2 — Chargeur datapack (ResourceReloadListener + Codec)
+- [x] `CivilizationLoader.java` — lit tous les `data/*/civilization/*.json` via `Civilization.CODEC`
+- [x] Support multi-datapacks (plusieurs civilisations en parallèle)
+- [x] Validation automatique par Codec + messages d'erreur clairs dans les logs
+- [x] API publique : `MilenaireApi.registerCivilization(...)` pour les mods compagnons
 
-### 3.3 — Civilisation Normande intégrée
-Créer tous les fichiers JSON pour les Normands (civilisation de base) :
-- [ ] `normans.json` — définition principale
-- [ ] Types de villages : hameau (3-5 bâtiments), village (8-15), forteresse (militaire)
-- [ ] Types de bâtiments : mairie, maison, forge, ferme, tour de guet, mur, chapelle, marché
-- [ ] Types de villageois : paysan, forgeron, garde, chef, marchand, enfant
-- [ ] Langue : pool de noms FR (Guillaume, Henri, Mathieu...) + noms de villages (Caen, Rouen...)
-- [ ] Catalogue de commerce normand
+### 2.3 — Civilisation Normande intégrée
+- [x] `normans.json` — définition principale complète
+- [x] Types de villages : hameau (3-5), village (8-15), forteresse (militaire)
+- [x] Types de bâtiments : mairie, maison, forge, ferme, chapelle, donjon, caserne
+- [x] Types de villageois : paysan, forgeron, garde, chef, marchand
+- [x] Langue : noms historiques normands (Guillaume, Mathilde…) + villes (Caen, Rouen…)
+- [x] Catalogue de commerce normand (blé, pain, pierre, outil, laine)
 
-### 3.4 — Commandes de debug civilisation
-- [ ] `/mna civilization list` — liste les civilisations chargées
-- [ ] `/mna civilization info <id>` — détails d'une civilisation
+### 2.4 — Commandes de debug civilisation
+- [x] `/mna civilization list` — liste les civilisations chargées
+- [x] `/mna civilization info <id>` — détails d'une civilisation
 
-**Livrable :** Log "Civilisation Normands chargée : 8 types de bâtiments, 6 types de villageois".
-**Tag :** `v0.4.0-alpha`
+**Livrable :** Log de chargement des civilisations OK, structures JSON définies.
+**Tag :** `v0.3.0-alpha`
 
 ---
 
-## Phase 4 — Types de Villages & Génération Monde
+## Phase 3 — Types de Villages & Génération Monde
 
 **Objectif :** Des villages normands de différents types apparaissent dans le monde.
 **Référence OldSource :** `common/world/` — algorithme de placement.
 
-### 4.1 — Schémas de structures normands
-- [ ] Créer les structures NBT pour chaque bâtiment normand
-  - Récupérer depuis OldSource si compatible, sinon reconstruire in-game
-- [ ] `StructurePlacer.java` — pose un schéma avec rotation + terrassement
+### 3.1 — Schémas de structures normands
+- [x] Créer les structures NBT pour chaque bâtiment normand
+- [x] `StructurePlacer.java` — pose un schéma avec rotation + terrassement
 
-### 4.2 — Algorithme de placement de village
+### 3.2 — Algorithme de placement de village
 - [ ] Sélection biome selon civilisation
 - [ ] Distance minimale entre villages (configurable)
 - [ ] Détection terrain plat (rayon configurable)
 - [ ] Orientation village selon terrain
 
-### 4.3 — Génération des types de villages
+### 3.3 — Génération des types de villages
 - [ ] **Hameau** (3-5 bâtiments) : mairie + maisons uniquement, pas de murs
 - [ ] **Village** (8-15 bâtiments) : bâtiments variés, éventuellement mur partiel
 - [ ] **Bourg** (20+ bâtiments) : complet, murs, marché
@@ -411,18 +352,71 @@ Créer tous les fichiers JSON pour les Normands (civilisation de base) :
 - [ ] **Monastère** (religieux) : bâtiments spécifiques, moine-type
 - [ ] Algorithme de sélection du type selon biome et chance
 
-### 4.4 — Worldgen Fabric
+### 3.4 — Worldgen Fabric
 - [ ] Enregistrement Structure/Feature Fabric pour les villages
 - [ ] Placement au chunkload (éviter conflits de génération)
 - [ ] Bâtiment ancre en premier (mairie), puis développement progressif
 
-### 4.5 — Commandes de debug village
+### 3.5 — Commandes de debug village
 - [ ] `/mna village list` — liste des villages du monde
 - [ ] `/mna village spawn <civilization> [type]` — forcer un village
 - [ ] `/mna village tp <nom_ou_id>` — téléporter
 - [ ] `/mna village info` — infos sur le village le plus proche
 
-**Livrable :** Villages normands de différents types, générés naturellement dans les plaines/forêts.
+**Livrable :** Villages normands de différents types générés naturellement.
+**Tag :** `v0.4.0-alpha`
+
+---
+
+## Phase 4 — Assets Normands (Blocs, Items & Textures)
+
+**Objectif :** Infrastructure d'enregistrement et ensemble complet des assets normands (Blocs et Items).
+Cette phase intervient une fois que le moteur de base et la génération sont en place.
+
+### 4.1 — Infrastructure d'enregistrement
+- [ ] Registres Fabric (`MillBlocks`, `MillItems`)
+- [ ] Onglet créatif "Millenaire: New Age" avec icône
+- [ ] Pattern de registre propre, documenté (futur template pour add-ons)
+
+### 4.2 — Blocs normands (depuis OldSource)
+Ces blocs servent de base de construction pour les villages.
+- [ ] Briques normandes (pierre, calcaire, variantes)
+- [ ] Bois normand (chêne, variantes de planches)
+- [ ] Blocs décoratifs (rosaces, moulures, bardages)
+- [ ] Bloc de chemin (terre battue)
+- [ ] Blocs fonctionnels : foyer, coffre verrouillé, lit de village
+
+### 4.3 — Items génériques (socle commun)
+Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
+- [ ] `generic_grain` — céréale générique (retexturable)
+- [ ] `generic_bread` — pain générique
+- [ ] `generic_fruit` — fruit générique
+- [ ] `generic_vegetable` — légume générique
+- [ ] `generic_cloth` — tissu générique
+- [ ] `generic_leather_item` — cuir travaillé générique
+- [ ] `generic_tool_wood` / `generic_tool_stone` — outils génériques
+- [ ] `parchment` — parchemin (quêtes, livres)
+- [ ] `travel_book` — livre de voyage
+- [ ] `debug_wand` — baguette de debug (mode créateur)
+
+### 4.4 — Items normands spécifiques
+- [ ] Blé, pain normand, fromage
+- [ ] Cidre (pomme, variantes)
+- [ ] Équipements de soldat normand
+- [ ] Bannière normande
+
+### 4.5 — Blocs agricoles normands
+- [ ] Pommier (sapling + arbre + feuilles de fruits)
+- [ ] Vigne (grimpe sur murs)
+- [ ] Blé (utilise le vanilla, pas de bloc custom nécessaire)
+
+### 4.6 — Assets visuels
+- [x] Récupérer et importer textures depuis OldSource (indépendance complète)
+- [x] `blockstates/*.json`, `models/block/*.json`, `models/item/*.json`
+- [x] `lang/en_us.json` — noms anglais de tous les blocs Phase 4
+- [x] `lang/fr_fr.json` — noms français de tous les blocs Phase 4
+
+**Livrable :** Écosystème visuel et matériel complet pour la civilisation de référence.
 **Tag :** `v0.5.0-alpha`
 
 ---
@@ -772,10 +766,10 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 | Phase | Statut | Tag |
 |-------|--------|-----|
 | 0 — Setup | 🟢 Terminé | v0.1.0 |
-| 1 — Assets Normands | 🟡 En cours | v0.2.0 |
-| 2 — Architecture données | 🔴 À faire | v0.3.0 |
-| 3 — Système civilisations | 🔴 À faire | v0.4.0 |
-| 4 — Types villages & génération | 🔴 À faire | v0.5.0 |
+| 1 — Architecture données | 🟢 Terminé | v0.2.0 |
+| 2 — Système civilisations | 🟢 Terminé | v0.3.0 |
+| 3 — Types villages & génération | 🔴 À faire | v0.4.0 |
+| 4 — Assets Normands | 🟡 En cours | v0.5.0 |
 | 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
 | 6 — IA & comportements | 🔴 À faire | v0.7.0 |
 | 7 — Santé bâtiments & construction | 🔴 À faire | v0.8.0 |

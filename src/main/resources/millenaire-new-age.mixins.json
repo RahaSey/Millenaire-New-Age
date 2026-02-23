@@ -3,6 +3,7 @@
 	"package": "com.mat37dev.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"StructureTemplateAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

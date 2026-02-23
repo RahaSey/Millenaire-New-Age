@@ -22,6 +22,9 @@
 		],
 		"fabric-datagen": [
 			"com.mat37dev.MillenaireNewAgeDataGenerator"
+		],
+		"cardinal-components": [
+			"com.mat37dev.world.VillageComponents"
 		]
 	},
 	"mixins": [
@@ -36,5 +39,10 @@
 		"minecraft": "~1.21.10",
 		"java": ">=21",
 		"fabric-api": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"millenaire-new-age:village_data"
+		]
 	}
 }

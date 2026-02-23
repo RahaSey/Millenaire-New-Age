@@ -28,6 +28,10 @@ public class MillItemGroups {
                         // ── Outils ────────────────────────────────────────────
                         entries.accept(MillItems.WAND_OF_SUMMONING);
                         entries.accept(MillItems.WAND_OF_NEGATION);
+
+                        // ── Outils créateur ───────────────────────────────────
+                        entries.accept(MillItems.STRUCTURE_SCANNER);
+                        entries.accept(MillItems.STRUCTURE_PLACER);
                     })
                     .build()
     );
