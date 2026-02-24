@@ -16,9 +16,9 @@ public class Village {
 
     private final UUID id;
     private String name;
-    private String civilizationId;
-    private String villageTypeId;
-    private BlockPos center;
+    private final String civilizationId;
+    private final String villageTypeId;
+    private final BlockPos center;
     private VillageState state;
     private final List<Building> buildings = new ArrayList<>();
     private final List<UUID> villagerIds = new ArrayList<>();

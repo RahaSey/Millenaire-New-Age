@@ -114,34 +114,34 @@ public class PerimeterElementPlacer {
             int pz = sz != null ? sz.getZ() : 0;  // sizeZ original
 
             // Côté nord : COUNTERCLOCKWISE_90 (au lieu de CW90)
-            for (int pillarX : distributePillars(-r, 0, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarX : distributePillars(-r, 0)) {
                 placeElement(server, level, village, pt, center.getX() + pillarX - pz / 2, center.getZ() - r, Rotation.COUNTERCLOCKWISE_90, "pilier nord");
             }
-            for (int pillarX : distributePillars(0, +r, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarX : distributePillars(0, +r)) {
                 placeElement(server, level, village, pt, center.getX() + pillarX - pz / 2, center.getZ() - r, Rotation.COUNTERCLOCKWISE_90, "pilier nord");
             }
 
             // Côté sud : CLOCKWISE_90 (au lieu de CCW90)
-            for (int pillarX : distributePillars(-r, 0, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarX : distributePillars(-r, 0)) {
                 placeElement(server, level, village, pt, center.getX() + pillarX - pz / 2, center.getZ() + r - px, Rotation.CLOCKWISE_90, "pilier sud");
             }
-            for (int pillarX : distributePillars(0, +r, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarX : distributePillars(0, +r)) {
                 placeElement(server, level, village, pt, center.getX() + pillarX - pz / 2, center.getZ() + r - px, Rotation.CLOCKWISE_90, "pilier sud");
             }
 
             // Côté est : NONE (au lieu de CW180)
-            for (int pillarZ : distributePillars(-r, 0, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarZ : distributePillars(-r, 0)) {
                 placeElement(server, level, village, pt, center.getX() + r - px, center.getZ() + pillarZ - pz / 2, Rotation.NONE, "pilier est");
             }
-            for (int pillarZ : distributePillars(0, +r, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarZ : distributePillars(0, +r)) {
                 placeElement(server, level, village, pt, center.getX() + r - px, center.getZ() + pillarZ - pz / 2, Rotation.NONE, "pilier est");
             }
 
             // Côté ouest : CLOCKWISE_180 (au lieu de NONE)
-            for (int pillarZ : distributePillars(-r, 0, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarZ : distributePillars(-r, 0)) {
                 placeElement(server, level, village, pt, center.getX() - r, center.getZ() + pillarZ - pz / 2, Rotation.CLOCKWISE_180, "pilier ouest");
             }
-            for (int pillarZ : distributePillars(0, +r, MIN_SPACING, MAX_PILLAR_INTERVAL)) {
+            for (int pillarZ : distributePillars(0, +r)) {
                 placeElement(server, level, village, pt, center.getX() - r, center.getZ() + pillarZ - pz / 2, Rotation.CLOCKWISE_180, "pilier ouest");
             }
         });
@@ -152,22 +152,22 @@ public class PerimeterElementPlacer {
     /**
      * Distribue des piliers entre deux positions-clé (coin et entrée) selon MAX_PILLAR_INTERVAL.
      *
-     * @param from  position relative de départ (coin ou entrée) — exclue
-     * @param to    position relative d'arrivée (entrée ou coin) — exclue
+     * @param from position relative de départ (coin ou entrée) — exclue
+     * @param to   position relative d'arrivée (entrée ou coin) — exclue
      * @return liste de positions relatives pour les piliers
      */
-    private static List<Integer> distributePillars(int from, int to, int minSpacing, int maxInterval) {
+    private static List<Integer> distributePillars(int from, int to) {
         List<Integer> result = new ArrayList<>();
         int direction = Integer.signum(to - from);
 
-        int availStart = from + direction * minSpacing;
-        int availEnd   = to   - direction * minSpacing;
+        int availStart = from + direction * PerimeterElementPlacer.MIN_SPACING;
+        int availEnd   = to   - direction * PerimeterElementPlacer.MIN_SPACING;
         int availSpan  = Math.abs(availEnd - availStart);
 
         if (availSpan <= 0) return result;
 
         int totalSpan = Math.abs(to - from);
-        int numPillars = Math.max(0, (int) Math.ceil((double) totalSpan / maxInterval) - 1);
+        int numPillars = Math.max(0, (int) Math.ceil((double) totalSpan / PerimeterElementPlacer.MAX_PILLAR_INTERVAL) - 1);
         if (numPillars == 0) return result;
 
         for (int i = 1; i <= numPillars; i++) {

@@ -7,13 +7,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Baguette d'Arpentage.
  *
  * <ul>
  *   <li>Clic gauche sur un bloc = Pos1 (coin A de la sélection)</li>
- *   <li>Clic droit sur un bloc  = Pos2 (coin B de la sélection)</li>
+ *   <li>Clic droit sur un bloc = Pos2 (coin B de la sélection)</li>
  * </ul>
  *
  * L'interception du clic gauche est enregistrée via {@code AttackBlockCallback.EVENT}
@@ -28,7 +29,7 @@ public class StructureScannerItem extends Item {
     // ── Clic droit sur bloc → Pos2 ───────────────────────────────────────────
 
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public @NotNull InteractionResult useOn(UseOnContext ctx) {
         if (ctx.getLevel().isClientSide()) return InteractionResult.SUCCESS;
         if (!(ctx.getPlayer() instanceof ServerPlayer player)) return InteractionResult.PASS;
 

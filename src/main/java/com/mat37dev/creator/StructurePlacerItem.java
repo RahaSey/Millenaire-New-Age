@@ -1,13 +1,11 @@
 package com.mat37dev.creator;
 
-import com.mat37dev.network.MillNetwork;
 import com.mat37dev.network.StructureRotationPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,14 +18,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Baguette de Placement.
  *
  * <ul>
- *   <li>Clic droit sur bloc (sans Shift)  = placer la structure</li>
- *   <li>Clic droit sur bloc (avec Shift)  = rotation +90°</li>
- *   <li>Clic droit dans le vide           = rotation +90° (fallback)</li>
+ *   <li>Clic droit sur bloc (sans Shift) = placer la structure</li>
+ *   <li>Clic droit sur bloc (avec Shift) = rotation +90°</li>
+ *   <li>Clic droit dans le vide = rotation +90° (fallback)</li>
  * </ul>
  *
  * <p>La structure sélectionnée et la rotation sont stockées dans {@link CustomData}
@@ -45,7 +44,7 @@ public class StructurePlacerItem extends Item {
     // ── Clic droit sur bloc ──────────────────────────────────────────────────
 
     @Override
-    public InteractionResult useOn(UseOnContext ctx) {
+    public @NotNull InteractionResult useOn(UseOnContext ctx) {
         Player player = ctx.getPlayer();
         if (player == null) return InteractionResult.PASS;
 
@@ -70,7 +69,7 @@ public class StructurePlacerItem extends Item {
     // ── Clic droit (dans le vide ou global) ──────────────────────────────────
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (level.isClientSide()) {

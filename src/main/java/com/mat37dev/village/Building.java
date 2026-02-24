@@ -15,11 +15,11 @@ public class Building {
     private final UUID id;
     private final UUID villageId;
     private final String typeId;
-    private BlockPos origin;
-    private Direction facing;
+    private final BlockPos origin;
+    private final Direction facing;
     private BuildingState state;
     private int currentHealth;
-    private int maxHealth;
+    private final int maxHealth;
     private final List<UUID> residentIds = new ArrayList<>();
 
     public Building(UUID id, UUID villageId, String typeId,

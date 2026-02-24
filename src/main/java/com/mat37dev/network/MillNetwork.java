@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 /**
- * Centralise l'enregistrement de tous les {@link net.minecraft.network.protocol.common.custom.CustomPayload}.
+ * Centralise l'enregistrement de tous les {@link net.minecraft.network.protocol.common.custom.CustomPacketPayload}.
  *
  * <p>Appelé depuis {@link com.mat37dev.MillenaireNewAge#onInitialize()}.</p>
  */

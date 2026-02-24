@@ -22,12 +22,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Algorithme central de placement de village.
@@ -84,7 +79,7 @@ public class VillagePlacer {
 
         // 1. Sélectionner & trier les bâtiments (CENTER → NEAR → FAR)
         List<BuildingType> selected = selectBuildings(civ, vt);
-        selected.sort((a, b) -> a.proximity().ordinal() - b.proximity().ordinal());
+        selected.sort(Comparator.comparingInt(a -> a.proximity().ordinal()));
 
         // 2. Nommer le village
         String villageName = generateVillageName(civ);

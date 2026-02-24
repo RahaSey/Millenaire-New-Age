@@ -2,6 +2,7 @@ package com.mat37dev.command;
 
 import com.mat37dev.civilization.Civilization;
 import com.mat37dev.civilization.CivilizationRegistry;
+import com.mat37dev.civilization.VillageType;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -14,12 +15,12 @@ import java.util.Optional;
 
 /**
  * Commandes de debug préfixées /mna.
- *
+ * <p>
  * Phase 2 :
  *   /mna civilization list           — liste toutes les civs chargées
  *   /mna civilization info <id>      — détails d'une civ
- *
- * Futur (Phase 3+) :
+ * <p>
+ * Futur (Phase 3+):
  *   /mna village list | spawn | tp | info
  *   /mna reputation set ...
  *   /mna creator ...
@@ -83,7 +84,7 @@ public class MillCommands {
                 () -> Component.literal("§7Biomes : §f" + String.join(", ", civ.compatibleBiomes())), false);
         ctx.getSource().sendSuccess(
                 () -> Component.literal("§7Types de villages : §f" +
-                        civ.villageTypes().stream().map(v -> v.id()).reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b)), false);
+                        civ.villageTypes().stream().map(VillageType::id).reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b)), false);
         ctx.getSource().sendSuccess(
                 () -> Component.literal("§7Bâtiments : §f" + civ.buildingTypes().size()), false);
         ctx.getSource().sendSuccess(

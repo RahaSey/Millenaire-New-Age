@@ -5,7 +5,7 @@ import com.mat37dev.data.CivilizationLoader;
 
 /**
  * API publique de Millenaire: New Age.
- *
+ * <p>
  * Destinée aux mods compagnons qui souhaitent enregistrer du contenu
  * programmatiquement (ex: une civilisation avec des comportements Java custom).
  *

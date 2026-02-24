@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public record OpenVillageCreationPayload(
         );
 
     @Override
-    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() { return ID; }
+    public CustomPacketPayload.@NotNull Type<? extends CustomPacketPayload> type() { return ID; }
 
     /** Crée le payload depuis une liste de civilisations full. */
     public static OpenVillageCreationPayload from(BlockPos goldPos, List<Civilization> civs) {
