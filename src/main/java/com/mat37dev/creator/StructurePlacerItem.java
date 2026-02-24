@@ -102,8 +102,8 @@ public class StructurePlacerItem extends Item {
     private InteractionResult placeStructureServer(ServerPlayer player, ItemStack stack, BlockPos origin) {
         String structureId = getStructureId(stack);
         if (structureId == null || structureId.isEmpty()) {
-            player.sendSystemMessage(Component.literal(
-                "§c[MNA] Aucune structure sélectionnée. Utilisez /mna creator structure list")
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.placer.no_selection"))
             );
             return InteractionResult.FAIL;
         }
@@ -116,12 +116,12 @@ public class StructurePlacerItem extends Item {
             structureId, origin, Mirror.NONE, mcRotation);
 
         if (placed) {
-            player.sendSystemMessage(Component.literal(
-                "§a[MNA] Structure '§f" + structureId + "§a' placée en §f" + origin.toShortString()
-                + " §a(rotation §f" + (rot * 90) + "°§a)"));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.placer.placed",
+                    structureId, origin.toShortString(), (rot * 90))));
         } else {
-            player.sendSystemMessage(Component.literal(
-                "§c[MNA] Impossible de placer '§f" + structureId + "§c' — fichier introuvable."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.placer.not_found", structureId)));
         }
 
         return InteractionResult.SUCCESS;
@@ -137,10 +137,8 @@ public class StructurePlacerItem extends Item {
         // Sync vers le client pour le renderer
         ServerPlayNetworking.send(player, new StructureRotationPayload(next));
 
-        player.sendSystemMessage(Component.literal(
-            "§b[MNA] Rotation §f" + (next * 90) + "°"
-                + "§b (Shift+clic pour changer, clic pour placer)"
-        ).withStyle(ChatFormatting.AQUA));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.placer.rotation", (next * 90))
+            .withStyle(ChatFormatting.AQUA));
     }
 
     // ── Données de l'item ────────────────────────────────────────────────────

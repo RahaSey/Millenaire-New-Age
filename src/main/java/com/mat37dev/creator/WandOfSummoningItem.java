@@ -40,7 +40,8 @@ public class WandOfSummoningItem extends Item {
 
         Collection<Civilization> civs = CivilizationRegistry.getAll();
         if (civs.isEmpty()) {
-            player.sendSystemMessage(Component.literal("§c[MNA] Aucune civilisation chargée."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.village.no_civ_loaded")));
             return InteractionResult.FAIL;
         }
 

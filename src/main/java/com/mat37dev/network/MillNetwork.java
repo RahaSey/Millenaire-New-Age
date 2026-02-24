@@ -86,9 +86,9 @@ public class MillNetwork {
             java.nio.file.Files.deleteIfExists(blocksPath);
 
             if (deleted) {
-                player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                    "§e[MNA] Structure '§f" + structureId + "§e' supprimée."
-                ));
+                player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")
+                    .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.creator.deleted", structureId))
+                );
             }
         } catch (java.io.IOException e) {
             MillenaireNewAge.LOGGER.error("Erreur suppression structure : {}", e.getMessage());
@@ -116,9 +116,9 @@ public class MillNetwork {
         // Envoyer les données de preview au client
         ServerPlayNetworking.send(player, new StructurePreviewPayload(structureId, blocks, size));
 
-        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-            "§a[MNA] Structure '§f" + structureId + "§a' sélectionnée. Clic droit pour placer, Shift+clic pour tourner."
-        ));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.creator.placer_configured", structureId))
+        );
     }
 
     private static void handleCreateVillage(ServerPlayer player,
@@ -127,24 +127,23 @@ public class MillNetwork {
         ServerLevel level = player.level();
 
         // Vérifier la distance avec les villages existants
-        String spacingError = com.mat37dev.village.VillagePlacer.checkSpacing(level, goldPos);
+        net.minecraft.network.chat.Component spacingError = com.mat37dev.village.VillagePlacer.checkSpacing(level, goldPos);
         if (spacingError != null) {
-            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c[MNA] " + spacingError));
+            player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(spacingError));
             return;
         }
 
         VillagePlacer.placeVillage(player.level().getServer(), level, civId, villageTypeId, goldPos)
             .ifPresentOrElse(
                 village -> player.sendSystemMessage(
-                    net.minecraft.network.chat.Component.literal(
-                        "§a[MNA] Village '§f" + village.getName()
-                        + "§a' créé (" + village.getBuildings().size() + " bâtiments)."
-                    )
+                    net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")
+                        .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.village.created",
+                            village.getName(), village.getBuildings().size()))
                 ),
                 () -> player.sendSystemMessage(
-                    net.minecraft.network.chat.Component.literal(
-                        "§c[MNA] Échec de la création du village."
-                    )
+                    net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.error_prefix")
+                        .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.village.create_fail"))
                 )
             );
     }

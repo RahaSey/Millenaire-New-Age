@@ -37,8 +37,9 @@ public class StructureScannerItem extends Item {
         CreatorSession session = CreatorSession.get(player);
         session.setPos2(pos);
 
-        player.sendSystemMessage(Component.literal("§b[MNA] Pos2 → ")
-            .append(Component.literal(pos.toShortString()).withStyle(ChatFormatting.WHITE)));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.info_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.pos2",
+                Component.literal(pos.toShortString()).withStyle(ChatFormatting.WHITE))));
 
         if (session.hasSelection()) {
             sendSelectionInfo(player, session);
@@ -58,8 +59,9 @@ public class StructureScannerItem extends Item {
         CreatorSession session = CreatorSession.get(player);
         session.setPos1(pos);
 
-        player.sendSystemMessage(Component.literal("§b[MNA] Pos1 → ")
-            .append(Component.literal(pos.toShortString()).withStyle(ChatFormatting.WHITE)));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.info_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.pos1",
+                Component.literal(pos.toShortString()).withStyle(ChatFormatting.WHITE))));
 
         if (session.hasSelection()) {
             sendSelectionInfo(player, session);
@@ -72,8 +74,7 @@ public class StructureScannerItem extends Item {
 
     private static void sendSelectionInfo(ServerPlayer player, CreatorSession session) {
         net.minecraft.core.Vec3i size = session.getSize();
-        player.sendSystemMessage(Component.literal(
-            "§7Sélection : §f" + size.getX() + " × " + size.getY() + " × " + size.getZ() + " blocs"
-        ));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection",
+            size.getX(), size.getY(), size.getZ()));
     }
 }

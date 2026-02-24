@@ -121,7 +121,8 @@ public class VillageCreationScreen extends Screen {
             g.fill(tabX, tabY, tabX + tabWidth, tabY + 1, 0xFF888888);
             g.fill(tabX, tabY, tabX + 1, tabY + TAB_H, 0xFF888888);
 
-            g.drawCenteredString(this.font, civ.displayName(),
+            Component civName = Component.translatable("civilization.millenaire-new-age." + civ.id());
+            g.drawCenteredString(this.font, civName,
                 tabX + tabWidth / 2, tabY + (TAB_H - 8) / 2,
                 sel ? 0xFFFFFFFF : 0xFFAAAAAA);
         }
@@ -129,8 +130,8 @@ public class VillageCreationScreen extends Screen {
 
     private void renderVillageTypes(GuiGraphics g, int mx, int my) {
         if (civilizations.isEmpty()) return;
-        List<OpenVillageCreationPayload.VillageTypeInfo> vtList =
-            civilizations.get(selectedCivIndex).villageTypes();
+        OpenVillageCreationPayload.CivInfo currentCiv = civilizations.get(selectedCivIndex);
+        List<OpenVillageCreationPayload.VillageTypeInfo> vtList = currentCiv.villageTypes();
 
         for (int i = 0; i < vtList.size(); i++) {
             OpenVillageCreationPayload.VillageTypeInfo vt = vtList.get(i);
@@ -149,12 +150,16 @@ public class VillageCreationScreen extends Screen {
             g.fill(listX, entryY, listX + listWidth, entryY + 1, 0x33FFFFFF);
 
             // Nom
-            g.drawString(this.font, vt.displayName(),
+            String vtSubId = vt.id().contains(":") ? vt.id().split(":")[1] : vt.id();
+            Component vtName = Component.translatable("village_type.millenaire-new-age." + currentCiv.id() + "." + vtSubId);
+            g.drawString(this.font, vtName,
                 listX + 6, entryY + 5, sel ? 0xFFFFFFFF : 0xFFDDDDDD);
 
             // Infos
-            String info = vt.minBuildings() + "–" + vt.maxBuildings() + " bâtiments"
-                + (vt.hasWalls() ? "  |  Murailles" : "");
+            Component info = Component.translatable("gui.millenaire-new-age.village_creation.buildings", vt.minBuildings(), vt.maxBuildings());
+            if (vt.hasWalls()) {
+                info = info.copy().append("  |  ").append(Component.translatable("gui.millenaire-new-age.village_creation.walls"));
+            }
             g.drawString(this.font, info, listX + 6, entryY + 17, 0xFF888888);
         }
     }

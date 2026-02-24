@@ -2,7 +2,6 @@ package com.mat37dev.command;
 
 import com.mat37dev.civilization.Civilization;
 import com.mat37dev.civilization.CivilizationRegistry;
-import com.mat37dev.civilization.VillageType;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -52,16 +51,17 @@ public class MillCommands {
 
         if (all.isEmpty()) {
             ctx.getSource().sendSuccess(
-                    () -> Component.literal("§eAucune civilisation chargée."), false);
+                    () -> Component.translatable("chat.millenaire-new-age.command.no_civ_loaded"), false);
             return 0;
         }
 
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§6=== Civilisations chargées (" + all.size() + ") ==="), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_list_title", all.size()), false);
 
         for (Civilization civ : all) {
             ctx.getSource().sendSuccess(
-                    () -> Component.literal("§a• §f" + civ.id() + " §7— " + civ.displayName()), false);
+                    () -> Component.translatable("chat.millenaire-new-age.command.civ_list_item",
+                            civ.id(), Component.translatable("civilization.millenaire-new-age." + civ.id())), false);
         }
         return all.size();
     }
@@ -73,31 +73,35 @@ public class MillCommands {
 
         if (found.isEmpty()) {
             ctx.getSource().sendFailure(
-                    Component.literal("Civilisation inconnue : " + id));
+                    Component.translatable("chat.millenaire-new-age.command.civ_unknown", id));
             return 0;
         }
 
         Civilization civ = found.get();
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§6=== " + civ.displayName() + " [" + civ.id() + "] ==="), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_title",
+                        Component.translatable("civilization.millenaire-new-age." + civ.id()), civ.id()), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Biomes : §f" + String.join(", ", civ.compatibleBiomes())), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_biomes",
+                        String.join(", ", civ.compatibleBiomes())), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Types de villages : §f" +
-                        civ.villageTypes().stream().map(VillageType::id).reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b)), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_village_types",
+                        civ.villageTypes().stream()
+                                .map(vt -> Component.translatable("village_type.millenaire-new-age." + civ.id() + "." + vt.id().split(":")[1]).getString())
+                                .reduce("", (a, b) -> a.isEmpty() ? b : a + ", " + b)), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Bâtiments : §f" + civ.buildingTypes().size()), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_buildings", civ.buildingTypes().size()), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Villageois : §f" + civ.villagerTypes().size()), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_villagers", civ.villagerTypes().size()), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Commerce : §f" + civ.tradeGoods().size() + " bien(s)"), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_trade", civ.tradeGoods().size()), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Cultures : §f" + String.join(", ", civ.knownCrops())), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_crops", String.join(", ", civ.knownCrops())), false);
         ctx.getSource().sendSuccess(
-                () -> Component.literal("§7Langue : §f" + civ.language().id() +
-                        " (" + civ.language().maleFirstNames().size() + " prénoms masc., " +
-                        civ.language().femaleFirstNames().size() + " prénoms fém., " +
-                        civ.language().villageNames().size() + " noms de village)"), false);
+                () -> Component.translatable("chat.millenaire-new-age.command.civ_info_lang", civ.language().id(),
+                        civ.language().maleFirstNames().size(),
+                        civ.language().femaleFirstNames().size(),
+                        civ.language().villageNames().size()), false);
 
         return 1;
     }

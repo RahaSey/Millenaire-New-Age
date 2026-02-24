@@ -40,15 +40,15 @@ public class VillagePlacer {
      *
      * @return message d'erreur localisé ou {@code null} si OK
      */
-    public static String checkSpacing(ServerLevel level, BlockPos goldPos) {
+    public static Component checkSpacing(ServerLevel level, BlockPos goldPos) {
         int minDist = VillageConfig.villageSpacing;
         for (Village v : VillageManager.getAllVillages(level)) {
             double dx = v.getCenter().getX() - goldPos.getX();
             double dz = v.getCenter().getZ() - goldPos.getZ();
             int dist = (int) Math.sqrt(dx * dx + dz * dz);
             if (dist < minDist) {
-                return "Trop proche du village '§f" + v.getName()
-                    + "§c' (distance : §f" + dist + "§c blocs, minimum : §f" + minDist + "§c blocs).";
+                return Component.translatable("chat.millenaire-new-age.village.spacing_error",
+                    v.getName(), dist, minDist);
             }
         }
         return null;
@@ -244,7 +244,10 @@ public class VillagePlacer {
 
     private static String generateVillageName(Civilization civ) {
         List<String> names = civ.language().villageNames();
-        if (names.isEmpty()) return civ.displayName() + " Village";
+        if (names.isEmpty()) {
+            return Component.translatable("civilization.millenaire-new-age." + civ.id())
+                .append(" Village").getString(); // Fallback simpler for name
+        }
         return names.get(new Random().nextInt(names.size()));
     }
 

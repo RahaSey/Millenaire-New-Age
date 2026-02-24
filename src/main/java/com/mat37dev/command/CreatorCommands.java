@@ -95,7 +95,8 @@ public class CreatorCommands {
         ServerPlayer player = getPlayer(ctx);
         if (player == null) return 0;
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(MillItems.STRUCTURE_SCANNER));
-        player.sendSystemMessage(Component.literal("§a[MNA] Baguette d'Arpentage — Clic gauche = Pos1, Clic droit = Pos2"));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.scanner_tool")));
         return 1;
     }
 
@@ -103,7 +104,8 @@ public class CreatorCommands {
         ServerPlayer player = getPlayer(ctx);
         if (player == null) return 0;
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(MillItems.STRUCTURE_PLACER));
-        player.sendSystemMessage(Component.literal("§a[MNA] Baguette de Placement — Utilisez /mna creator structure place <id>"));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.placer_tool")));
         return 1;
     }
 
@@ -115,8 +117,8 @@ public class CreatorCommands {
 
         CreatorSession session = CreatorSession.get(player);
         if (!session.hasSelection()) {
-            player.sendSystemMessage(Component.literal(
-                "§c[MNA] Aucune sélection active. Utilisez la Baguette d'Arpentage d'abord."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.no_selection")));
             return 0;
         }
 
@@ -127,19 +129,19 @@ public class CreatorCommands {
             Vec3i size = session.getSize();
             String langKey = "structure.millenaire-new-age." + structureId.replace('/', '.');
 
-            player.sendSystemMessage(Component.literal("§a[MNA] ✅ Structure sauvegardée !"));
-            player.sendSystemMessage(Component.literal("§7Fichier : §f" + saved));
-            player.sendSystemMessage(Component.literal("§7Taille  : §f"
-                + size.getX() + " × " + size.getY() + " × " + size.getZ()));
-            player.sendSystemMessage(Component.literal("§7Clé lang : §f" + langKey));
-            player.sendSystemMessage(Component.literal(
-                "§7→ Copiez les entrées de §fmods/MillenaireNewAge/lang_additions.json§7 dans vos fichiers lang."));
-            player.sendSystemMessage(Component.literal(
-                "§7→ Copiez le .nbt dans §fsrc/main/resources/data/millenaire-new-age/structure/" + structureId + ".nbt"));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.save_success")));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_file", saved));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_size",
+                size.getX(), size.getY(), size.getZ()));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_lang", langKey));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_instruction_lang"));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_instruction_data", structureId));
             return 1;
 
         } catch (Exception e) {
-            player.sendSystemMessage(Component.literal("§c[MNA] Erreur lors de la sauvegarde : " + e.getMessage()));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.save_error", e.getMessage())));
             return 0;
         }
     }
@@ -153,8 +155,8 @@ public class CreatorCommands {
         List<String> ids = StructureSaveManager.listStructures(player.level().getServer());
 
         if (ids.isEmpty()) {
-            player.sendSystemMessage(Component.literal(
-                "§e[MNA] Aucune structure dans creator_output. Sauvegardez-en une d'abord."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.list_empty")));
             return 0;
         }
 
@@ -171,8 +173,8 @@ public class CreatorCommands {
 
         List<BlockPos> blocks = StructureSaveManager.loadBlockPositions(player.level().getServer(), structureId);
         if (blocks.isEmpty()) {
-            player.sendSystemMessage(Component.literal(
-                "§c[MNA] Structure '§f" + structureId + "§c' introuvable dans creator_output."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.not_found", structureId)));
             return 0;
         }
 
@@ -187,9 +189,8 @@ public class CreatorCommands {
         // Envoyer le preview au client
         ServerPlayNetworking.send(player, new StructurePreviewPayload(structureId, blocks, size));
 
-        player.sendSystemMessage(Component.literal(
-            "§a[MNA] Baguette configurée pour '§f" + structureId
-            + "§a'. Clic droit = placer, Shift+clic = tourner."));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.placer_configured", structureId)));
         return 1;
     }
 
@@ -208,12 +209,15 @@ public class CreatorCommands {
             if (java.nio.file.Files.deleteIfExists(java.nio.file.Path.of(base + "_blocks.json"))) deleted = true;
 
             if (deleted) {
-                player.sendSystemMessage(Component.literal("§a[MNA] Structure '§f" + structureId + "§a' supprimée."));
+                player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+                    .append(Component.translatable("chat.millenaire-new-age.creator.deleted", structureId)));
             } else {
-                player.sendSystemMessage(Component.literal("§e[MNA] Structure '§f" + structureId + "§e' non trouvée."));
+                player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.prefix")
+                    .append(Component.translatable("chat.millenaire-new-age.creator.delete_not_found", structureId)));
             }
         } catch (Exception e) {
-            player.sendSystemMessage(Component.literal("§c[MNA] Erreur : " + e.getMessage()));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.error", e.getMessage())));
             return 0;
         }
         return 1;
@@ -227,8 +231,8 @@ public class CreatorCommands {
 
         List<BlockPos> blocks = StructureSaveManager.loadBlockPositions(player.level().getServer(), structureId);
         if (blocks.isEmpty()) {
-            player.sendSystemMessage(Component.literal(
-                "§c[MNA] Structure '§f" + structureId + "§c' introuvable."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.not_found", structureId)));
             return 0;
         }
 
@@ -237,12 +241,13 @@ public class CreatorCommands {
         String enName   = StructureSaveManager.autoName(structureId, false);
         String frName   = StructureSaveManager.autoName(structureId, true);
 
-        player.sendSystemMessage(Component.literal("§6=== " + structureId + " ==="));
-        player.sendSystemMessage(Component.literal("§7Taille    : §f" + size.getX() + " × " + size.getY() + " × " + size.getZ()));
-        player.sendSystemMessage(Component.literal("§7Blocs     : §f" + blocks.size()));
-        player.sendSystemMessage(Component.literal("§7Clé lang  : §f" + langKey));
-        player.sendSystemMessage(Component.literal("§7Nom EN    : §f" + enName));
-        player.sendSystemMessage(Component.literal("§7Nom FR    : §f" + frName));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_title", structureId));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_size",
+            size.getX(), size.getY(), size.getZ()));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_blocks", blocks.size()));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_lang", langKey));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_name_en", enName));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.info_name_fr", frName));
         return 1;
     }
 
@@ -252,7 +257,8 @@ public class CreatorCommands {
         ServerPlayer player = getPlayer(ctx);
         if (player == null) return 0;
         CreatorSession.get(player).clearSelection();
-        player.sendSystemMessage(Component.literal("§a[MNA] Sélection réinitialisée."));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.creator.selection_reset")));
         return 1;
     }
 
@@ -262,7 +268,8 @@ public class CreatorCommands {
 
         CreatorSession session = CreatorSession.get(player);
         if (!session.hasSelection()) {
-            player.sendSystemMessage(Component.literal("§e[MNA] Aucune sélection active."));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.prefix")
+                .append(Component.translatable("chat.millenaire-new-age.creator.no_active_selection")));
             return 0;
         }
 
@@ -270,12 +277,11 @@ public class CreatorCommands {
         BlockPos max  = session.getMaxPos();
         Vec3i    size = session.getSize();
 
-        player.sendSystemMessage(Component.literal("§6=== Sélection courante ==="));
-        player.sendSystemMessage(Component.literal("§7Pos1 (min) : §f" + min.toShortString()));
-        player.sendSystemMessage(Component.literal("§7Pos2 (max) : §f" + max.toShortString()));
-        player.sendSystemMessage(Component.literal("§7Taille     : §f"
-            + size.getX() + " × " + size.getY() + " × " + size.getZ()
-            + " §7(§f" + (size.getX() * size.getY() * size.getZ()) + " blocs§7)"));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_info_title"));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_pos1", min.toShortString()));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_pos2", max.toShortString()));
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_size",
+            size.getX(), size.getY(), size.getZ(), (size.getX() * size.getY() * size.getZ())));
         return 1;
     }
 

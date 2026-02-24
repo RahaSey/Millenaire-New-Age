@@ -62,7 +62,7 @@ public class StructureListScreen extends Screen {
         this.addRenderableWidget(this.placeButton);
 
         this.deleteButton = Button.builder(
-            Component.literal("§cSupprimer"),
+            Component.translatable("gui.millenaire-new-age.structure_list.delete"),
             btn -> onDeleteClicked()
         ).bounds(startX + btnW + spacing, this.height - 28, btnW, 20).build();
         this.deleteButton.active = false;
@@ -90,7 +90,7 @@ public class StructureListScreen extends Screen {
         // Titre
         g.drawCenteredString(this.font, this.title, this.width / 2, 14, 0xFFFFFFFF);
         g.drawString(this.font,
-            Component.literal(structureIds.size() + " structure(s)"),
+            Component.translatable("gui.millenaire-new-age.structure_list.count", structureIds.size()),
             listX, listY - 12, 0xFF888888);
 
         // Fond de la liste
