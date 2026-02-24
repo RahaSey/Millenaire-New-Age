@@ -66,6 +66,12 @@ Le développement est structuré en plusieurs phases pour garantir la robustesse
 
 ---
 
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! Que ce soit pour signaler un bug, proposer une idée ou soumettre du code, merci de consulter notre **[Guide de Contribution](CONTRIBUTING.md)** pour connaître la marche à suivre.
+
+---
+
 ## 📜 Licence
 
 Ce projet est distribué sous licence **CC0-1.0** (Public Domain). Vous êtes libre de l'utiliser, le modifier et le distribuer.
