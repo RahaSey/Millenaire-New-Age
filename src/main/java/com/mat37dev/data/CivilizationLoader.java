@@ -6,10 +6,12 @@ import com.mat37dev.MillenaireNewAge;
 import com.mat37dev.civilization.Civilization;
 import com.mat37dev.civilization.CivilizationRegistry;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -28,7 +30,7 @@ import java.util.Map;
  *       sauf si un JSON existe déjà pour cet ID</li>
  * </ol>
  */
-public class CivilizationLoader implements SimpleSynchronousResourceReloadListener {
+public class CivilizationLoader implements ResourceManagerReloadListener {
 
     private static final ResourceLocation LOADER_ID =
             ResourceLocation.fromNamespaceAndPath(MillenaireNewAge.MOD_ID, "civilization_loader");
@@ -48,12 +50,13 @@ public class CivilizationLoader implements SimpleSynchronousResourceReloadListen
         MillenaireNewAge.LOGGER.debug("Civilisation programmatique enregistrée : {}", civilization.id());
     }
 
-    // ── ResourceReloadListener ───────────────────────────────────────────────
+    // ── Enregistrement ───────────────────────────────────────────────────────
 
-    @Override
-    public ResourceLocation getFabricId() {
-        return LOADER_ID;
+    public static void register() {
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(LOADER_ID, new CivilizationLoader());
     }
+
+    // ── ResourceManagerReloadListener ────────────────────────────────────────
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {

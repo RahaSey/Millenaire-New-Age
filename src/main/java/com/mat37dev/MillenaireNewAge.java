@@ -11,10 +11,8 @@ import com.mat37dev.network.MillNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +34,7 @@ public class MillenaireNewAge implements ModInitializer {
         MillNetwork.registerServerHandlers();
 
         // Chargeurs de données (datapacks)
-        ResourceManagerHelper.get(PackType.SERVER_DATA)
-                .registerReloadListener(new CivilizationLoader());
+        CivilizationLoader.register();
 
         // Config village (chargée au démarrage du serveur)
         ServerLifecycleEvents.SERVER_STARTED.register(VillageConfig::load);
