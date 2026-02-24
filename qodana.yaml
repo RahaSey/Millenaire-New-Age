@@ -18,10 +18,11 @@ profile:
 #  - name: <SomeEnabledInspectionId>
 
 #Disable inspections
-#exclude:
-#  - name: <SomeDisabledInspectionId>
-#    paths:
-#      - <path/where/not/run/inspection>
+exclude:
+  # Faux positifs pour un mod Minecraft : ServerLevel, MinecraftServer et Minecraft
+  # implémentent AutoCloseable mais sont des singletons gérés par le moteur de jeu.
+  # Les fermer dans un try-with-resources serait incorrect et ferait planter le jeu.
+  - name: resource
 
 projectJDK: "25" #(Applied in CI/CD pipeline)
 
