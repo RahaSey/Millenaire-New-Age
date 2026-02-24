@@ -1,7 +1,7 @@
 package com.mat37dev.creator;
 
-import com.mat37dev.civilization.Civilization;
-import com.mat37dev.civilization.CivilizationRegistry;
+import com.mat37dev.culture.Culture;
+import com.mat37dev.culture.CultureRegistry;
 import com.mat37dev.network.OpenVillageCreationPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -38,15 +38,15 @@ public class WandOfSummoningItem extends Item {
             return InteractionResult.PASS;
         }
 
-        Collection<Civilization> civs = CivilizationRegistry.getAll();
-        if (civs.isEmpty()) {
+        Collection<Culture> cultures = CultureRegistry.getAll();
+        if (cultures.isEmpty()) {
             player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
-                .append(Component.translatable("chat.millenaire-new-age.village.no_civ_loaded")));
+                .append(Component.translatable("chat.millenaire-new-age.village.no_culture_loaded")));
             return InteractionResult.FAIL;
         }
 
-        List<Civilization> civList = new ArrayList<>(civs);
-        ServerPlayNetworking.send(player, OpenVillageCreationPayload.from(clickedPos, civList));
+        List<Culture> cultureList = new ArrayList<>(cultures);
+        ServerPlayNetworking.send(player, OpenVillageCreationPayload.from(clickedPos, cultureList));
         return InteractionResult.SUCCESS;
     }
 }

@@ -16,7 +16,7 @@ public class Village {
 
     private final UUID id;
     private String name;
-    private final String civilizationId;
+    private final String cultureId;
     private final String villageTypeId;
     private final BlockPos center;
     private VillageState state;
@@ -25,11 +25,11 @@ public class Village {
     private final Map<UUID, Integer> reputation = new HashMap<>();
     private final ResourceStock stock = new ResourceStock();
 
-    public Village(UUID id, String name, String civilizationId,
+    public Village(UUID id, String name, String cultureId,
                    String villageTypeId, BlockPos center) {
         this.id = id;
         this.name = name;
-        this.civilizationId = civilizationId;
+        this.cultureId = cultureId;
         this.villageTypeId = villageTypeId;
         this.center = center;
         this.state = VillageState.GROWING;
@@ -74,7 +74,7 @@ public class Village {
         output.putLong("id_msb", id.getMostSignificantBits());
         output.putLong("id_lsb", id.getLeastSignificantBits());
         output.putString("name", name);
-        output.putString("civilization_id", civilizationId);
+        output.putString("culture_id", cultureId);
         output.putString("village_type_id", villageTypeId);
         output.putLong("center", center.asLong());
         output.putString("state", state.name());
@@ -109,11 +109,11 @@ public class Village {
     public static Village readFrom(ValueInput input) {
         UUID id = new UUID(input.getLongOr("id_msb", 0L), input.getLongOr("id_lsb", 0L));
         String name = input.getStringOr("name", "");
-        String civilizationId = input.getStringOr("civilization_id", "");
+        String cultureId = input.getStringOr("culture_id", "");
         String villageTypeId = input.getStringOr("village_type_id", "");
         BlockPos center = BlockPos.of(input.getLongOr("center", 0L));
 
-        Village village = new Village(id, name, civilizationId, villageTypeId, center);
+        Village village = new Village(id, name, cultureId, villageTypeId, center);
         village.state = VillageState.valueOf(input.getStringOr("state", "GROWING"));
 
         for (ValueInput entry : input.childrenListOrEmpty("buildings")) {
@@ -138,7 +138,7 @@ public class Village {
     public UUID getId() { return id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    public String getCivilizationId() { return civilizationId; }
+    public String getCultureId() { return cultureId; }
     public String getVillageTypeId() { return villageTypeId; }
     public BlockPos getCenter() { return center; }
     public VillageState getState() { return state; }

@@ -1,21 +1,21 @@
 package com.mat37dev.api;
 
-import com.mat37dev.civilization.Civilization;
-import com.mat37dev.data.CivilizationLoader;
+import com.mat37dev.culture.Culture;
+import com.mat37dev.data.CultureLoader;
 
 /**
  * API publique de Millenaire: New Age.
  * <p>
  * Destinée aux mods compagnons qui souhaitent enregistrer du contenu
- * programmatiquement (ex: une civilisation avec des comportements Java custom).
+ * programmatiquement (ex: une culture avec des comportements Java custom).
  *
  * <p>Usage dans le mod compagnon :</p>
  * <pre>{@code
  * // Dans ModInitializer.onInitialize() :
- * MilenaireApi.registerCivilization(new Civilization("vikings", ...));
+ * MilenaireApi.registerCulture(new Culture("vikings", ...));
  * }</pre>
  *
- * <p>Note : pour une civilisation sans code Java custom (blocs/items génériques),
+ * <p>Note : pour une culture sans code Java custom (blocs/items génériques),
  * préférez un datapack embarqué dans votre JAR — c'est plus simple.</p>
  */
 public final class MilenaireApi {
@@ -23,14 +23,14 @@ public final class MilenaireApi {
     private MilenaireApi() {}
 
     /**
-     * Enregistre une civilisation programmatiquement.
+     * Enregistre une culture programmatiquement.
      *
-     * <p>La civilisation persiste à travers les reloads de datapacks.
+     * <p>La culture persiste à travers les reloads de datapacks.
      * En cas de conflit d'ID avec un JSON, le JSON a la priorité.</p>
      *
-     * @param civilization la civilisation à enregistrer
+     * @param culture la culture à enregistrer
      */
-    public static void registerCivilization(Civilization civilization) {
-        CivilizationLoader.addProgrammatic(civilization);
+    public static void registerCulture(Culture culture) {
+        CultureLoader.addProgrammatic(culture);
     }
 }

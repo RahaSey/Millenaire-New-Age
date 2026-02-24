@@ -1,8 +1,8 @@
 package com.mat37dev.village;
 
 import com.mat37dev.MillenaireNewAge;
-import com.mat37dev.civilization.BuildingType;
-import com.mat37dev.civilization.Civilization;
+import com.mat37dev.culture.BuildingType;
+import com.mat37dev.culture.Culture;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureSaveManager;
 import net.minecraft.core.BlockPos;
@@ -46,17 +46,17 @@ public class PerimeterElementPlacer {
     /**
      * Place tous les éléments de délimitation pour le village.
      *
-     * @param civ civilisation pour trouver les building types corner/entrance/pillar
+     * @param culture culture pour trouver les building types corner/entrance/pillar
      */
     public static void place(MinecraftServer server, ServerLevel level,
-                              Village village, Civilization civ, BlockPos center) {
-        Optional<BuildingType> cornerOpt   = findPerimeterElement(civ, BuildingType.PerimeterPlacement.CORNER);
-        Optional<BuildingType> entranceOpt = findPerimeterElement(civ, BuildingType.PerimeterPlacement.ENTRANCE);
-        Optional<BuildingType> pillarOpt   = findPerimeterElement(civ, BuildingType.PerimeterPlacement.PILLAR);
+                              Village village, Culture culture, BlockPos center) {
+        Optional<BuildingType> cornerOpt   = findPerimeterElement(culture, BuildingType.PerimeterPlacement.CORNER);
+        Optional<BuildingType> entranceOpt = findPerimeterElement(culture, BuildingType.PerimeterPlacement.ENTRANCE);
+        Optional<BuildingType> pillarOpt   = findPerimeterElement(culture, BuildingType.PerimeterPlacement.PILLAR);
 
-        if (cornerOpt.isEmpty())   MillenaireNewAge.LOGGER.warn("[MNA] Aucun coin (CORNER) trouvé pour la civilisation '{}'.", civ.id());
-        if (entranceOpt.isEmpty()) MillenaireNewAge.LOGGER.warn("[MNA] Aucune entrée (ENTRANCE) trouvée pour la civilisation '{}'.", civ.id());
-        if (pillarOpt.isEmpty())   MillenaireNewAge.LOGGER.warn("[MNA] Aucun pilier (PILLAR) trouvé pour la civilisation '{}'.", civ.id());
+        if (cornerOpt.isEmpty())   MillenaireNewAge.LOGGER.warn("[MNA] Aucun coin (CORNER) trouvé pour la culture '{}'.", culture.id());
+        if (entranceOpt.isEmpty()) MillenaireNewAge.LOGGER.warn("[MNA] Aucune entrée (ENTRANCE) trouvée pour la culture '{}'.", culture.id());
+        if (pillarOpt.isEmpty())   MillenaireNewAge.LOGGER.warn("[MNA] Aucun pilier (PILLAR) trouvé pour la culture '{}'.", culture.id());
 
         int r = VillageConfig.villageSize;
 
@@ -227,9 +227,9 @@ public class PerimeterElementPlacer {
         return template != null ? template.getSize() : null;
     }
 
-    private static Optional<BuildingType> findPerimeterElement(Civilization civ,
+    private static Optional<BuildingType> findPerimeterElement(Culture culture,
                                                                 BuildingType.PerimeterPlacement type) {
-        return civ.buildingTypes().stream()
+        return culture.buildingTypes().stream()
             .filter(bt -> bt.perimeterPlacement() == type)
             .findFirst();
     }

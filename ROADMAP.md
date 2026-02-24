@@ -3,23 +3,23 @@
 > **Mod :** Millenaire: New Age
 > **Framework :** Fabric (Fabric Loader + Fabric API)
 > **Cible :** Minecraft Java Edition 1.21.10
-> **Philosophie :** Moteur générique de civilisations + civilisation Normande comme référence.
+> **Philosophie :** Moteur générique de cultures + culture Normande comme référence.
 > **OldSource :** Concepts, mécaniques, assets visuels uniquement. Aucun code repris.
 
 ---
 
 ## Vision du projet
 
-Un **moteur de civilisations** extensible par la communauté :
+Un **moteur de cultures** extensible par la communauté :
 - Le mod est le moteur (IA, village, bâtiments, économie, quêtes)
-- Les civilisations sont des **datapacks** — partageables, sans code
-- Les civilisations nécessitant de nouveaux items/blocs utilisent un **mod compagnon** minimal
-- La civilisation **Normande** est la référence intégrée au mod de base
+- Les cultures sont des **datapacks** — partageables, sans code
+- Les cultures nécessitant de nouveaux items/blocs utilisent un **mod compagnon** minimal
+- La culture **Normande** est la référence intégrée au mod de base
 
 ### Modèle de données
 
 ```
-Civilization (données JSON/datapack)
+Culture (données JSON/datapack)
   ├── VillageType[]      → hameau, village, bourg, forteresse, monastère...
   │     └── BuildingType[] → maison, forge, mairie, tour de guet...
   │           └── StructureTemplate (.nbt)
@@ -30,7 +30,7 @@ Civilization (données JSON/datapack)
   └── ItemSet            → crops, nourriture, décorations
 
 Village (instance runtime, persistée par monde)
-  ├── civilization, type, nom, position
+  ├── culture, type, nom, position
   ├── buildings: Building[]
   ├── villagers: MillVillager[]
   ├── reputation: Map<PlayerUUID, Int>
@@ -43,7 +43,7 @@ Building (instance runtime)
   └── residents: MillVillager[]
 
 MillVillager (entité mob)
-  ├── civilization, type, village
+  ├── culture, type, village
   ├── home: Building, workplace: Building
   └── Brain (IA comportementale)
 ```
@@ -58,9 +58,9 @@ MillVillager (entité mob)
 
 ### Items — Architecture à 3 couches
 
-1. **Items génériques** intégrés au mod (cultures, nourriture, matériaux) — utilisables par toutes les civilisations via retexture
-2. **Items Normands** intégrés directement (civilisation de base)
-3. **Items civilisations externes** — via mod compagnon déclarant ses items à l'API
+1. **Items génériques** intégrés au mod (cultures, nourriture, matériaux) — utilisables par toutes les cultures via retexture
+2. **Items Normands** intégrés directement (culture de base)
+3. **Items cultures externes** — via mod compagnon déclarant ses items à l'API
 
 ### Santé des bâtiments
 
@@ -114,7 +114,7 @@ Réparation : villageois (automatique, lent) ou joueur (rapide, coûte des maté
 ```
 Phase 0  │ Setup & Infrastructure de base              │ ~2 semaines
 Phase 1  │ Architecture des entités de données         │ ~2 semaines
-Phase 2  │ Système de civilisations (datapack)         │ ~3 semaines
+Phase 2  │ Système de cultures (datapack)         │ ~3 semaines
 Phase 3  │ Types de villages & génération monde        │ ~4 semaines
 Phase 4  │ Assets Normands (Blocs, Items, Textures)    │ ~4 semaines
 Phase 5  │ Entité Villageois & rendu                   │ ~3 semaines
@@ -126,7 +126,7 @@ Phase 10 │ Creator Mode (outil de création in-game)    │ ~3 semaines
 Phase 11 │ Interfaces utilisateur                      │ ~3 semaines
 Phase 12 │ Réseau & multijoueur                        │ ~2 semaines
 Phase 13 │ Avancements & progression                   │ ~2 semaines
-Phase 14 │ 2ème civilisation (validation du système)   │ ~4 semaines
+Phase 14 │ 2ème culture (validation du système)   │ ~4 semaines
 Phase 15 │ Bandits, diplomatie, villages contrôlés     │ Post-v1.0
 Phase 16 │ Polish, tests & release                     │ ~2 semaines
 ```
@@ -157,8 +157,8 @@ com.mat37dev/
 │   ├── MillBlocks.java
 │   ├── MillItems.java
 │   └── MillEntities.java
-├── civilization/               ← Modèle de données civilisation
-│   ├── Civilization.java
+├── culture/               ← Modèle de données culture
+│   ├── Culture.java
 │   ├── VillageType.java
 │   ├── BuildingType.java
 │   ├── VillagerTypeDef.java
@@ -197,12 +197,12 @@ com.mat37dev/
 
 ## Phase 1 — Architecture des Entités de Données
 
-**Objectif :** Les classes Java qui représentent les concepts de civilisation, village, bâtiment.
+**Objectif :** Les classes Java qui représentent les concepts de culture, village, bâtiment.
 Ces classes sont le **squelette** sur lequel tout le reste s'appuie.
 
-### 1.1 — Civilization (données immuables, chargées depuis JSON)
+### 1.1 — Culture (données immuables, chargées depuis JSON)
 ```java
-public record Civilization(
+public record Culture(
     String id,
     String displayName,
     CultureLanguage language,
@@ -213,20 +213,20 @@ public record Civilization(
     List<String> knownCrops
 ) {}
 ```
-- [x] `Civilization.java`
+- [x] `Culture.java`
 - [x] `VillageType.java` (hameau, village, bourg, forteresse, monastère)
 - [x] `BuildingType.java` (mairie, maison, forge, ferme, tour, mur...)
 - [x] `VillagerTypeDef.java` (paysan, forgeron, garde, chef, marchand...)
 - [x] `CultureLanguage.java` (pools de noms, dialogues)
 - [x] `TradeGoodDef.java`
-- [x] `CivilizationRegistry.java` — registre des civilisations chargées
+- [x] `CultureRegistry.java` — registre des cultures chargées
 
 ### 1.2 — Village (état runtime, persisté)
 ```java
 public class Village {
     UUID id;
     String name;
-    Civilization civilization;
+    Culture culture;
     VillageType type;
     BlockPos center;
     List<Building> buildings;
@@ -265,20 +265,20 @@ public class Building {
 
 ### 1.5 — Tests unitaires (optionnel mais recommandé)
 - [ ] Test de sérialisation/désérialisation
-- [ ] Test de registry des civilisations
+- [ ] Test de registry des cultures
 
 **Livrable :** Classes compilées, log de debug affichant les structures de données.
 **Tag :** `v0.2.0-alpha`
 
 ---
 
-## Phase 2 — Système de Civilisations (Datapack)
+## Phase 2 — Système de Cultures (Datapack)
 
-**Objectif :** Charger les civilisations depuis des datapacks. Normands intégrés comme référence.
+**Objectif :** Charger les cultures depuis des datapacks. Normands intégrés comme référence.
 
-### 2.1 — Format JSON des civilisations
+### 2.1 — Format JSON des cultures
 ```json
-// data/millenaire_new_age/civilizations/normans.json
+// data/millenaire_new_age/cultures/normans.json
 {
   "id": "normans",
   "display_name": { "fr_fr": "Normands", "en_us": "Normans" },
@@ -293,7 +293,7 @@ public class Building {
 // data/millenaire_new_age/village_types/normans/village.json
 {
   "id": "normans:village",
-  "civilization": "normans",
+  "culture": "normans",
   "display_name": { "fr_fr": "Village Normand", "en_us": "Norman Village" },
   "min_buildings": 8,
   "max_buildings": 15,
@@ -303,16 +303,16 @@ public class Building {
   "villager_types": ["normans:farmer", "normans:blacksmith", "normans:guard", "normans:chief"]
 }
 ```
-- [x] Schéma JSON embarqué dans `civilization/<id>.json` : language, village_types, building_types, villager_types, trade_goods, known_crops
-  - Note : format actuel = types embarqués dans la civilisation. Refactorisable en fichiers séparés si besoin.
+- [x] Schéma JSON embarqué dans `culture/<id>.json` : language, village_types, building_types, villager_types, trade_goods, known_crops
+  - Note : format actuel = types embarqués dans la culture. Refactorisable en fichiers séparés si besoin.
 
 ### 2.2 — Chargeur datapack (ResourceReloadListener + Codec)
-- [x] `CivilizationLoader.java` — lit tous les `data/*/civilization/*.json` via `Civilization.CODEC`
-- [x] Support multi-datapacks (plusieurs civilisations en parallèle)
+- [x] `CultureLoader.java` — lit tous les `data/*/culture/*.json` via `Culture.CODEC`
+- [x] Support multi-datapacks (plusieurs cultures en parallèle)
 - [x] Validation automatique par Codec + messages d'erreur clairs dans les logs
-- [x] API publique : `MilenaireApi.registerCivilization(...)` pour les mods compagnons
+- [x] API publique : `MilenaireApi.registerCulture(...)` pour les mods compagnons
 
-### 2.3 — Civilisation Normande intégrée
+### 2.3 — Culture Normande intégrée
 - [x] `normans.json` — définition principale complète
 - [x] Types de villages : hameau (3-5), village (8-15), forteresse (militaire)
 - [x] Types de bâtiments : mairie, maison, forge, ferme, chapelle, donjon, caserne
@@ -320,11 +320,11 @@ public class Building {
 - [x] Langue : noms historiques normands (Guillaume, Mathilde…) + villes (Caen, Rouen…)
 - [x] Catalogue de commerce normand (blé, pain, pierre, outil, laine)
 
-### 2.4 — Commandes de debug civilisation
-- [x] `/mna civilization list` — liste les civilisations chargées
-- [x] `/mna civilization info <id>` — détails d'une civilisation
+### 2.4 — Commandes de debug culture
+- [x] `/mna culture list` — liste les cultures chargées
+- [x] `/mna culture info <id>` — détails d'une culture
 
-**Livrable :** Log de chargement des civilisations OK, structures JSON définies.
+**Livrable :** Log de chargement des cultures OK, structures JSON définies.
 **Tag :** `v0.3.0-alpha`
 
 ---
@@ -352,18 +352,18 @@ public class Building {
 
 #### Item `WandOfSummoningItem`
 - [x] Clic droit sur bloc d'or → ouvre le GUI de création de village
-- [x] Envoi payload S→C avec la liste des civilisations disponibles
+- [x] Envoi payload S→C avec la liste des cultures disponibles
 - [x] Vérification `villageSpacing` — message d'erreur rouge si trop proche
 - [x] Bloc d'or supprimé après création
 
 #### GUI `VillageCreationScreen`
-- [x] Onglets par civilisation (un onglet = une civilisation chargée)
+- [x] Onglets par culture (un onglet = une culture chargée)
 - [x] Dans chaque onglet : liste des types de villages avec infos (nb bâtiments, murailles)
 - [x] Bouton "Créer" → envoie `CreateVillagePayload` au serveur
 - [x] Bouton "Annuler" → ferme le GUI sans action
 
 #### `VillagePlacer.java`
-- [x] Reçoit : civilisation, type de village, position centrale (bloc d'or)
+- [x] Reçoit : culture, type de village, position centrale (bloc d'or)
 - [x] Détermine les bâtiments à placer (requis + aléatoire parmi optionnels)
 - [x] Tri par proximity (CENTER → NEAR → FAR), centrage du bâtiment principal sur le bloc d'or
 - [x] `TerrainAdapter` — nivelle le terrain (creuse / remblaye / nettoie végétation)
@@ -373,7 +373,7 @@ public class Building {
 - [x] `normans.json` mis à jour : fortress utilise les 4 structures enregistrées
 
 #### Réseau
-- [x] `OpenVillageCreationPayload` (S→C) — liste des civilisations pour le GUI
+- [x] `OpenVillageCreationPayload` (S→C) — liste des cultures pour le GUI
 - [x] `CreateVillagePayload` (C→S) — demande de création (civ + type + pos)
 
 #### Test : forteresse normande
@@ -395,7 +395,7 @@ public class Building {
 ### 3.4 — Génération naturelle (Worldgen Fabric)
 **Objectif :** Villages générés automatiquement selon le biome.
 
-- [ ] Algorithme de sélection biome/civilisation
+- [ ] Algorithme de sélection biome/culture
 - [ ] Distance minimale entre villages (lire `village_spacing` depuis config)
 - [ ] Détection terrain plat (rayon = `village_size / 2`)
 - [ ] Enregistrement Structure/Feature Fabric
@@ -428,7 +428,7 @@ Ces blocs servent de base de construction pour les villages.
 - [ ] Blocs fonctionnels : foyer, coffre verrouillé, lit de village
 
 ### 4.3 — Items génériques (socle commun)
-Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
+Ces items sont le socle commun que toutes les cultures peuvent utiliser :
 - [ ] `generic_grain` — céréale générique (retexturable)
 - [ ] `generic_bread` — pain générique
 - [ ] `generic_fruit` — fruit générique
@@ -457,7 +457,7 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 - [x] `lang/en_us.json` — noms anglais de tous les blocs Phase 4
 - [x] `lang/fr_fr.json` — noms français de tous les blocs Phase 4
 
-**Livrable :** Écosystème visuel et matériel complet pour la civilisation de référence.
+**Livrable :** Écosystème visuel et matériel complet pour la culture de référence.
 **Tag :** `v0.5.0-alpha`
 
 ---
@@ -470,13 +470,13 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 ### 5.1 — Entité de base (côté serveur)
 - [ ] `MillVillagerEntity.java` extends `PathAwareEntity`
 - [ ] Attributs : HP, vitesse, portée de vision, force
-- [ ] NBT persistant : `civilizationId`, `villagerTypeId`, `villageId`, `sex`, `name`
+- [ ] NBT persistant : `cultureId`, `villagerTypeId`, `villageId`, `sex`, `name`
 - [ ] Enregistrement EntityType + SpawnEgg (debug)
 
 ### 5.2 — Rendu (côté client uniquement)
 - [ ] Modèle humanoïde custom (ou couche sur biped vanilla)
 - [ ] Renderer `MillVillagerEntityRenderer`
-- [ ] Layer de vêtements par type de villageois + civilisation
+- [ ] Layer de vêtements par type de villageois + culture
 - [ ] Textures normandes récupérées de OldSource
 - [ ] Nametag avec nom + rôle (ex: "Guillaume — Forgeron")
 
@@ -632,20 +632,20 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 
 ## Phase 10 — Creator Mode (Outil de Création In-Game)
 
-**Objectif :** Permettre la création de civilisations directement en jeu, avec export en datapack.
+**Objectif :** Permettre la création de cultures directement en jeu, avec export en datapack.
 
 ### 10.1 — Activation du mode créateur
 - [ ] `/mna creator` — toggle le mode créateur (admin seulement)
 - [ ] Visual feedback (particle d'activation, message dans le tchat)
 - [ ] Débloque les commandes et outils de création
 
-### 10.2 — Création de civilisation (GUI)
-- [ ] `/mna creator civilization new` → ouvre `CivilizationBuilderScreen`
+### 10.2 — Création de culture (GUI)
+- [ ] `/mna creator culture new` → ouvre `CultureBuilderScreen`
   - **Page 1** : Nom, ID, langue de base
   - **Page 2** : Biomes compatibles (sélection visuelle)
   - **Page 3** : Types de villages à inclure
   - **Page 4** : Résumé + validation
-- [ ] Génère un fichier JSON dans `config/millenaire_new_age/civilizations/`
+- [ ] Génère un fichier JSON dans `config/millenaire_new_age/cultures/`
 
 ### 10.3 — Outil de scan de structure
 - [ ] Item `StructureScannerWand`
@@ -664,8 +664,8 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 - [ ] Sélection de texture depuis les ressources existantes ou upload
 
 ### 10.6 — Export en datapack
-- [ ] `/mna creator export <civilization_id>` — génère un dossier datapack complet
-  - Structure : `data/<civilization_id>/...` + `pack.mcmeta`
+- [ ] `/mna creator export <culture_id>` — génère un dossier datapack complet
+  - Structure : `data/<culture_id>/...` + `pack.mcmeta`
   - Peut être zippé et partagé directement
 - [ ] Log du contenu exporté (JSON générés, structures incluses)
 
@@ -673,7 +673,7 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 - [ ] `/mna creator village test <type>` — génère un village test à la position du joueur
 - [ ] `/mna creator reload` — recharge les données sans redémarrer le jeu
 
-**Livrable :** Cycle complet : créer une civilisation simple → tester → exporter → réimporter.
+**Livrable :** Cycle complet : créer une culture simple → tester → exporter → réimporter.
 **Tag :** `v0.11.0-alpha`
 
 ---
@@ -746,10 +746,10 @@ Ces items sont le socle commun que toutes les civilisations peuvent utiliser :
 
 ---
 
-## Phase 14 — 2ème Civilisation (Validation du Système)
+## Phase 14 — 2ème Culture (Validation du Système)
 
-**Objectif :** Prouver que le système est générique en ajoutant une deuxième civilisation.
-Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
+**Objectif :** Prouver que le système est générique en ajoutant une deuxième culture.
+Culture choisie : **Byzantins** (architecture distincte, commerce avancé).
 
 - [ ] Créer tous les JSON Byzantins (culture, villages, bâtiments, villageois)
 - [ ] Créer les structures NBT des bâtiments byzantins
@@ -758,7 +758,7 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 - [ ] Avancements byzantins
 - [ ] Corriger tout problème de généricité découvert
 
-**Livrable :** Deux civilisations jouables, système prouvé générique.
+**Livrable :** Deux cultures jouables, système prouvé générique.
 **Tag :** `v0.15.0-alpha`
 
 ---
@@ -768,9 +768,9 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 À traiter après la release initiale :
 - [ ] **Bandits & Raiders** — attaques de villages, système de défense
 - [ ] **Villages contrôlés par le joueur** — devenir chef, prendre des décisions
-- [ ] **Diplomatie** — relations entre civilisations, commerce inter-villages, guerres
-- [ ] **Civilisations supplémentaires** — Japonais, Indiens, Inuits, Mayas, Seldjoukides
-- [ ] **Structures Nether/End** — ruines, avant-postes de civilisations disparues
+- [ ] **Diplomatie** — relations entre cultures, commerce inter-villages, guerres
+- [ ] **Cultures supplémentaires** — Japonais, Indiens, Inuits, Mayas, Seldjoukides
+- [ ] **Structures Nether/End** — ruines, avant-postes de cultures disparues
 - [ ] **Saisons** — compatibilité Serene Seasons
 - [ ] **Compatibilité mods** — Create, etc.
 
@@ -780,7 +780,7 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 
 ### 16.1 — Tests
 - [ ] Scénario complet Normands + Byzantins
-- [ ] Tests Creator Mode (créer une civilisation simple)
+- [ ] Tests Creator Mode (créer une culture simple)
 - [ ] Tests performance (15+ villages actifs)
 - [ ] Tests multijoueur
 
@@ -792,7 +792,7 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 ### 16.3 — Documentation
 - [ ] `README.md` — installation, présentation
 - [ ] Guide gameplay (Modrinth/wiki)
-- [ ] **Guide Creator** — créer une civilisation custom (priorité communauté)
+- [ ] **Guide Creator** — créer une culture custom (priorité communauté)
 - [ ] Changelog
 
 ### 16.4 — Release
@@ -808,7 +808,7 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 |-------|--------|-----|
 | 0 — Setup | 🟢 Terminé | v0.1.0 |
 | 1 — Architecture données | 🟢 Terminé | v0.2.0 |
-| 2 — Système civilisations | 🟢 Terminé | v0.3.0 |
+| 2 — Système cultures | 🟢 Terminé | v0.3.0 |
 | 3 — Types villages & génération | 🟡 En cours (3.1 ✅) | v0.4.0 |
 | 4 — Assets Normands | 🟡 En cours | v0.5.0 |
 | 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
@@ -820,7 +820,7 @@ Civilisation choisie : **Byzantins** (architecture distincte, commerce avancé).
 | 11 — Interfaces utilisateur | 🔴 À faire | v0.12.0 |
 | 12 — Réseau & multijoueur | 🔴 À faire | v0.13.0 |
 | 13 — Avancements | 🔴 À faire | v0.14.0 |
-| 14 — 2ème civilisation (Byzantins) | 🔴 À faire | v0.15.0 |
+| 14 — 2ème culture (Byzantins) | 🔴 À faire | v0.15.0 |
 | 15 — Extensions Post-v1.0 | ⏸ Plus tard | — |
 | 16 — Polish & Release | 🔴 À faire | v1.0.0 |
 

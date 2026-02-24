@@ -4,17 +4,17 @@
 [![Fabric](https://img.shields.io/badge/Loader-Fabric-lightgrey.svg)](https://fabricmc.net/)
 [![License](https://img.shields.io/badge/License-CC0--1.0-green.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 
-Une refonte moderne et ambitieuse du mod légendaire **Millénaire** (originaire de la 1.12.2). Ce projet vise à recréer et étendre l'expérience des civilisations vivantes, des villages autonomes et des cultures riches pour les versions récentes de Minecraft.
+Une refonte moderne et ambitieuse du mod légendaire **Millénaire** (originaire de la 1.12.2). Ce projet vise à recréer et étendre l'expérience des cultures vivantes, des villages autonomes et des traditions riches pour les versions récentes de Minecraft.
 
 ---
 
 ## 🏛️ Vision du Projet
 
-**Millénaire: New Age** est un **moteur de civilisations** conçu pour la performance et l'extensibilité :
+**Millénaire: New Age** est un **moteur de cultures** conçu pour la performance et l'extensibilité :
 - **Héritage 1.12.2** : Reprend les concepts, les mécaniques et l'âme du mod original tout en réécrivant chaque ligne de code pour les standards modernes.
 - **Moteur IA & Économie** : Gestion universelle des villages, du commerce simulé, des quêtes et des comportements complexes des villageois.
-- **Civilisations via Datapacks** : Les cultures ne sont plus figées dans le code. Chaque civilisation est un datapack JSON, permettant une personnalisation totale par la communauté.
-- **Référence Normande** : La culture Normande historique sert de socle technique et de référence pour toutes les autres civilisations.
+- **Cultures via Datapacks** : Les cultures ne sont plus figées dans le code. Chaque culture est un datapack JSON, permettant une personnalisation totale par la communauté.
+- **Référence Normande** : La culture Normande historique sert de socle technique et de référence pour toutes les autres cultures.
 
 ## 🚀 Fonctionnalités Actuelles
 
@@ -58,7 +58,7 @@ Le développement est structuré en plusieurs phases pour garantir la robustesse
 
 - **Phase 0** : Setup & Infrastructure (🟢 Terminé)
 - **Phase 1** : Architecture des données (🟢 Terminé)
-- **Phase 2** : Système de Civilisations (🟢 Terminé)
+- **Phase 2** : Système de Cultures (🟢 Terminé)
 - **Phase 3** : Génération du Monde (🔴 À faire)
 - **Phase 4** : Assets & Items Normands (🟡 En cours)
 

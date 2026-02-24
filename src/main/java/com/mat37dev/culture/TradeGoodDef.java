@@ -1,4 +1,4 @@
-package com.mat37dev.civilization;
+package com.mat37dev.culture;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

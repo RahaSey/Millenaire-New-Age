@@ -3,7 +3,7 @@ package com.mat37dev;
 import com.mat37dev.command.MillCommands;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureScannerItem;
-import com.mat37dev.data.CivilizationLoader;
+import com.mat37dev.data.CultureLoader;
 import com.mat37dev.init.MillBlocks;
 import com.mat37dev.init.MillItemGroups;
 import com.mat37dev.init.MillItems;
@@ -34,7 +34,7 @@ public class MillenaireNewAge implements ModInitializer {
         MillNetwork.registerServerHandlers();
 
         // Chargeurs de données (datapacks)
-        CivilizationLoader.register();
+        CultureLoader.register();
 
         // Config village (chargée au démarrage du serveur)
         ServerLifecycleEvents.SERVER_STARTED.register(VillageConfig::load);

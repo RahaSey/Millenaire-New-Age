@@ -302,11 +302,11 @@ public class StructureSaveManager {
             name.append(french ? " (Niveau " : " (Tier ").append(tier).append(')');
         }
 
-        // Préfixe civilisation si présent
+        // Préfixe culture si présent
         if (structureId.contains("/")) {
-            String civ = structureId.substring(0, structureId.lastIndexOf('/'));
-            String civName = Character.toUpperCase(civ.charAt(0)) + civ.substring(1);
-            name.insert(0, civName + " ");
+            String culture = structureId.substring(0, structureId.lastIndexOf('/'));
+            String cultureName = Character.toUpperCase(culture.charAt(0)) + culture.substring(1);
+            name.insert(0, cultureName + " ");
         }
 
         return name.toString();

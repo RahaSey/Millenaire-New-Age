@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * C→S : le joueur confirme la création d'un village.
- * Contient l'ID de civilisation, l'ID du type de village et la position du bloc d'or.
+ * Contient l'ID de culture, l'ID du type de village et la position du bloc d'or.
  */
 public record CreateVillagePayload(
-        String civId,
+        String cultureId,
         String villageTypeId,
         BlockPos goldPos
 ) implements CustomPacketPayload {
@@ -26,7 +26,7 @@ public record CreateVillagePayload(
     public static final StreamCodec<FriendlyByteBuf, CreateVillagePayload> CODEC =
         StreamCodec.of(
             (buf, p) -> {
-                buf.writeUtf(p.civId());
+                buf.writeUtf(p.cultureId());
                 buf.writeUtf(p.villageTypeId());
                 buf.writeBlockPos(p.goldPos());
             },

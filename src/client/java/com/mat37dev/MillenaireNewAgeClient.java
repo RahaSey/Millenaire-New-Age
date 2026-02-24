@@ -46,7 +46,7 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(OpenVillageCreationPayload.ID, (payload, ctx) ->
             ctx.client().execute(() ->
                 Minecraft.getInstance().setScreen(
-                    new VillageCreationScreen(payload.goldPos(), payload.civilizations())
+                    new VillageCreationScreen(payload.goldPos(), payload.cultures())
                 )
             )
         );

@@ -1,8 +1,8 @@
 package com.mat37dev.network;
 
 import com.mat37dev.MillenaireNewAge;
-import com.mat37dev.civilization.Civilization;
-import com.mat37dev.civilization.VillageType;
+import com.mat37dev.culture.Culture;
+import com.mat37dev.culture.VillageType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,11 +15,11 @@ import java.util.List;
 
 /**
  * S→C : ouvre le GUI de création de village.
- * Contient la position du bloc d'or + la liste des civilisations disponibles.
+ * Contient la position du bloc d'or + la liste des cultures disponibles.
  */
 public record OpenVillageCreationPayload(
         BlockPos goldPos,
-        List<CivInfo> civilizations
+        List<CultureInfo> cultures
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<OpenVillageCreationPayload> ID =
@@ -36,18 +36,18 @@ public record OpenVillageCreationPayload(
     @Override
     public CustomPacketPayload.@NotNull Type<? extends CustomPacketPayload> type() { return ID; }
 
-    /** Crée le payload depuis une liste de civilisations full. */
-    public static OpenVillageCreationPayload from(BlockPos goldPos, List<Civilization> civs) {
-        List<CivInfo> infos = new ArrayList<>(civs.size());
-        for (Civilization civ : civs) {
+    /** Crée le payload depuis une liste de cultures full. */
+    public static OpenVillageCreationPayload from(BlockPos goldPos, List<Culture> cultures) {
+        List<CultureInfo> infos = new ArrayList<>(cultures.size());
+        for (Culture culture : cultures) {
             List<VillageTypeInfo> vtInfos = new ArrayList<>();
-            for (VillageType vt : civ.villageTypes()) {
+            for (VillageType vt : culture.villageTypes()) {
                 vtInfos.add(new VillageTypeInfo(
                     vt.id(), vt.displayName(),
                     vt.minBuildings(), vt.maxBuildings(), vt.hasWalls()
                 ));
             }
-            infos.add(new CivInfo(civ.id(), civ.displayName(), vtInfos));
+            infos.add(new CultureInfo(culture.id(), culture.displayName(), vtInfos));
         }
         return new OpenVillageCreationPayload(goldPos, infos);
     }
@@ -56,8 +56,8 @@ public record OpenVillageCreationPayload(
 
     private static void encode(FriendlyByteBuf buf, OpenVillageCreationPayload p) {
         buf.writeBlockPos(p.goldPos());
-        buf.writeVarInt(p.civilizations().size());
-        for (CivInfo ci : p.civilizations()) {
+        buf.writeVarInt(p.cultures().size());
+        for (CultureInfo ci : p.cultures()) {
             buf.writeUtf(ci.id());
             buf.writeUtf(ci.displayName());
             buf.writeVarInt(ci.villageTypes().size());
@@ -73,12 +73,12 @@ public record OpenVillageCreationPayload(
 
     private static OpenVillageCreationPayload decode(FriendlyByteBuf buf) {
         BlockPos goldPos = buf.readBlockPos();
-        int civCount = buf.readVarInt();
-        List<CivInfo> civs = new ArrayList<>(civCount);
-        for (int i = 0; i < civCount; i++) {
-            String civId   = buf.readUtf();
-            String civName = buf.readUtf();
-            int vtCount    = buf.readVarInt();
+        int cultureCount = buf.readVarInt();
+        List<CultureInfo> cultures = new ArrayList<>(cultureCount);
+        for (int i = 0; i < cultureCount; i++) {
+            String cultureId   = buf.readUtf();
+            String cultureName = buf.readUtf();
+            int vtCount        = buf.readVarInt();
             List<VillageTypeInfo> vtInfos = new ArrayList<>(vtCount);
             for (int j = 0; j < vtCount; j++) {
                 vtInfos.add(new VillageTypeInfo(
@@ -87,14 +87,14 @@ public record OpenVillageCreationPayload(
                     buf.readBoolean()
                 ));
             }
-            civs.add(new CivInfo(civId, civName, vtInfos));
+            cultures.add(new CultureInfo(cultureId, cultureName, vtInfos));
         }
-        return new OpenVillageCreationPayload(goldPos, civs);
+        return new OpenVillageCreationPayload(goldPos, cultures);
     }
 
     // ── Types de données ──────────────────────────────────────────────────────
 
-    public record CivInfo(String id, String displayName, List<VillageTypeInfo> villageTypes) {}
+    public record CultureInfo(String id, String displayName, List<VillageTypeInfo> villageTypes) {}
 
     public record VillageTypeInfo(
             String id, String displayName,

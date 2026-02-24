@@ -1,10 +1,10 @@
 package com.mat37dev.village;
 
 import com.mat37dev.MillenaireNewAge;
-import com.mat37dev.civilization.BuildingType;
-import com.mat37dev.civilization.Civilization;
-import com.mat37dev.civilization.CivilizationRegistry;
-import com.mat37dev.civilization.VillageType;
+import com.mat37dev.culture.BuildingType;
+import com.mat37dev.culture.Culture;
+import com.mat37dev.culture.CultureRegistry;
+import com.mat37dev.culture.VillageType;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureSaveManager;
 import net.minecraft.ChatFormatting;
@@ -58,34 +58,34 @@ public class VillagePlacer {
      * Place un village complet centré sur {@code goldPos}.
      * Supprime le bloc d'or et crée un indicateur de nom au-dessus du centre.
      *
-     * @return le village créé, ou empty si la civilisation/type est introuvable
+     * @return le village créé, ou empty si la culture/type est introuvable
      */
     public static Optional<Village> placeVillage(MinecraftServer server, ServerLevel level,
-                                                  String civId, String villageTypeId,
+                                                  String cultureId, String villageTypeId,
                                                   BlockPos goldPos) {
-        Optional<Civilization> civOpt = CivilizationRegistry.get(civId);
-        if (civOpt.isEmpty()) {
-            MillenaireNewAge.LOGGER.error("[MNA] Civilisation '{}' introuvable.", civId);
+        Optional<Culture> cultureOpt = CultureRegistry.get(cultureId);
+        if (cultureOpt.isEmpty()) {
+            MillenaireNewAge.LOGGER.error("[MNA] Culture '{}' introuvable.", cultureId);
             return Optional.empty();
         }
-        Civilization civ = civOpt.get();
+        Culture culture = cultureOpt.get();
 
-        Optional<VillageType> vtOpt = civ.getVillageType(villageTypeId);
+        Optional<VillageType> vtOpt = culture.getVillageType(villageTypeId);
         if (vtOpt.isEmpty()) {
-            MillenaireNewAge.LOGGER.error("[MNA] Type '{}' introuvable dans '{}'.", villageTypeId, civId);
+            MillenaireNewAge.LOGGER.error("[MNA] Type '{}' introuvable dans '{}'.", villageTypeId, cultureId);
             return Optional.empty();
         }
         VillageType vt = vtOpt.get();
 
         // 1. Sélectionner & trier les bâtiments (CENTER → NEAR → FAR)
-        List<BuildingType> selected = selectBuildings(civ, vt);
+        List<BuildingType> selected = selectBuildings(culture, vt);
         selected.sort(Comparator.comparingInt(a -> a.proximity().ordinal()));
 
         // 2. Nommer le village
-        String villageName = generateVillageName(civ);
+        String villageName = generateVillageName(culture);
 
         // 3. Créer l'instance Village
-        Village village = new Village(UUID.randomUUID(), villageName, civId, villageTypeId, goldPos);
+        Village village = new Village(UUID.randomUUID(), villageName, cultureId, villageTypeId, goldPos);
 
         // 4. Placer chaque bâtiment
         Random rng = new Random();
@@ -127,7 +127,7 @@ public class VillagePlacer {
 
         // 5. Éléments de délimitation (coins, entrées, piliers) si le type a un périmètre
         if (vt.hasWalls()) {
-            PerimeterElementPlacer.place(server, level, village, civ, goldPos);
+            PerimeterElementPlacer.place(server, level, village, culture, goldPos);
         }
 
         // 6. Supprimer le bloc d'or (marqueur)
@@ -143,18 +143,18 @@ public class VillagePlacer {
 
     // ── Sélection ─────────────────────────────────────────────────────────────
 
-    private static List<BuildingType> selectBuildings(Civilization civ, VillageType vt) {
+    private static List<BuildingType> selectBuildings(Culture culture, VillageType vt) {
         List<BuildingType> result = new ArrayList<>();
 
         for (String id : vt.requiredBuildingIds()) {
-            civ.getBuildingType(id).ifPresent(result::add);
+            culture.getBuildingType(id).ifPresent(result::add);
         }
 
         List<String> optIds = new ArrayList<>(vt.optionalBuildingIds());
         Collections.shuffle(optIds);
         for (String id : optIds) {
             if (result.size() >= vt.maxBuildings()) break;
-            civ.getBuildingType(id).ifPresent(result::add);
+            culture.getBuildingType(id).ifPresent(result::add);
         }
 
         return result;
@@ -242,10 +242,10 @@ public class VillagePlacer {
 
     // ── Nommage ───────────────────────────────────────────────────────────────
 
-    private static String generateVillageName(Civilization civ) {
-        List<String> names = civ.language().villageNames();
+    private static String generateVillageName(Culture culture) {
+        List<String> names = culture.language().villageNames();
         if (names.isEmpty()) {
-            return Component.translatable("civilization.millenaire-new-age." + civ.id())
+            return Component.translatable("culture.millenaire-new-age." + culture.id())
                 .append(" Village").getString(); // Fallback simpler for name
         }
         return names.get(new Random().nextInt(names.size()));

@@ -64,11 +64,11 @@ public class MillNetwork {
         ServerPlayNetworking.registerGlobalReceiver(CreateVillagePayload.ID,
             (payload, ctx) -> {
                 ServerPlayer player = ctx.player();
-                String civId         = payload.civId();
+                String cultureId     = payload.cultureId();
                 String villageTypeId = payload.villageTypeId();
                 net.minecraft.core.BlockPos goldPos = payload.goldPos();
 
-                ctx.server().execute(() -> handleCreateVillage(player, civId, villageTypeId, goldPos));
+                ctx.server().execute(() -> handleCreateVillage(player, cultureId, villageTypeId, goldPos));
             }
         );
     }
@@ -122,7 +122,7 @@ public class MillNetwork {
     }
 
     private static void handleCreateVillage(ServerPlayer player,
-                                             String civId, String villageTypeId,
+                                             String cultureId, String villageTypeId,
                                              net.minecraft.core.BlockPos goldPos) {
         ServerLevel level = player.level();
 
@@ -134,7 +134,7 @@ public class MillNetwork {
             return;
         }
 
-        VillagePlacer.placeVillage(player.level().getServer(), level, civId, villageTypeId, goldPos)
+        VillagePlacer.placeVillage(player.level().getServer(), level, cultureId, villageTypeId, goldPos)
             .ifPresentOrElse(
                 village -> player.sendSystemMessage(
                     net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")

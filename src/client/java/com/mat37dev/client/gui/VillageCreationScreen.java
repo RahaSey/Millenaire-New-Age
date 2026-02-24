@@ -21,18 +21,18 @@ import java.util.List;
  * <p>Layout :
  * <ul>
  *   <li>Titre en haut</li>
- *   <li>Rangée d'onglets (un par civilisation)</li>
- *   <li>Liste des types de village de la civilisation active</li>
+ *   <li>Rangée d'onglets (un par culture)</li>
+ *   <li>Liste des types de village de la culture active</li>
  *   <li>Boutons "Créer" / "Annuler"</li>
  * </ul>
  */
 @Environment(EnvType.CLIENT)
 public class VillageCreationScreen extends Screen {
 
-    private final List<OpenVillageCreationPayload.CivInfo> civilizations;
+    private final List<OpenVillageCreationPayload.CultureInfo> cultures;
     private final BlockPos goldPos;
 
-    private int selectedCivIndex      = 0;
+    private int selectedCultureIndex     = 0;
     private String selectedVillageTypeId = null;
 
     private Button createButton;
@@ -47,10 +47,10 @@ public class VillageCreationScreen extends Screen {
     private int scrollOffset = 0;
 
     public VillageCreationScreen(BlockPos goldPos,
-                                  List<OpenVillageCreationPayload.CivInfo> civilizations) {
+                                  List<OpenVillageCreationPayload.CultureInfo> cultures) {
         super(Component.translatable("gui.millenaire-new-age.village_creation.title"));
-        this.goldPos       = goldPos;
-        this.civilizations = civilizations;
+        this.goldPos  = goldPos;
+        this.cultures = cultures;
     }
 
     @Override
@@ -105,14 +105,14 @@ public class VillageCreationScreen extends Screen {
     }
 
     private void renderTabs(GuiGraphics g, int mx, int my) {
-        if (civilizations.isEmpty()) return;
+        if (cultures.isEmpty()) return;
         int tabY     = 14;
-        int tabWidth = tabWidthFor(civilizations.size());
+        int tabWidth = tabWidthFor(cultures.size());
 
-        for (int i = 0; i < civilizations.size(); i++) {
-            OpenVillageCreationPayload.CivInfo civ = civilizations.get(i);
+        for (int i = 0; i < cultures.size(); i++) {
+            OpenVillageCreationPayload.CultureInfo culture = cultures.get(i);
             int tabX = MARGIN + i * tabWidth;
-            boolean sel     = (i == selectedCivIndex);
+            boolean sel     = (i == selectedCultureIndex);
             boolean hovered = mx >= tabX && mx < tabX + tabWidth
                            && my >= tabY  && my < tabY + TAB_H;
 
@@ -121,17 +121,17 @@ public class VillageCreationScreen extends Screen {
             g.fill(tabX, tabY, tabX + tabWidth, tabY + 1, 0xFF888888);
             g.fill(tabX, tabY, tabX + 1, tabY + TAB_H, 0xFF888888);
 
-            Component civName = Component.translatable("civilization.millenaire-new-age." + civ.id());
-            g.drawCenteredString(this.font, civName,
+            Component cultureName = Component.translatable("culture.millenaire-new-age." + culture.id());
+            g.drawCenteredString(this.font, cultureName,
                 tabX + tabWidth / 2, tabY + (TAB_H - 8) / 2,
                 sel ? 0xFFFFFFFF : 0xFFAAAAAA);
         }
     }
 
     private void renderVillageTypes(GuiGraphics g, int mx, int my) {
-        if (civilizations.isEmpty()) return;
-        OpenVillageCreationPayload.CivInfo currentCiv = civilizations.get(selectedCivIndex);
-        List<OpenVillageCreationPayload.VillageTypeInfo> vtList = currentCiv.villageTypes();
+        if (cultures.isEmpty()) return;
+        OpenVillageCreationPayload.CultureInfo currentCulture = cultures.get(selectedCultureIndex);
+        List<OpenVillageCreationPayload.VillageTypeInfo> vtList = currentCulture.villageTypes();
 
         for (int i = 0; i < vtList.size(); i++) {
             OpenVillageCreationPayload.VillageTypeInfo vt = vtList.get(i);
@@ -151,7 +151,7 @@ public class VillageCreationScreen extends Screen {
 
             // Nom
             String vtSubId = vt.id().contains(":") ? vt.id().split(":")[1] : vt.id();
-            Component vtName = Component.translatable("village_type.millenaire-new-age." + currentCiv.id() + "." + vtSubId);
+            Component vtName = Component.translatable("village_type.millenaire-new-age." + currentCulture.id() + "." + vtSubId);
             g.drawString(this.font, vtName,
                 listX + 6, entryY + 5, sel ? 0xFFFFFFFF : 0xFFDDDDDD);
 
@@ -172,15 +172,15 @@ public class VillageCreationScreen extends Screen {
 
         // Clic sur onglet
         int tabY     = 14;
-        int tabWidth = tabWidthFor(civilizations.size());
+        int tabWidth = tabWidthFor(cultures.size());
         if (my >= tabY && my < tabY + TAB_H) {
-            for (int i = 0; i < civilizations.size(); i++) {
+            for (int i = 0; i < cultures.size(); i++) {
                 int tabX = MARGIN + i * tabWidth;
                 if (mx >= tabX && mx < tabX + tabWidth) {
-                    selectedCivIndex     = i;
+                    selectedCultureIndex  = i;
                     selectedVillageTypeId = null;
-                    createButton.active  = false;
-                    scrollOffset         = 0;
+                    createButton.active   = false;
+                    scrollOffset          = 0;
                     return true;
                 }
             }
@@ -189,10 +189,10 @@ public class VillageCreationScreen extends Screen {
         // Clic dans la liste
         if (mx >= listX && mx < listX + listWidth
          && my >= listY  && my < listY + listHeight
-         && !civilizations.isEmpty()) {
+         && !cultures.isEmpty()) {
             int idx = ((int) my - listY + scrollOffset) / ITEM_H;
             List<OpenVillageCreationPayload.VillageTypeInfo> vtList =
-                civilizations.get(selectedCivIndex).villageTypes();
+                cultures.get(selectedCultureIndex).villageTypes();
             if (idx >= 0 && idx < vtList.size()) {
                 selectedVillageTypeId = vtList.get(idx).id();
                 createButton.active   = true;
@@ -207,8 +207,8 @@ public class VillageCreationScreen extends Screen {
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
         if (mx >= listX && mx < listX + listWidth
          && my >= listY  && my < listY + listHeight
-         && !civilizations.isEmpty()) {
-            int count     = civilizations.get(selectedCivIndex).villageTypes().size();
+         && !cultures.isEmpty()) {
+            int count     = cultures.get(selectedCultureIndex).villageTypes().size();
             int maxScroll = Math.max(0, count * ITEM_H - listHeight);
             scrollOffset  = Mth.clamp(scrollOffset - (int)(dy * ITEM_H), 0, maxScroll);
             return true;
@@ -219,9 +219,9 @@ public class VillageCreationScreen extends Screen {
     // ── Actions ───────────────────────────────────────────────────────────────
 
     private void onCreateClicked() {
-        if (selectedVillageTypeId == null || civilizations.isEmpty()) return;
-        String civId = civilizations.get(selectedCivIndex).id();
-        ClientPlayNetworking.send(new CreateVillagePayload(civId, selectedVillageTypeId, goldPos));
+        if (selectedVillageTypeId == null || cultures.isEmpty()) return;
+        String cultureId = cultures.get(selectedCultureIndex).id();
+        ClientPlayNetworking.send(new CreateVillagePayload(cultureId, selectedVillageTypeId, goldPos));
         this.onClose();
     }
 
