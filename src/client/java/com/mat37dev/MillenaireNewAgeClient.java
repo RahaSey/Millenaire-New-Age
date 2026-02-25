@@ -33,7 +33,10 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
 
         // Besoin de ça pour render les textures transparente
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT, ChunkSectionLayer.CUTOUT);
-
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT_SLAB, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL_SLAB, ChunkSectionLayer.CUTOUT);
+        
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->
             ctx.client().execute(() -> CreatorClientState.setRotation(payload.rotation()))

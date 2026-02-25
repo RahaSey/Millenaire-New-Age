@@ -1,6 +1,4 @@
-package com.mat37dev.init;
-
-import javax.swing.text.html.BlockView;
+package com.mat37dev.init.custom_classes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
