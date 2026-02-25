@@ -30,6 +30,13 @@ public class VillageManager {
         return getData(level).getVillage(id);
     }
 
+    /** Recherche un village par son nom (insensible à la casse). */
+    public static Optional<Village> getVillageByName(ServerLevel level, String name) {
+        return getData(level).getAllVillages().stream()
+            .filter(v -> v.getName().equalsIgnoreCase(name))
+            .findFirst();
+    }
+
     public static Collection<Village> getAllVillages(ServerLevel level) {
         return getData(level).getAllVillages();
     }

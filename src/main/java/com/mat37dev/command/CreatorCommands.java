@@ -131,7 +131,7 @@ public class CreatorCommands {
 
             player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
                 .append(Component.translatable("chat.millenaire-new-age.creator.save_success")));
-            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_file", saved));
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_file", Component.literal(saved.toString())));
             player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_size",
                 size.getX(), size.getY(), size.getZ()));
             player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.save_lang", langKey));

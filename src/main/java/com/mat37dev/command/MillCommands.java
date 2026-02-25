@@ -27,8 +27,9 @@ import java.util.Optional;
 public class MillCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        // Sous-commandes creator (arbre séparé mais même racine /mna)
+        // Sous-commandes creator et village (arbres séparés mais même racine /mna)
         CreatorCommands.register(dispatcher);
+        VillageCommands.register(dispatcher);
 
         dispatcher.register(
             Commands.literal("mna")
