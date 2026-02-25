@@ -1,5 +1,4 @@
 package com.mat37dev;
-
 import com.mat37dev.client.creator.CreatorClientState;
 import com.mat37dev.client.creator.StructureListScreen;
 import com.mat37dev.client.creator.StructurePreviewRenderer;
@@ -10,7 +9,9 @@ import com.mat37dev.network.StructurePreviewPayload;
 import com.mat37dev.network.StructureRotationPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
 public class MillenaireNewAgeClient implements ClientModInitializer {
 
@@ -29,6 +30,9 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
                 )
             )
         );
+
+        // Besoin de ça pour render les textures transparente
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT, ChunkSectionLayer.CUTOUT);
 
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->

@@ -30,7 +30,7 @@ public class MillBlocks {
             SlabBlock::new,
             BlockBehaviour.Properties.ofFullCopy(PATH_GRAVEL));
 
-    public static final Block PATH_DIRT = register("path_dirt",
+    public static final MillPathBlock PATH_DIRT = registerPathBlock("path_dirt",
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DIRT)
                     .strength(0.5f)
@@ -61,6 +61,19 @@ public class MillBlocks {
 
     private static Block register(String id, BlockBehaviour.Properties props) {
         return register(id, Block::new, props);
+    }
+
+    private static <T extends MillPathBlock> T registerPathBlock(
+        String id,
+        Function<BlockBehaviour.Properties, T> factory,
+        BlockBehaviour.Properties props) {
+        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(MillenaireNewAge.MOD_ID, id));
+        return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(props.setId(key)));
+    }
+
+    private static MillPathBlock registerPathBlock(String id, BlockBehaviour.Properties props) {
+        return registerPathBlock(id, MillPathBlock::new, props);
     }
 
     public static void initialize() {
