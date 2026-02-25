@@ -98,6 +98,7 @@
   "chat.millenaire-new-age.village.create_fail": "Échec de la création du village.",
   "chat.millenaire-new-age.village.spacing_error": "Trop proche du village '%s' (distance : %s blocs, minimum : %s blocs).",
   "chat.millenaire-new-age.village.no_culture_loaded": "Aucune culture chargée.",
+  "chat.millenaire-new-age.village.danger_lava": "Impossible de placer le village ici : de la lave est trop proche du bâtiment principal.",
 
   "chat.millenaire-new-age.placer.no_selection": "Aucune structure sélectionnée. Utilisez /mna creator structure list",
   "chat.millenaire-new-age.placer.placed": "Structure '%s' placée en %s (rotation %s°)",
@@ -107,7 +108,9 @@
   "culture.millenaire-new-age.normans": "Normands",
   "village_type.millenaire-new-age.normans.hamlet": "Hameau Normand",
   "village_type.millenaire-new-age.normans.village": "Village Normand",
-  "village_type.millenaire-new-age.normans.fortress": "Forteresse Normande",
+  "village_type.millenaire-new-age.normans.little_village": "Petit Village Normande",
+  "village_type.millenaire-new-age.normans.big_village": "Grand Village Normand",
+  "village_type.millenaire-new-age.normans.xl_big_village": "Super Grand Village Normand",
 
   "structure.millenaire-new-age.normans.guard_t1": "Garde Normand (Niveau 1)",
   "structure.millenaire-new-age.normans.castle_t1": "Château Normand (Niveau 1)",

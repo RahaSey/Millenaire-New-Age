@@ -39,11 +39,20 @@ public record Culture(
         return villageTypes.stream().filter(v -> v.id().equals(typeId)).findFirst();
     }
 
+    /**
+     * Recherche un bâtiment par ID complet ({@code "normans:barracks"}) ou court ({@code "barracks"}).
+     * Un ID court est automatiquement préfixé par l'identifiant de cette culture.
+     */
     public Optional<BuildingType> getBuildingType(String typeId) {
-        return buildingTypes.stream().filter(b -> b.id().equals(typeId)).findFirst();
+        String resolved = typeId.contains(":") ? typeId : (this.id + ":" + typeId);
+        return buildingTypes.stream().filter(b -> b.id().equals(resolved)).findFirst();
     }
 
+    /**
+     * Recherche un type de villageois par ID complet ou court (voir {@link #getBuildingType}).
+     */
     public Optional<VillagerTypeDef> getVillagerType(String typeId) {
-        return villagerTypes.stream().filter(v -> v.id().equals(typeId)).findFirst();
+        String resolved = typeId.contains(":") ? typeId : (this.id + ":" + typeId);
+        return villagerTypes.stream().filter(v -> v.id().equals(resolved)).findFirst();
     }
 }

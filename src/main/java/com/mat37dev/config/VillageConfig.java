@@ -22,7 +22,7 @@ public class VillageConfig {
     public static int villageSize             = 90;
     public static int villageSpacing          = 100;
     public static int maxVillagersPerVillage  = 20;
-    public static int buildingSpacing         = 2;
+    public static int buildingSpacing         = 5;
 
     public static void load(MinecraftServer server) {
         Path configPath = StructureSaveManager.creatorOutputDir().resolve("config/village_config.json");

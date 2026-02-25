@@ -98,6 +98,7 @@
   "chat.millenaire-new-age.village.create_fail": "Village creation failed.",
   "chat.millenaire-new-age.village.spacing_error": "Too close to village '%s' (distance: %s blocks, minimum: %s blocks).",
   "chat.millenaire-new-age.village.no_culture_loaded": "No culture loaded.",
+  "chat.millenaire-new-age.village.danger_lava": "Cannot place village here: lava is too close to the main building.",
 
   "chat.millenaire-new-age.placer.no_selection": "No structure selected. Use /mna creator structure list",
   "chat.millenaire-new-age.placer.placed": "Structure '%s' placed at %s (rotation %s°)",
@@ -107,7 +108,9 @@
   "culture.millenaire-new-age.normans": "Normans",
   "village_type.millenaire-new-age.normans.hamlet": "Norman Hamlet",
   "village_type.millenaire-new-age.normans.village": "Norman Village",
-  "village_type.millenaire-new-age.normans.fortress": "Norman Fortress",
+  "village_type.millenaire-new-age.normans.little_village": "Norman Little Village",
+  "village_type.millenaire-new-age.normans.big_village": "Norman Big Village",
+  "village_type.millenaire-new-age.normans.xl_big_village": "Norman XL Big Village",
 
   "structure.millenaire-new-age.normans.guard_t1": "Norman Guard (Tier 1)",
   "structure.millenaire-new-age.normans.castle_t1": "Norman Castle (Tier 1)",
