@@ -381,16 +381,16 @@ public class Building {
 - [x] Instance `Village` créée et accessible via `VillageManager`
 - [x] Messages de confirmation en jeu
 
-### 3.3 — Persistance des villages
+### 3.3 — Persistance des villages ✅ Implémenté
 **Objectif :** Les villages survivent au redémarrage du monde.
 
-- [ ] Vérifier sérialisation complète `Village` + `Building` via Cardinal Components
-- [ ] Test : créer un village → quitter → recharger → village toujours présent
-- [ ] Commandes de debug :
-  - [ ] `/mna village list` — liste tous les villages du monde courant
-  - [ ] `/mna village info` — infos sur le village le plus proche du joueur
-  - [ ] `/mna village tp <id>` — téléporter vers un village
-  - [ ] `/mna village remove <id>` — supprimer un village (debug)
+- [x] Vérifier sérialisation complète `Village` + `Building` via Cardinal Components
+- [x] Test : créer un village → quitter → recharger → village toujours présent
+- [x] Commandes de debug :
+  - [x] `/mna village list` — liste tous les villages du monde courant
+  - [x] `/mna village info [id]` — infos sur le village le plus proche (ou par ID)
+  - [x] `/mna village tp <id>` — téléporter vers un village
+  - [x] `/mna village remove <id>` — supprimer un village (debug)
 
 ### 3.4 — Génération naturelle (Worldgen Fabric)
 **Objectif :** Villages générés automatiquement selon le biome.
@@ -809,7 +809,7 @@ Culture choisie : **Byzantins** (architecture distincte, commerce avancé).
 | 0 — Setup | 🟢 Terminé | v0.1.0 |
 | 1 — Architecture données | 🟢 Terminé | v0.2.0 |
 | 2 — Système cultures | 🟢 Terminé | v0.3.0 |
-| 3 — Types villages & génération | 🟡 En cours (3.1 ✅) | v0.4.0 |
+| 3 — Types villages & génération | 🟡 En cours (3.1 ✅ 3.2 ✅ 3.3 ✅) | v0.4.0 |
 | 4 — Assets Normands | 🟡 En cours | v0.5.0 |
 | 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
 | 6 — IA & comportements | 🔴 À faire | v0.7.0 |

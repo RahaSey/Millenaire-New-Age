@@ -165,9 +165,8 @@ public class StructurePreviewRenderer {
                                             Vec3 camPos,
                                             PoseStack poseStack,
                                             MultiBufferSource consumers) {
-        // Utilise translucentMovingBlock qui est plus standard pour le blending
-        VertexConsumer filled = consumers.getBuffer(RenderType.translucentMovingBlock());
-        VertexConsumer lines  = consumers.getBuffer(RenderType.lines());
+        // RenderType.lines() est garanti disponible dans AFTER_ENTITIES
+        VertexConsumer lines = consumers.getBuffer(RenderType.lines());
 
         for (BlockPos rel : blocks) {
             BlockPos rotated  = applyRotation(rel, rotation, size);
@@ -176,18 +175,11 @@ public class StructurePreviewRenderer {
             double dy = worldPos.getY() - camPos.y;
             double dz = worldPos.getZ() - camPos.z;
 
-            // Rendu du cube plein (semi-transparent)
             poseStack.pushPose();
             poseStack.translate(dx, dy, dz);
-            ShapeRenderer.addChainedFilledBoxVertices(
-                poseStack, filled,
-                0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-                FB_R, FB_G, FB_B, FB_A);
-
-            // Rendu des arêtes
             ShapeRenderer.renderLineBox(poseStack.last(), lines,
                 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-                FB_R + 0.1f, FB_G + 0.15f, FB_B, 0.7f);
+                FB_R, FB_G, FB_B, 0.8f);
             poseStack.popPose();
         }
     }

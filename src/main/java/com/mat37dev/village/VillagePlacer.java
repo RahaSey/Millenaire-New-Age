@@ -81,8 +81,8 @@ public class VillagePlacer {
         List<BuildingType> selected = selectBuildings(culture, vt);
         selected.sort(Comparator.comparingInt(a -> a.proximity().ordinal()));
 
-        // 2. Nommer le village
-        String villageName = generateVillageName(culture);
+        // 2. Nommer le village (nom unique dans ce monde pour cette culture)
+        String villageName = generateVillageName(culture, level);
 
         // 3. Créer l'instance Village
         Village village = new Village(UUID.randomUUID(), villageName, cultureId, villageTypeId, goldPos);
@@ -242,13 +242,43 @@ public class VillagePlacer {
 
     // ── Nommage ───────────────────────────────────────────────────────────────
 
-    private static String generateVillageName(Culture culture) {
-        List<String> names = culture.language().villageNames();
-        if (names.isEmpty()) {
+    /**
+     * Génère un nom de village unique pour cette culture dans ce monde.
+     *
+     * <p>Tire un nom au hasard depuis la langue de la culture. Si tous les noms
+     * du pool sont déjà pris, recommence une passe en ajoutant le suffixe " 2",
+     * puis " 3", etc.</p>
+     */
+    private static String generateVillageName(Culture culture, ServerLevel level) {
+        List<String> pool = culture.language().villageNames();
+        if (pool.isEmpty()) {
             return Component.translatable("culture.millenaire-new-age." + culture.id())
-                .append(" Village").getString(); // Fallback simpler for name
+                .getString() + " Village";
         }
-        return names.get(new Random().nextInt(names.size()));
+
+        // Noms déjà utilisés par cette culture dans ce monde
+        Set<String> used = new HashSet<>();
+        for (Village v : VillageManager.getAllVillages(level)) {
+            if (v.getCultureId().equals(culture.id())) {
+                used.add(v.getName());
+            }
+        }
+
+        // Essai par passes : passe 1 = noms bruts, passe 2 = "Nom 2", passe 3 = "Nom 3"…
+        List<String> shuffled = new ArrayList<>(pool);
+        Collections.shuffle(shuffled);
+
+        for (int pass = 1; pass <= 100; pass++) {
+            for (String base : shuffled) {
+                String candidate = (pass == 1) ? base : base + " " + pass;
+                if (!used.contains(candidate)) {
+                    return candidate;
+                }
+            }
+        }
+
+        // Fallback impossible en pratique (100 passes × taille du pool)
+        return pool.get(0) + " " + (used.size() + 1);
     }
 
     // ── Données de placement ─────────────────────────────────────────────────
