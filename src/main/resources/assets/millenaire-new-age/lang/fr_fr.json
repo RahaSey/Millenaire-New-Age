@@ -9,6 +9,10 @@
   "item.millenaire-new-age.path_dirt":         "Chemin de terre",
   "block.millenaire-new-age.path_dirt_slab":   "Dalle de chemin de terre",
   "item.millenaire-new-age.path_dirt_slab":    "Dalle de chemin de terre",
+  "block.millenaire-new-age.path_slabs":       "Chemin pavé",
+  "item.millenaire-new-age.path_slabs":        "Chemin pavé",
+  "block.millenaire-new-age.path_slabs_slab":  "Dalle de chemin pavé",
+  "item.millenaire-new-age.path_slabs_slab":   "Dalle de chemin pavé",
   "block.millenaire-new-age.dirt_wall":        "Pisé",
   "item.millenaire-new-age.dirt_wall":         "Pisé",
 

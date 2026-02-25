@@ -1,0 +1,5 @@
+{
+    "multipart": [
+        {   "apply": { "model": "millenaire-new-age:block/bed_straw" }}
+    ]
+}

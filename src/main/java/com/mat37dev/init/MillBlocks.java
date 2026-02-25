@@ -9,7 +9,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -45,6 +48,22 @@ public class MillBlocks {
                     .mapColor(MapColor.DIRT)
                     .strength(1.0f, 2.0f)
                     .sound(SoundType.GRAVEL));
+
+    public static final Block PATH_SLABS = registerPathBlock("path_slabs",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.STONE));
+
+    public static final Block PATH_SLABS_SLAB = registerPathSlab("path_slabs_slab",
+            BlockBehaviour.Properties.ofFullCopy(PATH_SLABS));    
+
+    // TODO Make this block an EntityBlock
+    public static final Block BED_STRAW = register("bed_straw", 
+                BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(1.0f, 2.0f)
+                    .sound(SoundType.BAMBOO_WOOD));
 
     // =========================================================================
     // Helpers

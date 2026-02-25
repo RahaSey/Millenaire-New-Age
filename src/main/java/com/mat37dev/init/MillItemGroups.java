@@ -23,7 +23,10 @@ public class MillItemGroups {
                         entries.accept(MillItems.PATH_GRAVEL_SLAB);
                         entries.accept(MillItems.PATH_DIRT);
                         entries.accept(MillItems.PATH_DIRT_SLAB);
+                        entries.accept(MillItems.PATH_SLABS);
+                        entries.accept(MillItems.PATH_SLABS_SLAB);
                         entries.accept(MillItems.DIRT_WALL);
+                        entries.accept(MillItems.BED_STRAW);
 
                         // ── Outils ────────────────────────────────────────────
                         entries.accept(MillItems.WAND_OF_SUMMONING);

@@ -36,6 +36,8 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT_SLAB, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL, ChunkSectionLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL_SLAB, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_SLABS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_SLABS_SLAB, ChunkSectionLayer.CUTOUT);
         
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->

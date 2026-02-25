@@ -1,0 +1,7 @@
+{
+  "parent": "millenaire-new-age:block/path_bottom",
+  "textures": {
+    "sideblock": "millenaire-new-age:block/path_slabs_side",
+    "topblock": "millenaire-new-age:block/path_slabs"
+  }
+}

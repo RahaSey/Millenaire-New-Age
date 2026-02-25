@@ -26,6 +26,9 @@ public class MillItems {
     public static final Item PATH_DIRT        = registerBlockItem("path_dirt",        MillBlocks.PATH_DIRT);
     public static final Item PATH_DIRT_SLAB   = registerBlockItem("path_dirt_slab",   MillBlocks.PATH_DIRT_SLAB);
     public static final Item DIRT_WALL        = registerBlockItem("dirt_wall",        MillBlocks.DIRT_WALL);
+    public static final Item PATH_SLABS        = registerBlockItem("path_slabs",        MillBlocks.PATH_SLABS);
+    public static final Item PATH_SLABS_SLAB   = registerBlockItem("path_slabs_slab",   MillBlocks.PATH_SLABS_SLAB);
+    public static final Item BED_STRAW        = registerBlockItem("bed_straw",        MillBlocks.BED_STRAW);
 
     // =========================================================================
     // TOOLS — Wands (pure Items)
