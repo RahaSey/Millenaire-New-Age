@@ -30,6 +30,8 @@ public class MillItemGroups {
                         entries.accept(MillItems.TIMBER_FRAME_CROSS);
                         entries.accept(MillItems.STAINED_GLASS_WHITE);
                         entries.accept(MillItems.STAINED_GLASS_YELLOW);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW_RED);
+                        entries.accept(MillItems.STAINED_GLASS_RED_BLUE);
                         entries.accept(MillItems.BED_STRAW);
 
                         // ── Outils ────────────────────────────────────────────

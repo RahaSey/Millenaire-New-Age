@@ -86,6 +86,20 @@ public class MillBlocks {
                     .sound(SoundType.GLASS)
                     .noOcclusion());                 
 
+    public static final Block STAINED_GLASS_YELLOW_RED = registerGlass("stained_glass_yellow_red",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion());  
+
+    public static final Block STAINED_GLASS_RED_BLUE = registerGlass("stained_glass_red_blue",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion());       
+
     // TODO Make this block an EntityBlock
     public static final Block BED_STRAW = register("bed_straw", 
                 BlockBehaviour.Properties.of()
