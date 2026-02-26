@@ -42,6 +42,7 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_YELLOW, ChunkSectionLayer.TRANSLUCENT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_YELLOW_RED, ChunkSectionLayer.TRANSLUCENT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_RED_BLUE, ChunkSectionLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_GREEN_BLUE, ChunkSectionLayer.TRANSLUCENT);
         
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->

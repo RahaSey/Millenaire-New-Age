@@ -35,6 +35,7 @@ public class MillItems {
     public static final Item STAINED_GLASS_YELLOW   = registerBlockItem("stained_glass_yellow",   MillBlocks.STAINED_GLASS_YELLOW);
     public static final Item STAINED_GLASS_YELLOW_RED   = registerBlockItem("stained_glass_yellow_red",   MillBlocks.STAINED_GLASS_YELLOW_RED);
     public static final Item STAINED_GLASS_RED_BLUE   = registerBlockItem("stained_glass_red_blue",   MillBlocks.STAINED_GLASS_RED_BLUE);
+    public static final Item STAINED_GLASS_GREEN_BLUE   = registerBlockItem("stained_glass_green_blue",   MillBlocks.STAINED_GLASS_GREEN_BLUE);
 
     // =========================================================================
     // TOOLS — Wands (pure Items)

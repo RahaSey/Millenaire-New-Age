@@ -98,6 +98,13 @@ public class MillBlocks {
                     .mapColor(MapColor.DIRT)
                     .strength(0.5f)
                     .sound(SoundType.GLASS)
+                    .noOcclusion());      
+
+    public static final Block STAINED_GLASS_GREEN_BLUE = registerGlass("stained_glass_green_blue",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.GLASS)
                     .noOcclusion());       
 
     // TODO Make this block an EntityBlock
