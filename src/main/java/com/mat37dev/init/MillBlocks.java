@@ -13,6 +13,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -56,7 +57,19 @@ public class MillBlocks {
                     .sound(SoundType.STONE));
 
     public static final Block PATH_SLABS_SLAB = registerPathSlab("path_slabs_slab",
-            BlockBehaviour.Properties.ofFullCopy(PATH_SLABS));    
+            BlockBehaviour.Properties.ofFullCopy(PATH_SLABS));
+            
+    public static final Block TIMBER_FRAME_PLAIN = register("timber_frame_plain",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.WOOD));
+
+    public static final Block TIMBER_FRAME_CROSS = register("timber_frame_cross",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.WOOD));                
 
     // TODO Make this block an EntityBlock
     public static final Block BED_STRAW = register("bed_straw", 

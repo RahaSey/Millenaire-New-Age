@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "millenaire-new-age:block/timber_frame_cross"
+  }
+}
