@@ -41,7 +41,8 @@ public class TerrainAdapter {
         Blocks.SHORT_GRASS, Blocks.FERN, Blocks.TALL_GRASS, Blocks.LARGE_FERN,
         Blocks.SNOW, Blocks.VINE, Blocks.SUGAR_CANE, Blocks.CACTUS, Blocks.CORNFLOWER,
             Blocks.WILDFLOWERS, Blocks.POPPY, Blocks.DANDELION, Blocks.ALLIUM, Blocks.AZURE_BLUET,
-            Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP
+            Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.LEAF_LITTER,
+            Blocks.SUNFLOWER, Blocks.LILAC, Blocks.ROSE_BUSH, Blocks.PEONY
     );
 
     public static int adapt(ServerLevel level, BlockPos origin, int sizeX, int sizeZ) {

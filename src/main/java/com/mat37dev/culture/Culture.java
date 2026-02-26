@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public record Culture(
         String id,
@@ -54,5 +55,26 @@ public record Culture(
     public Optional<VillagerTypeDef> getVillagerType(String typeId) {
         String resolved = typeId.contains(":") ? typeId : (this.id + ":" + typeId);
         return villagerTypes.stream().filter(v -> v.id().equals(resolved)).findFirst();
+    }
+
+    /**
+     * Tire au sort un type de village en respectant les poids de spawn ({@code spawn_weight}).
+     * Un poids de 0 exclut le type de la génération naturelle.
+     * Retourne {@link Optional#empty()} si aucun type n'a de poids positif.
+     */
+    public Optional<VillageType> selectRandomVillageType(Random random) {
+        int totalWeight = villageTypes.stream()
+                .mapToInt(VillageType::spawnWeight)
+                .filter(w -> w > 0)
+                .sum();
+        if (totalWeight == 0) return Optional.empty();
+        int roll = random.nextInt(totalWeight);
+        int cumulative = 0;
+        for (VillageType type : villageTypes) {
+            if (type.spawnWeight() <= 0) continue;
+            cumulative += type.spawnWeight();
+            if (roll < cumulative) return Optional.of(type);
+        }
+        return Optional.empty();
     }
 }

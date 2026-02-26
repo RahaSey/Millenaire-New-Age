@@ -108,14 +108,28 @@ public class VillagePlacer {
     }
 
     /**
-     * Place un village complet centré sur {@code goldPos}.
-     * Supprime le bloc d'or et crée un indicateur de nom au-dessus du centre.
+     * Place un village via la baguette d'invocation (supprime le bloc d'or marqueur).
      *
      * @return le village créé, ou empty si la culture/type est introuvable
      */
     public static Optional<Village> placeVillage(MinecraftServer server, ServerLevel level,
                                                   String cultureId, String villageTypeId,
                                                   BlockPos goldPos) {
+        return doPlaceVillage(server, level, cultureId, villageTypeId, goldPos, true);
+    }
+
+    /**
+     * Place un village lors de la génération naturelle du monde (sans marqueur physique).
+     */
+    public static void placeVillageAt(MinecraftServer server, ServerLevel level,
+                                      String cultureId, String villageTypeId,
+                                      BlockPos center) {
+        doPlaceVillage(server, level, cultureId, villageTypeId, center, false);
+    }
+
+    private static Optional<Village> doPlaceVillage(MinecraftServer server, ServerLevel level,
+                                                     String cultureId, String villageTypeId,
+                                                     BlockPos center, boolean removeMarker) {
         Optional<Culture> cultureOpt = CultureRegistry.get(cultureId);
         if (cultureOpt.isEmpty()) {
             MillenaireNewAge.LOGGER.error("[MNA] Culture '{}' introuvable.", cultureId);
@@ -141,11 +155,11 @@ public class VillagePlacer {
         String villageName = generateVillageName(culture, level);
 
         // 4. Créer l'instance Village
-        Village village = new Village(UUID.randomUUID(), villageName, cultureId, villageTypeId, goldPos);
+        Village village = new Village(UUID.randomUUID(), villageName, cultureId, villageTypeId, center);
 
         // 5. Placer le périmètre d'abord + récupérer ses empreintes pour la détection de collision
         List<PlacedBuilding> placed = new ArrayList<>(
-            PerimeterElementPlacer.place(server, level, village, culture, goldPos));
+            PerimeterElementPlacer.place(server, level, village, culture, center));
 
         // 6. Placer chaque bâtiment (qui évite maintenant le périmètre)
         for (BuildingType bt : selected) {
@@ -155,7 +169,7 @@ public class VillagePlacer {
                 continue;
             }
 
-            BlockPos xzPos = findPositionXZ(goldPos, bt, size, placed, rng, level);
+            BlockPos xzPos = findPositionXZ(center, bt, size, placed, rng, level);
             if (xzPos == null) {
                 MillenaireNewAge.LOGGER.warn("[MNA] Impossible de placer '{}', position non trouvée.", bt.id());
                 continue;
@@ -188,11 +202,13 @@ public class VillagePlacer {
             MillenaireNewAge.LOGGER.info("[MNA] Bâtiment '{}' placé en {}.", bt.id(), origin.toShortString());
         }
 
-        // 7. Supprimer le bloc d'or (marqueur)
-        level.setBlock(goldPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        // 7. Supprimer le bloc d'or (marqueur) — uniquement pour le placement manuel
+        if (removeMarker) {
+            level.setBlock(center, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        }
 
         // 8. Spawner l'indicateur de nom flottant
-        spawnNameIndicator(level, goldPos, villageName);
+        spawnNameIndicator(level, center, villageName);
 
         // 9. Enregistrer dans VillageManager
         VillageManager.addVillage(level, village);

@@ -22,4 +22,13 @@ public interface WorldVillageData extends Component {
     Collection<Village> getAllVillages();
 
     void removeVillage(UUID id);
+
+    /**
+     * Indique si ce chunk a déjà fait l'objet d'une tentative de génération de village.
+     * Utiliser {@link net.minecraft.world.level.ChunkPos#toLong()} comme clé.
+     */
+    boolean hasTriedChunk(long chunkKey);
+
+    /** Marque le chunk comme tenté (appeler avant la tentative de placement). */
+    void markChunkTried(long chunkKey);
 }

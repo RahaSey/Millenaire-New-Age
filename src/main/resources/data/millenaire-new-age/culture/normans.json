@@ -38,7 +38,8 @@
       "min_starter_buildings": 4,
       "max_starter_buildings": 4,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"]
+      "villager_type_ids": ["guard", "chief", "farmer"],
+      "spawn_weight": 10
     },
     {
       "id": "normans:big_village",
@@ -50,7 +51,8 @@
       "min_starter_buildings": 10,
       "max_starter_buildings": 15,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"]
+      "villager_type_ids": ["guard", "chief", "farmer"],
+      "spawn_weight": 5
     },
     {
       "id": "normans:xl_big_village",
@@ -62,7 +64,8 @@
       "min_starter_buildings": 40,
       "max_starter_buildings": 45,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"]
+      "villager_type_ids": ["guard", "chief", "farmer"],
+      "spawn_weight": 2
     }
   ],
   "building_types": [

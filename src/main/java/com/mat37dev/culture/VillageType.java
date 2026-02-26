@@ -35,7 +35,8 @@ public record VillageType(
         int minStarterBuildings,
         int maxStarterBuildings,
         boolean hasWalls,
-        List<String> villagerTypeIds
+        List<String> villagerTypeIds,
+        int spawnWeight
 ) {
     public static final Codec<VillageType> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -48,7 +49,8 @@ public record VillageType(
                     Codec.INT.optionalFieldOf("min_starter_buildings", 0).forGetter(VillageType::minStarterBuildings),
                     Codec.INT.optionalFieldOf("max_starter_buildings", 0).forGetter(VillageType::maxStarterBuildings),
                     Codec.BOOL.optionalFieldOf("has_walls", false).forGetter(VillageType::hasWalls),
-                    Codec.STRING.listOf().optionalFieldOf("villager_type_ids", List.of()).forGetter(VillageType::villagerTypeIds)
+                    Codec.STRING.listOf().optionalFieldOf("villager_type_ids", List.of()).forGetter(VillageType::villagerTypeIds),
+                    Codec.INT.optionalFieldOf("spawn_weight", 1).forGetter(VillageType::spawnWeight)
             ).apply(instance, VillageType::new)
     );
 }
