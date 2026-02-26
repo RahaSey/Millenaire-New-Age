@@ -13,6 +13,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -69,7 +70,21 @@ public class MillBlocks {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DIRT)
                     .strength(0.5f)
-                    .sound(SoundType.WOOD));                
+                    .sound(SoundType.WOOD));   
+        
+     public static final Block STAINED_GLASS_WHITE = registerGlass("stained_glass_white",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion());    
+                    
+    public static final Block STAINED_GLASS_YELLOW = registerGlass("stained_glass_yellow",
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5f)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion());                 
 
     // TODO Make this block an EntityBlock
     public static final Block BED_STRAW = register("bed_straw", 
@@ -101,6 +116,10 @@ public class MillBlocks {
 
     private static MillPathSlab registerPathSlab(String id, BlockBehaviour.Properties props) {
         return register(id, MillPathSlab::new, props);
+    }
+
+    private static IronBarsBlock registerGlass(String id, BlockBehaviour.Properties props) {
+        return register(id, IronBarsBlock::new, props);
     }
 
     public static void initialize() {

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_glass_pane_noside",
+  "textures": {
+    "pane": "millenaire-new-age:block/stained_glass_yellow"
+  }
+}

@@ -31,6 +31,8 @@ public class MillItems {
     public static final Item BED_STRAW        = registerBlockItem("bed_straw",        MillBlocks.BED_STRAW);
     public static final Item TIMBER_FRAME_PLAIN   = registerBlockItem("timber_frame_plain",   MillBlocks.TIMBER_FRAME_PLAIN);
     public static final Item TIMBER_FRAME_CROSS   = registerBlockItem("timber_frame_cross",   MillBlocks.TIMBER_FRAME_CROSS);
+    public static final Item STAINED_GLASS_WHITE   = registerBlockItem("stained_glass_white",   MillBlocks.STAINED_GLASS_WHITE);
+    public static final Item STAINED_GLASS_YELLOW   = registerBlockItem("stained_glass_yellow",   MillBlocks.STAINED_GLASS_YELLOW);
 
     // =========================================================================
     // TOOLS — Wands (pure Items)

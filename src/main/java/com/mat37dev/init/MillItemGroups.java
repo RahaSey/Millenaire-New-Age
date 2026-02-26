@@ -28,6 +28,8 @@ public class MillItemGroups {
                         entries.accept(MillItems.DIRT_WALL);
                         entries.accept(MillItems.TIMBER_FRAME_PLAIN);
                         entries.accept(MillItems.TIMBER_FRAME_CROSS);
+                        entries.accept(MillItems.STAINED_GLASS_WHITE);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW);
                         entries.accept(MillItems.BED_STRAW);
 
                         // ── Outils ────────────────────────────────────────────
