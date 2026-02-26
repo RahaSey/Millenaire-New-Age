@@ -16,7 +16,7 @@ import java.util.Optional;
  * Commandes de debug préfixées /mna.
  * <p>
  * Phase 2 :
- *   /mna culture list           — liste toutes les cultures chargées
+ *   /mna culture list — liste toutes les cultures chargées
  *   /mna culture info <id>      — détails d'une culture
  * <p>
  * Futur (Phase 3+):

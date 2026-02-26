@@ -430,7 +430,7 @@ public class VillagePlacer {
         }
 
         // Fallback impossible en pratique (100 passes × taille du pool)
-        return pool.get(0) + " " + (used.size() + 1);
+        return pool.getFirst() + " " + (used.size() + 1);
     }
 
     // ── Vérification de danger ────────────────────────────────────────────────

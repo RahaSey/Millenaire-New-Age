@@ -151,7 +151,7 @@ public class TerrainAdapter {
         var structures = level.structureManager().getAllStructuresAt(origin);
         if (!structures.isEmpty()) {
             String names = String.join(", ", structures.keySet().stream()
-                .map(s -> s.toString())
+                .map(Object::toString)
                 .toList());
             MillenaireNewAge.LOGGER.info("[MNA] Structure(s) vanilla détectée(s) en {} : {}. Elles seront écrasées.", 
                 origin.toShortString(), names);

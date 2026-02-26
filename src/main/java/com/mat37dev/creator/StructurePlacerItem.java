@@ -129,16 +129,10 @@ public class StructurePlacerItem extends Item {
                 .setMirror(Mirror.NONE)
                 .setRotation(mcRotation);
         template.placeInWorld(player.level(), actualOrigin, actualOrigin, settings, player.level().random, 2);
-        boolean placed = true;
 
-        if (placed) {
-            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
-                .append(Component.translatable("chat.millenaire-new-age.placer.placed",
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.placer.placed",
                     structureId, actualOrigin.toShortString(), (rot * 90))));
-        } else {
-            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
-                .append(Component.translatable("chat.millenaire-new-age.placer.not_found", structureId)));
-        }
 
         return InteractionResult.SUCCESS;
     }
