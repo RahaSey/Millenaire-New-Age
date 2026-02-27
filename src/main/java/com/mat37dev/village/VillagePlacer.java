@@ -212,40 +212,50 @@ public class VillagePlacer {
 
         // 9. Enregistrer dans VillageManager
         VillageManager.addVillage(level, village);
+
+        // 10. Spawner les villageois initiaux
+        VillagerSpawner.spawnForVillage(level, village, vt, culture);
+
         return Optional.of(village);
     }
 
     // ── Sélection ─────────────────────────────────────────────────────────────
 
     /**
-     * Sélectionne les bâtiments à construire pour la génération initiale :
-     * <ol>
-     *   <li>Tous les {@code required_building_ids} (CENTER inclus) — toujours présents.</li>
-     *   <li>Entre {@code min_starter_buildings} et {@code max_starter_buildings} bâtiments
-     *       tirés avec remise dans {@code optional_building_ids}.</li>
-     * </ol>
+     * Sélectionne les bâtiments à construire pour la génération initiale.
+     *
+     * <h3>Sémantique de {@code min/max_starter_buildings}</h3>
+     * Ces valeurs représentent le <b>nombre TOTAL</b> de bâtiments (townhall inclus).
+     * <ul>
+     *   <li>Le townhall et les required sont toujours placés (peuvent dépasser max si nécessaire).</li>
+     *   <li>Les optional comblent la différence jusqu'à {@code max_starter_buildings}.</li>
+     * </ul>
+     *
+     * <p>Exemple : max=4, townhall(1) + required(3) = 4 → aucun optional → exactement 4 bâtiments.</p>
      */
     private static List<BuildingType> selectBuildings(Culture culture, VillageType vt, Random rng) {
         List<BuildingType> result = new ArrayList<>();
 
-        // 1. Townhall — bâtiment central, toujours placé en premier
+        // 1. Townhall — bâtiment central, toujours en premier
         if (!vt.townhallId().isEmpty()) {
             culture.getBuildingType(vt.townhallId()).ifPresent(result::add);
         }
 
-        // 2. Required — toujours tous présents
+        // 2. Required — toujours tous présents (peuvent porter le total au-delà de max)
         for (String id : vt.requiredBuildingIds()) {
             culture.getBuildingType(id).ifPresent(result::add);
         }
 
-        // 2. Optional starters — pioche avec remise entre min et max
+        // 3. Optional — comblent jusqu'à max_starter_buildings (total, townhall inclus)
         List<String> optPool = vt.optionalBuildingIds();
-        if (!optPool.isEmpty() && vt.maxStarterBuildings() > 0) {
-            int count = vt.minStarterBuildings();
-            if (vt.maxStarterBuildings() > vt.minStarterBuildings()) {
-                count += rng.nextInt(vt.maxStarterBuildings() - vt.minStarterBuildings() + 1);
+        if (!optPool.isEmpty() && vt.maxStarterBuildings() > result.size()) {
+            int minRemaining = Math.max(0, vt.minStarterBuildings() - result.size());
+            int maxRemaining = Math.max(0, vt.maxStarterBuildings() - result.size());
+            int countOptional = minRemaining;
+            if (maxRemaining > minRemaining) {
+                countOptional += rng.nextInt(maxRemaining - minRemaining + 1);
             }
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < countOptional; i++) {
                 String id = optPool.get(rng.nextInt(optPool.size()));
                 culture.getBuildingType(id).ifPresent(result::add);
             }

@@ -34,11 +34,11 @@
       "townhall_id": "townhall",
       "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
       "optional_building_ids": [],
-      "available_building_ids": ["townhall", "barracks", "lumberjack_house", "lumberjack_forest"],
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
       "min_starter_buildings": 4,
       "max_starter_buildings": 4,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"],
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 10
     },
     {
@@ -47,11 +47,11 @@
       "townhall_id": "townhall",
       "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
       "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "available_building_ids": ["townhall", "barracks", "lumberjack_house", "lumberjack_forest"],
-      "min_starter_buildings": 10,
-      "max_starter_buildings": 15,
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
+      "min_starter_buildings": 4,
+      "max_starter_buildings": 4,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"],
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 5
     },
     {
@@ -60,11 +60,11 @@
       "townhall_id": "townhall",
       "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
       "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "available_building_ids": ["townhall", "barracks", "lumberjack_house", "lumberjack_forest"],
-      "min_starter_buildings": 40,
-      "max_starter_buildings": 45,
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
+      "min_starter_buildings": 4,
+      "max_starter_buildings": 4,
       "has_walls": false,
-      "villager_type_ids": ["guard", "chief", "farmer"],
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 2
     }
   ],
@@ -74,7 +74,8 @@
       "display_name": "Mairie Normande",
       "structure_id": "normans/castel_t1",
       "max_health": 200,
-      "max_residents": 2,
+      "sleeping_capacity": 2,
+      "workplace_for": ["chief"],
       "role": "CENTER"
     },
     {
@@ -82,7 +83,8 @@
       "display_name": "Caserne Normande",
       "structure_id": "normans/guard_t1",
       "max_health": 200,
-      "max_residents": 6,
+      "sleeping_capacity": 2,
+      "workplace_for": ["guard"],
       "role": "REQUIRED",
       "min_distance_factor": 0.1,
       "max_distance_factor": 0.55
@@ -92,7 +94,7 @@
       "display_name": "Maison du Bûcheron",
       "structure_id": "normans/lumberjack_t1",
       "max_health": 100,
-      "max_residents": 2,
+      "sleeping_capacity": 2,
       "role": "REQUIRED",
       "min_distance_factor": 0,
       "max_distance_factor": 0.65
@@ -102,7 +104,7 @@
       "display_name": "Zone de Forêt",
       "structure_id": "normans/forest_t1",
       "max_health": 50,
-      "max_residents": 0,
+      "workplace_for": ["lumberjack"],
       "role": "REQUIRED",
       "min_distance_factor": 0.85,
       "max_distance_factor": 1.0
@@ -112,7 +114,6 @@
       "display_name": "Coin de Délimitation Normand",
       "structure_id": "normans/corner",
       "max_health": 150,
-      "max_residents": 0,
       "perimeter_placement": "CORNER"
     },
     {
@@ -120,7 +121,6 @@
       "display_name": "Entrée Normande",
       "structure_id": "normans/entrance",
       "max_health": 200,
-      "max_residents": 0,
       "perimeter_placement": "ENTRANCE"
     },
     {
@@ -128,11 +128,20 @@
       "display_name": "Pilier de Délimitation Normand",
       "structure_id": "normans/pillar",
       "max_health": 80,
-      "max_residents": 0,
       "perimeter_placement": "PILLAR"
     }
   ],
   "villager_types": [
+    {
+      "id": "normans:housewife",
+      "display_name": "Dame",
+      "behaviors": ["housework", "wander", "sleep"],
+      "base_health": 16,
+      "movement_speed": 0.5,
+      "clothing_texture": "female/clothes/nor_housewife_0.png",
+      "male": false,
+      "spawn_count": 0
+    },
     {
       "id": "normans:farmer",
       "display_name": "Paysan",
@@ -140,7 +149,18 @@
       "base_health": 20,
       "movement_speed": 0.55,
       "clothing_texture": "male/clothes/nor_farmer_0.png",
-      "male": true
+      "male": true,
+      "spawn_count": 0
+    },
+    {
+      "id": "normans:lumberjack",
+      "display_name": "Bûcheron",
+      "behaviors": ["lumberjack", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_lumberman_0.png",
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:blacksmith",
@@ -149,7 +169,8 @@
       "base_health": 20,
       "movement_speed": 0.5,
       "clothing_texture": "male/clothes/nor_smith_0.png",
-      "male": true
+      "male": true,
+      "spawn_count": 0
     },
     {
       "id": "normans:guard",
@@ -158,7 +179,8 @@
       "base_health": 30,
       "movement_speed": 0.6,
       "clothing_texture": "male/clothes/nor_guard_0.png",
-      "male": true
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:chief",
@@ -166,8 +188,9 @@
       "behaviors": ["supervise", "wander", "sleep"],
       "base_health": 25,
       "movement_speed": 0.55,
-      "clothing_texture": "male/clothes/nor_seneschal_0.png",
-      "male": true
+      "clothing_texture": "male/clothes/nor_baron_0.png",
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:merchant",
@@ -176,7 +199,8 @@
       "base_health": 20,
       "movement_speed": 0.55,
       "clothing_texture": "male/clothes/nor_merchant_0.png",
-      "male": true
+      "male": true,
+      "spawn_count": 0
     }
   ],
   "trade_goods": [

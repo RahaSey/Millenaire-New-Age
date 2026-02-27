@@ -3,12 +3,15 @@ package com.mat37dev.culture;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import java.util.List;
+
 public record BuildingType(
         String id,
         String displayName,
         String structureId,
         int maxHealth,
-        int maxResidents,
+        int sleepingCapacity,
+        List<String> workplaceFor,
         BuildingRole role,
         double minDistanceFactor,
         double maxDistanceFactor,
@@ -54,7 +57,8 @@ public record BuildingType(
                     Codec.STRING.fieldOf("display_name").forGetter(BuildingType::displayName),
                     Codec.STRING.fieldOf("structure_id").forGetter(BuildingType::structureId),
                     Codec.INT.optionalFieldOf("max_health", 100).forGetter(BuildingType::maxHealth),
-                    Codec.INT.optionalFieldOf("max_residents", 4).forGetter(BuildingType::maxResidents),
+                    Codec.INT.optionalFieldOf("sleeping_capacity", 0).forGetter(BuildingType::sleepingCapacity),
+                    Codec.STRING.listOf().optionalFieldOf("workplace_for", List.of()).forGetter(BuildingType::workplaceFor),
                     BuildingRole.CODEC.optionalFieldOf("role", BuildingRole.EXTRA).forGetter(BuildingType::role),
                     Codec.DOUBLE.optionalFieldOf("min_distance_factor", 0.1).forGetter(BuildingType::minDistanceFactor),
                     Codec.DOUBLE.optionalFieldOf("max_distance_factor", 0.9).forGetter(BuildingType::maxDistanceFactor),

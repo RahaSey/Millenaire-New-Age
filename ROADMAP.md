@@ -479,27 +479,13 @@ Ces items sont le socle commun que toutes les cultures peuvent utiliser :
 - [x] Nametag au-dessus avec nom + rôle (ex : "Guillaume — Forgeron")
 - [x] Rendu enfant : scale réduit (0.6) jusqu'à maturité
 
-### 5.3 — Cycle de vie
-- [ ] **Enfant** : spawn dans les maisons du village, scale réduit, consomme `foodsGrowth`
-- [ ] **Croissance** : grandit progressivement sur ~20 nuits MC
-- [ ] **Maturité** : cherche une maison + un emploi libres et déménage (`BecomeAdultBehavior`)
-- [ ] **Reproduction** : femme adulte + partenaire compatible + `foodsConception` → naissance
-- [ ] **Famille** : enfants héritent du `familyName` de la mère (noms historiques normands)
-- [ ] **Mort** : bâtiment libéré, slot de population disponible, remplacement éventuel
+### 5.3 — Intégration village ✅ Implémenté
+- [x] Spawn à la génération du village selon les types définis dans `VillagerTypeDef`
+- [x] Attribution type/village/nom via `CultureLanguage` (pools de prénoms + noms de famille)
+- [x] Assignation `homeBuilding` (résidence) + `workplaceBuilding` (lieu de travail)
+- [x] Population contrôlée : pas de spawn si `maxVillagersPerVillage` atteint
 
-### 5.4 — Intégration village
-- [ ] Spawn à la génération du village selon les types définis dans `VillagerTypeDef`
-- [ ] Attribution type/village/nom via `CultureLanguage` (pools de prénoms + noms de famille)
-- [ ] Assignation `homeBuilding` (résidence) + `workplaceBuilding` (lieu de travail)
-- [ ] Population contrôlée : pas de spawn si `maxVillagersPerVillage` atteint
-
-### 5.5 — Interaction joueur de base
-- [ ] Clic droit → ouvre l'interface de dialogue (placeholder, implémentée en Phase 11)
-- [ ] Affichage : nom, profession, village d'appartenance
-- [ ] Réaction basique selon réputation (message de bienvenue / méfiance / hostilité)
-- [ ] Garde : réaction agressive si réputation < seuil critique (appel aux autres gardes)
-
-**Livrable :** Villageois normands visibles, correctement nommés, assignés à leur village avec cycle de vie fonctionnel.
+**Livrable :** Villageois normands visibles, correctement nommés et intégrés au système de génération des villages.
 **Tag :** `v0.6.0-alpha`
 
 ---
@@ -703,7 +689,21 @@ Ces items sont le socle commun que toutes les cultures peuvent utiliser :
 - [ ] "Coup de main au chantier" — participer à la construction d'un bâtiment (HELP_BUILD)
 - [ ] "Exploration" — trouver et visiter un autre village normand (VISIT_LOCATION)
 
-**Livrable :** Villageois pleinement vivants — routines complètes, commerce multi-bâtiments, défense active, quêtes de base jouables.
+### 6.9 — Cycle de vie
+- [ ] **Enfant** : spawn dans les maisons du village, scale réduit, consomme `foodsGrowth`
+- [ ] **Croissance** : grandit progressivement sur ~20 nuits MC
+- [ ] **Maturité** : cherche une maison + un emploi libres et déménage (`BecomeAdultBehavior`)
+- [ ] **Reproduction** : femme adulte + partenaire compatible + `foodsConception` → naissance
+- [ ] **Famille** : enfants héritent du `familyName` de la mère (noms historiques normands)
+- [ ] **Mort** : bâtiment libéré, slot de population disponible, remplacement éventuel
+
+### 6.10 — Interaction joueur de base
+- [ ] Clic droit → ouvre l'interface de dialogue (placeholder, implémentée en Phase 11)
+- [ ] Affichage : nom, profession, village d'appartenance
+- [ ] Réaction basique selon réputation (message de bienvenue / méfiance / hostilité)
+- [ ] Garde : réaction agressive si réputation < seuil critique (appel aux autres gardes)
+
+**Livrable :** Villageois pleinement vivants — routines complètes, commerce multi-bâtiments, défense active, quêtes de base jouables et cycle de vie fonctionnel.
 **Tag :** `v0.7.0-alpha`
 
 ---
@@ -982,7 +982,7 @@ Culture choisie : **Byzantins** (architecture distincte, commerce avancé).
 | 2 — Système cultures | 🟢 Terminé | v0.3.0 |
 | 3 — Types villages & génération | 🟢 Terminé | v0.4.0 |
 | 4 — Assets Normands | 🟡 En cours (autre contrib.) | v0.5.0 |
-| 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
+| 5 — Entité Villageois & rendu | 🟢 Terminé | v0.6.0 |
 | 6 — IA, Comportements, Commerce & Quêtes | 🔴 À faire | v0.7.0 |
 | 7 — Santé bâtiments & construction dyn. | 🔴 À faire | v0.8.0 |
 | 8 — Économie avancée (inter-villages) | 🔴 À faire | v0.9.0 |

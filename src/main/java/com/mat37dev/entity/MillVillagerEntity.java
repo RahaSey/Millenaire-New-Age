@@ -34,14 +34,16 @@ public class MillVillagerEntity extends Mob {
             SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> BODY_VARIANT =
             SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> FIRST_NAME =
+            SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> FAMILY_NAME =
+            SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.STRING);
 
     // ── Champs serveur (NBT uniquement) ──────────────────────────────────────
 
     @Nullable private UUID villageId;
     @Nullable private UUID homeId;
     @Nullable private UUID workplaceId;
-    private String firstName = "";
-    private String familyName = "";
 
     // ── Constructeur ─────────────────────────────────────────────────────────
 
@@ -68,6 +70,8 @@ public class MillVillagerEntity extends Mob {
         builder.define(VILLAGER_TYPE_ID, "");
         builder.define(SEX, true);
         builder.define(BODY_VARIANT, 0);
+        builder.define(FIRST_NAME, "");
+        builder.define(FAMILY_NAME, "");
     }
 
     // ── Sérialisation ─────────────────────────────────────────────────────────
@@ -79,8 +83,8 @@ public class MillVillagerEntity extends Mob {
         output.putString("VillagerTypeId", getEntityData().get(VILLAGER_TYPE_ID));
         output.putBoolean("Sex", getEntityData().get(SEX));
         output.putInt("BodyVariant", getEntityData().get(BODY_VARIANT));
-        output.putString("FirstName", firstName);
-        output.putString("FamilyName", familyName);
+        output.putString("FirstName", getEntityData().get(FIRST_NAME));
+        output.putString("FamilyName", getEntityData().get(FAMILY_NAME));
         if (villageId != null) {
             output.putLong("VillageIdMsb", villageId.getMostSignificantBits());
             output.putLong("VillageIdLsb", villageId.getLeastSignificantBits());
@@ -102,8 +106,8 @@ public class MillVillagerEntity extends Mob {
         getEntityData().set(VILLAGER_TYPE_ID, input.getStringOr("VillagerTypeId", ""));
         getEntityData().set(SEX, input.getBooleanOr("Sex", true));
         getEntityData().set(BODY_VARIANT, input.getIntOr("BodyVariant", 0));
-        firstName = input.getStringOr("FirstName", "");
-        familyName = input.getStringOr("FamilyName", "");
+        getEntityData().set(FIRST_NAME, input.getStringOr("FirstName", ""));
+        getEntityData().set(FAMILY_NAME, input.getStringOr("FamilyName", ""));
         long villMsb = input.getLongOr("VillageIdMsb", 0L);
         long villLsb = input.getLongOr("VillageIdLsb", 0L);
         villageId = (villMsb != 0 || villLsb != 0) ? new UUID(villMsb, villLsb) : null;
@@ -158,8 +162,10 @@ public class MillVillagerEntity extends Mob {
                     .orElse(typeId);
         }
 
-        String fullName = (firstName.isEmpty() && familyName.isEmpty())
-                ? "Villageois" : (firstName + " " + familyName).trim();
+        String fName = getEntityData().get(FIRST_NAME);
+        String lName = getEntityData().get(FAMILY_NAME);
+        String fullName = (fName.isEmpty() && lName.isEmpty())
+                ? "Villageois" : (fName + " " + lName).trim();
         Component name = Component.literal(fullName);
         if (!typeName.isEmpty()) {
             name = name.copy().append(
@@ -203,10 +209,10 @@ public class MillVillagerEntity extends Mob {
     public void setVillageId(@Nullable UUID id) { this.villageId = id; }
     public void setHomeId(@Nullable UUID id) { this.homeId = id; }
     public void setWorkplaceId(@Nullable UUID id) { this.workplaceId = id; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public void setFamilyName(String familyName) { this.familyName = familyName; }
+    public void setFirstName(String firstName) { getEntityData().set(FIRST_NAME, firstName); }
+    public void setFamilyName(String familyName) { getEntityData().set(FAMILY_NAME, familyName); }
 
     @Nullable public UUID getVillageId() { return villageId; }
-    public String getFirstName() { return firstName; }
-    public String getFamilyName() { return familyName; }
+    public String getFirstName() { return getEntityData().get(FIRST_NAME); }
+    public String getFamilyName() { return getEntityData().get(FAMILY_NAME); }
 }
