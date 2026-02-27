@@ -105,6 +105,9 @@
   "chat.millenaire-new-age.placer.not_found": "Impossible de placer '%s' — fichier introuvable.",
   "chat.millenaire-new-age.placer.rotation": "Rotation %s° (Shift+clic pour changer, clic pour placer)",
 
+  "entity.millenaire-new-age.villager": "Villageois Normand",
+  "entity.millenaire-new-age.villager.role": " — %s",
+
   "culture.millenaire-new-age.normans": "Normands",
   "village_type.millenaire-new-age.normans.hamlet": "Hameau Normand",
   "village_type.millenaire-new-age.normans.village": "Village Normand",

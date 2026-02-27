@@ -4,12 +4,15 @@ import com.mat37dev.command.MillCommands;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureScannerItem;
 import com.mat37dev.data.CultureLoader;
+import com.mat37dev.entity.MillVillagerEntity;
 import com.mat37dev.init.MillBlocks;
+import com.mat37dev.init.MillEntities;
 import com.mat37dev.init.MillItemGroups;
 import com.mat37dev.init.MillItems;
 import com.mat37dev.network.MillNetwork;
 import com.mat37dev.world.VillageGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -27,10 +30,12 @@ public class MillenaireNewAge implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Registres (l'ordre compte : blocs → items → groupes)
+        // Registres (l'ordre compte : blocs → items → groupes → entités)
         MillBlocks.initialize();
         MillItems.initialize();
         MillItemGroups.initialize();
+        MillEntities.initialize();
+        FabricDefaultAttributeRegistry.register(MillEntities.VILLAGER, MillVillagerEntity.createAttributes());
 
         // Réseau
         MillNetwork.registerServerPayloads();

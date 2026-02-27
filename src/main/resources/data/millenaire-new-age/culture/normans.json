@@ -136,27 +136,47 @@
     {
       "id": "normans:farmer",
       "display_name": "Paysan",
-      "behaviors": ["farm", "wander", "sleep"]
+      "behaviors": ["farm", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_farmer_0.png",
+      "male": true
     },
     {
       "id": "normans:blacksmith",
       "display_name": "Forgeron",
-      "behaviors": ["smith", "wander", "sleep"]
+      "behaviors": ["smith", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.5,
+      "clothing_texture": "male/clothes/nor_smith_0.png",
+      "male": true
     },
     {
       "id": "normans:guard",
       "display_name": "Garde",
-      "behaviors": ["patrol", "defend", "sleep"]
+      "behaviors": ["patrol", "defend", "sleep"],
+      "base_health": 30,
+      "movement_speed": 0.6,
+      "clothing_texture": "male/clothes/nor_guard_0.png",
+      "male": true
     },
     {
       "id": "normans:chief",
       "display_name": "Chef de Village",
-      "behaviors": ["supervise", "wander", "sleep"]
+      "behaviors": ["supervise", "wander", "sleep"],
+      "base_health": 25,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_seneschal_0.png",
+      "male": true
     },
     {
       "id": "normans:merchant",
       "display_name": "Marchand",
-      "behaviors": ["trade", "wander", "sleep"]
+      "behaviors": ["trade", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_merchant_0.png",
+      "male": true
     }
   ],
   "trade_goods": [
