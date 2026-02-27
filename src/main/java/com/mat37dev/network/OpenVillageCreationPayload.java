@@ -42,10 +42,9 @@ public record OpenVillageCreationPayload(
         for (Culture culture : cultures) {
             List<VillageTypeInfo> vtInfos = new ArrayList<>();
             for (VillageType vt : culture.villageTypes()) {
-                vtInfos.add(new VillageTypeInfo(
-                    vt.id(), vt.displayName(),
-                    vt.minBuildings(), vt.maxBuildings(), vt.hasWalls()
-                ));
+                int minB = vt.requiredBuildingIds().size() + vt.minStarterBuildings();
+                int maxB = vt.requiredBuildingIds().size() + vt.maxStarterBuildings();
+                vtInfos.add(new VillageTypeInfo(vt.id(), vt.displayName(), minB, maxB, vt.hasWalls()));
             }
             infos.add(new CultureInfo(culture.id(), culture.displayName(), vtInfos));
         }

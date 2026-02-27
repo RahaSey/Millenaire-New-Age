@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -129,6 +130,7 @@ public class VillageCommands {
             }
         }
 
+        if (nearest == null) return 0;
         return printVillageInfo(source, nearest);
     }
 
@@ -227,7 +229,7 @@ public class VillageCommands {
             c.getX() - 1, c.getY() - 1, c.getZ() - 1,
             c.getX() + 2, c.getY() + 8, c.getZ() + 2);
         level.getEntitiesOfClass(ArmorStand.class, searchBox,
-            e -> e.hasCustomName()).forEach(e -> e.discard());
+                Entity::hasCustomName).forEach(Entity::discard);
 
         VillageManager.removeVillage(level, v.getId());
         source.sendSuccess(

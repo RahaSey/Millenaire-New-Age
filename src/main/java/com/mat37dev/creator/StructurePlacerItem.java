@@ -108,21 +108,31 @@ public class StructurePlacerItem extends Item {
             return InteractionResult.FAIL;
         }
 
+        // Charger le template une seule fois (validation + embed)
+        net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate template =
+            StructureSaveManager.loadTemplate(player.level().getServer(), structureId);
+        if (template == null) {
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.translatable("chat.millenaire-new-age.placer.not_found", structureId)));
+            return InteractionResult.FAIL;
+        }
+
         int rot = getRotation(stack);
         Rotation mcRotation = toMcRotation(rot);
 
-        boolean placed = StructureSaveManager.placeStructure(
-            player.level().getServer(), player.level(),
-            structureId, origin, Mirror.NONE, mcRotation);
+        // Si la couche basse du template est du sol naturel, enfoncer d'un bloc
+        boolean embed = StructureSaveManager.shouldEmbedFromTemplate(template);
+        BlockPos actualOrigin = embed ? origin.below() : origin;
 
-        if (placed) {
-            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
-                .append(Component.translatable("chat.millenaire-new-age.placer.placed",
-                    structureId, origin.toShortString(), (rot * 90))));
-        } else {
-            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
-                .append(Component.translatable("chat.millenaire-new-age.placer.not_found", structureId)));
-        }
+        net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings settings =
+            new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings()
+                .setMirror(Mirror.NONE)
+                .setRotation(mcRotation);
+        template.placeInWorld(player.level(), actualOrigin, actualOrigin, settings, player.level().random, 2);
+
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.translatable("chat.millenaire-new-age.placer.placed",
+                    structureId, actualOrigin.toShortString(), (rot * 90))));
 
         return InteractionResult.SUCCESS;
     }

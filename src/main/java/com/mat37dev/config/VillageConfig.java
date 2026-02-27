@@ -19,10 +19,14 @@ public class VillageConfig {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static int villageSize             = 90;
-    public static int villageSpacing          = 100;
-    public static int maxVillagersPerVillage  = 20;
-    public static int buildingSpacing         = 2;
+    public static int     villageSize               = 90;
+    public static int     villageSpacing             = 500;
+    public static int     maxVillagersPerVillage     = 20;
+    public static int     buildingSpacing            = 5;
+    /** 1 chunk sur N déclenche une tentative de génération naturelle. */
+    public static int     generationChance           = 200;
+    /** Si false, aucun village ne se génère naturellement (placement manuel uniquement). */
+    public static boolean naturalVillageGeneration   = true;
 
     public static void load(MinecraftServer server) {
         Path configPath = StructureSaveManager.creatorOutputDir().resolve("config/village_config.json");
@@ -30,10 +34,12 @@ public class VillageConfig {
             Files.createDirectories(configPath.getParent());
             if (Files.exists(configPath)) {
                 ConfigData data = GSON.fromJson(Files.readString(configPath), ConfigData.class);
-                villageSize            = data.villageSize;
-                villageSpacing         = data.villageSpacing;
-                maxVillagersPerVillage = data.maxVillagersPerVillage;
-                buildingSpacing        = data.buildingSpacing;
+                villageSize                = data.villageSize;
+                villageSpacing             = data.villageSpacing;
+                maxVillagersPerVillage     = data.maxVillagersPerVillage;
+                buildingSpacing            = data.buildingSpacing;
+                generationChance           = data.generationChance;
+                naturalVillageGeneration   = data.naturalVillageGeneration;
                 MillenaireNewAge.LOGGER.info("[MNA] VillageConfig chargé depuis {}", configPath);
             } else {
                 save(configPath);
@@ -44,19 +50,34 @@ public class VillageConfig {
         }
     }
 
+    /** Persiste la configuration courante sur disque (ex. après modification par commande). */
+    public static void save() {
+        Path configPath = StructureSaveManager.creatorOutputDir().resolve("config/village_config.json");
+        try {
+            Files.createDirectories(configPath.getParent());
+            save(configPath);
+        } catch (IOException e) {
+            MillenaireNewAge.LOGGER.error("[MNA] Erreur sauvegarde VillageConfig : {}", e.getMessage());
+        }
+    }
+
     private static void save(Path path) throws IOException {
         ConfigData data = new ConfigData();
-        data.villageSize            = villageSize;
-        data.villageSpacing         = villageSpacing;
-        data.maxVillagersPerVillage = maxVillagersPerVillage;
-        data.buildingSpacing        = buildingSpacing;
+        data.villageSize                = villageSize;
+        data.villageSpacing             = villageSpacing;
+        data.maxVillagersPerVillage     = maxVillagersPerVillage;
+        data.buildingSpacing            = buildingSpacing;
+        data.generationChance           = generationChance;
+        data.naturalVillageGeneration   = naturalVillageGeneration;
         Files.writeString(path, GSON.toJson(data));
     }
 
     private static class ConfigData {
-        int villageSize            = 90;
-        int villageSpacing         = 100;
-        int maxVillagersPerVillage = 20;
-        int buildingSpacing        = 2;
+        int     villageSize              = 90;
+        int     villageSpacing           = 500;
+        int     maxVillagersPerVillage   = 20;
+        int     buildingSpacing          = 2;
+        int     generationChance         = 200;
+        boolean naturalVillageGeneration = true;
     }
 }

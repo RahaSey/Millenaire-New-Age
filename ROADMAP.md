@@ -395,14 +395,11 @@ public class Building {
 ### 3.4 — Génération naturelle (Worldgen Fabric)
 **Objectif :** Villages générés automatiquement selon le biome.
 
-- [ ] Algorithme de sélection biome/culture
-- [ ] Distance minimale entre villages (lire `village_spacing` depuis config)
-- [ ] Détection terrain plat (rayon = `village_size / 2`)
-- [ ] Enregistrement Structure/Feature Fabric
-- [ ] Placement au chunkload (sans conflits de génération)
-- [ ] `normans:hamlet` dans biomes plaines/forêt
-- [ ] `normans:village` dans biomes plaines/prairie
-- [ ] `normans:fortress` dans biomes collines/montagne
+- [x] Algorithme de sélection biome/culture
+- [x] Distance minimale entre villages (lire `village_spacing` depuis config)
+- [x] Détection terrain plat (rayon = `village_size / 2`)
+- [x] Enregistrement Structure/Feature Fabric
+- [x] Placement au chunkload (sans conflits de génération)
 
 **Livrable :** Villages normands générés naturellement + persistants + créables manuellement.
 **Tag :** `v0.4.0-alpha`
@@ -464,75 +461,249 @@ Ces items sont le socle commun que toutes les cultures peuvent utiliser :
 
 ## Phase 5 — Entité Villageois & Rendu
 
-**Objectif :** Les villageois existent avec leur apparence, appartiennent à un village.
-**Référence OldSource :** `client/render/`, `common/entity/` — concepts visuels uniquement.
+**Objectif :** Les villageois existent avec leur apparence, appartiennent à un village, ont une identité (nom, profession, âge) et un cycle de vie complet.
+**Référence OldSource :** `client/render/`, `common/entity/MillVillager.java` — concepts uniquement, tout est réécrit.
 
 ### 5.1 — Entité de base (côté serveur)
-- [ ] `MillVillagerEntity.java` extends `PathAwareEntity`
-- [ ] Attributs : HP, vitesse, portée de vision, force
-- [ ] NBT persistant : `cultureId`, `villagerTypeId`, `villageId`, `sex`, `name`
-- [ ] Enregistrement EntityType + SpawnEgg (debug)
+- [x] `MillVillagerEntity.java` extends `Mob` (pathfinding + Brain API intégrés)
+- [x] Attributs : HP (20 base, variable par type), vitesse (0.55), portée de vision (16 blocs), force
+- [x] NBT persistant : `cultureId`, `villagerTypeId`, `villageId`, `sex`, `name`, `familyName`, `age`, `homeId`, `workplaceId`
+- [x] Enregistrement `EntityType` — **pas de SpawnEgg** (spawn uniquement via village)
+- [x] Mort : résurrection possible selon `noresurrect` dans `VillagerTypeDef`
 
 ### 5.2 — Rendu (côté client uniquement)
-- [ ] Modèle humanoïde custom (ou couche sur biped vanilla)
-- [ ] Renderer `MillVillagerEntityRenderer`
-- [ ] Layer de vêtements par type de villageois + culture
-- [ ] Textures normandes récupérées de OldSource
-- [ ] Nametag avec nom + rôle (ex: "Guillaume — Forgeron")
+- [x] Modèle humanoïde custom (`MillVillagerModel`) — corps, bras, jambes, tête
+- [x] Renderer `MillVillagerEntityRenderer`
+- [x] Couche de vêtements (`MillVillagerClothingLayer`) par type de villageois + culture
+- [x] Textures normandes récupérées de OldSource (indépendance totale)
+- [x] Nametag au-dessus avec nom + rôle (ex : "Guillaume — Forgeron")
+- [x] Rendu enfant : scale réduit (0.6) jusqu'à maturité
 
-### 5.3 — Intégration village
-- [ ] Spawn à la génération du village selon les types définis
-- [ ] Attribution type/village/nom (via CultureLanguage)
-- [ ] Assignation logement (home building) + lieu de travail (workplace)
+### 5.3 — Intégration village ✅ Implémenté
+- [x] Spawn à la génération du village selon les types définis dans `VillagerTypeDef`
+- [x] Attribution type/village/nom via `CultureLanguage` (pools de prénoms + noms de famille)
+- [x] Assignation `homeBuilding` (résidence) + `workplaceBuilding` (lieu de travail)
+- [x] Population contrôlée : pas de spawn si `maxVillagersPerVillage` atteint
 
-### 5.4 — Interaction joueur de base
-- [ ] Clic droit → ouvre interface de dialogue (placeholder Phase 11)
-- [ ] Réaction basique selon réputation (accueil / méfiance)
-
-**Livrable :** Villageois normands visibles avec bonne apparence, nommés correctement.
+**Livrable :** Villageois normands visibles, correctement nommés et intégrés au système de génération des villages.
 **Tag :** `v0.6.0-alpha`
 
 ---
 
-## Phase 6 — IA & Comportements (Améliorée)
+## Phase 6 — IA, Comportements, Commerce & Quêtes
 
-**Objectif :** IA crédible et réactive, nettement meilleure que l'original.
-**Référence OldSource :** `common/goal/` — comprendre les comportements, réécrire avec Brain API.
+**Objectif :** Les villageois sont pleinement vivants — ils travaillent selon leur métier, dorment, se promènent, font du commerce avec le joueur, se défendent et donnent des quêtes.
+**Référence OldSource :** `common/goal/` (45+ Goals) — concepts à réécrire proprement avec Brain API.
+**Architecture :** Brain API (MC 1.21) — Activities, Behaviors, Sensors, Schedules.
 
 ### 6.1 — Architecture Brain API
-- [ ] `MillVillagerBrain.java` configure le Brain
-- [ ] Mémoires : `HOME_POS`, `WORK_POS`, `CURRENT_STATE`, `NEAREST_PLAYER`, `THREAT_LEVEL`
-- [ ] Sensors : `NearestPlayerSensor`, `NearestVillagerSensor`, `ThreatSensor`
-- [ ] Schedules (horaires) : WORK_SCHEDULE, SLEEP_SCHEDULE, GUARD_SCHEDULE
 
-### 6.2 — Behaviors de base
-- [ ] `WanderAroundVillageBehavior` — déambulation dans le périmètre
-- [ ] `SleepAtHomeBehavior` — dormir la nuit dans le home building
-- [ ] `LookAtPlayerBehavior` — interaction passive avec le joueur
-- [ ] `ReturnHomeBehavior` — rentrer avant la nuit
-- [ ] `SocialInteractBehavior` — interagir avec les autres villageois
+#### Mémoires
+- [ ] `HOME_POS`, `WORK_POS` — positions assignées (domicile + lieu de travail)
+- [ ] `CURRENT_ACTIVITY` — activité en cours (WORK, REST, SLEEP, SOCIALIZE, DEFEND, TRADE)
+- [ ] `NEAREST_PLAYER` — joueur le plus proche (commerce, quêtes, dialogue)
+- [ ] `THREAT_TARGET` — cible hostile détectée (mob ou joueur agressif)
+- [ ] `ACTIVE_QUEST` — quête en cours (état + étape)
+- [ ] `DIALOGUE_PARTNER` — interlocuteur social actuel
 
-### 6.3 — Behaviors de travail par profession
-- [ ] `FarmBehavior` — labourer, planter, récolter
-- [ ] `ChopWoodBehavior` — couper, replanter
-- [ ] `SmithBehavior` — produire des outils/armes (simulation)
-- [ ] `MerchantBehavior` — gérer le stock, accueillir les joueurs
-- [ ] `GuardPatrolBehavior` — patrouille avec alertes
-- [ ] `ChiefBehavior` — supervise les projets de construction, prend les décisions
-- [ ] `BuildBehavior` — contribue aux projets de construction en cours
+#### Sensors
+- [ ] `NearestPlayerSensor` — joueurs dans le rayon de vision
+- [ ] `NearestVillagerSensor` — autres villageois (pour socialisation)
+- [ ] `ThreatSensor` — monstres / joueurs hostiles
+- [ ] `NearestBuildingSensor` — bâtiments accessibles (shops, chantiers, resources)
 
-### 6.4 — Cycle jour/nuit structuré
-- [ ] `WAKING (6h-7h)` → `WORKING (7h-18h)` → `RETURNING (18h-20h)` → `SLEEPING (20h-6h)`
-- [ ] Variantes par profession (gardes font des quarts de nuit)
-- [ ] Variation selon la météo (villageois rentrent sous la pluie)
+#### Schedules (horaires MC)
+- [ ] `CIVILIAN_SCHEDULE` : WAKING(6h) → WORKING(7h–17h) → LEISURE(17h–20h) → SLEEPING(20h)
+- [ ] `GUARD_SCHEDULE` : alternance quarts jour/nuit — toujours en alerte
+- [ ] `MERCHANT_SCHEDULE` : WORKING(8h–18h) avec pauses socialisation
+- [ ] Variante météo : rentre sous la pluie (interruption WORKING)
 
-### 6.5 — Réactions et alertes
-- [ ] Détection de menace (monstres, bandits) → alerte village
-- [ ] Comportement de fuite par profession (civils fuient, gardes défendent)
-- [ ] Comportement de réparation d'urgence (si bâtiment RUINED)
-- [ ] Réaction à la réputation joueur (méfiance, bienvenue)
+### 6.2 — Routine quotidienne
 
-**Livrable :** Villageois qui travaillent, dorment, réagissent, varient par profession.
+- [ ] Lever : se dirige vers son lieu de travail (`GoToWorkplaceBehavior`)
+- [ ] Journée : comportements de travail selon profession (voir 6.3)
+- [ ] Soir : rentre à la maison (`GoHomeBehavior`)
+- [ ] Nuit : dort sur son lit (`SleepAtHomeBehavior`) — entité posée horizontalement
+  - Fallback : sol dégagé à 6 blocs si pas de lit disponible
+- [ ] Loisir (fenêtre 17h–20h) : socialisation, visite auberge, repos, balade
+
+### 6.3 — Comportements par profession
+
+**Chaque profession est liée à un bâtiment de travail (`workplaceBuilding`) avec des points de ressource spécifiques marqués dans le template NBT.**
+
+#### Fermier
+- [ ] Laboure le sol aux points `soils` du bâtiment de ferme
+- [ ] Plante les cultures définies dans `VillagerTypeDef.knownCrops`
+- [ ] Récolte quand les cultures sont mûres
+- [ ] Rapporte la récolte au coffre du village (`BringResourcesHomeBehavior`)
+
+#### Bûcheron
+- [ ] Travaille dans le bâtiment `grove` (zone boisée du village)
+- [ ] Coupe les arbres présents, récolte bois + sapling
+- [ ] Replante les saplings pour renouveler la ressource
+- [ ] Rapporte le bois au stock
+
+#### Mineur
+- [ ] Travaille à la mine (bâtiment avec points de ressource `sources`)
+- [ ] Extrait pierre / sable / argile / gravier selon les points définis
+- [ ] Rapporte au stock du village
+
+#### Pêcheur
+- [ ] Travaille aux points `fishingspots` du bâtiment de pêche (eau adjacente)
+- [ ] Lance la ligne, attend (~500 ticks), récolte le poisson
+- [ ] Rapporte au stock
+
+#### Berger / Éleveur
+- [ ] Travaille dans l'enclos (bâtiment avec tags `cattle`, `sheeps`, `pig`, `chicken`)
+- [ ] Nourrit les animaux pour déclencher la reproduction (`BreedAnimalsBehavior`)
+- [ ] Tond les moutons (`ShearSheepBehavior`) → laine dans le stock
+- [ ] Collecte les œufs, le lait si applicable
+
+#### Constructeur
+- [ ] Surveille les bâtiments en état `PLANNED` ou `UNDER_CONSTRUCTION`
+- [ ] Récupère les matériaux requis dans le stock du village (`GetResourcesForBuildBehavior`)
+- [ ] Place les blocs selon le plan (`ConstructionStepByStepBehavior`) — couche par couche, saute si bloqué
+- [ ] Construit les chemins entre les bâtiments
+
+#### Marchand villageois (commerce inter-bâtiments)
+- [ ] Approvisionne les bâtiments-boutiques en goods manquants
+- [ ] Effectue des visites entre bâtiments pour équilibrer les stocks (`MerchantVisitBuildingBehavior`)
+- [ ] Peut sortir du village pour visiter des villages normands voisins
+
+#### Garde
+- [ ] Patrouille le périmètre (points de patrouille dans le bâtiment de garde / tour de guet)
+- [ ] Attaque les monstres détectés (`HuntMonsterBehavior`)
+- [ ] `DefendVillageBehavior` (priorité maximale) déclenché par `ThreatSensor`
+- [ ] Peut utiliser arc (`isArcher = true` dans VillagerTypeDef) ou arme de mêlée
+
+#### Chef
+- [ ] Reste au bâtiment principal (`isTownhall = true`)
+- [ ] Supervise les priorités de construction
+- [ ] Point d'entrée pour le commerce et les quêtes joueur
+
+#### Vendeurs de bâtiments spécialisés
+- [ ] Forgeron (forge) : vend outils / armes / armures
+- [ ] Boulanger (boulangerie) : vend pain / nourriture préparée
+- [ ] Paysan (ferme) : vend cultures, graines
+- [ ] Tout bâtiment marqué `isShop = true` peut avoir un vendeur (`isSellerBehavior`)
+- [ ] Le vendeur se dirige vers le comptoir quand un joueur s'approche (rayon 7 blocs)
+
+### 6.4 — Comportements sociaux et balade
+
+- [ ] `WanderAroundVillageBehavior` — se promène dans le périmètre du village au hasard
+- [ ] `GoSocializeBehavior` — cherche un villageois libre, s'approche
+- [ ] `ChatBehavior` — échange de phrases culturelles aléatoires (~40 ticks)
+- [ ] `GoRestBehavior` — pause loisir (s'assoit, regarde autour)
+- [ ] `VisitInnBehavior` — va à l'auberge, "consomme" une boisson (si auberge présente)
+- [ ] `LookAtPlayerBehavior` — tourne la tête vers le joueur dans un rayon de 6 blocs
+
+### 6.5 — Commerce avec le joueur
+
+#### Bâtiment principal (Townhall)
+- [ ] Interface de commerce complète (`TradeScreen`) — achat et vente d'items
+- [ ] Catalogue `TradeGood` définis dans `normans.json` (blé, pain, pierre, outils, laine, bois...)
+- [ ] Prix de base modifié par la réputation du joueur
+
+#### Bâtiments spécialisés (shops)
+- [ ] Chaque bâtiment `isShop = true` propose son propre catalogue (`TradeGood` filtré par building)
+- [ ] Forge : outils, armes normandes
+- [ ] Boulangerie : pain, nourriture
+- [ ] Ferme : grains, végétaux, pommes
+- [ ] Interface identique à celle du Townhall, catalogue réduit à la spécialité
+
+#### Marchands étrangers
+- [ ] Apparaissent au marché du village pour quelques jours (cooldown configurable)
+- [ ] Vendent des goods importés (non produits localement) à prix différent
+- [ ] Restent à leur stall (`ForeignMerchantKeepStallBehavior`) jusqu'à épuisement du stock
+
+#### Système de prix et réputation
+- [ ] Multiplicateur : Inconnu(×1.5) → Étranger(×1.2) → Ami(×1.0) → Allié(×0.9) → Chef(×0.8)
+- [ ] Niveaux réputation : `UNKNOWN`, `STRANGER`, `FRIEND`, `ALLY`, `CHIEF`
+- [ ] Gains : commerce, quêtes, dons, aide à la construction
+- [ ] Pertes : vol, attaque, destruction de bâtiments
+- [ ] Commande debug : `/mna reputation set <joueur> <villageId> <valeur>`
+
+### 6.6 — Système de défense
+
+- [ ] Points de défense définis dans les bâtiments de garde (template NBT)
+- [ ] `DefendVillageBehavior` (priorité absolue) : tous les villageois avec `helpInAttacks = true` convergent vers le point de défense et attaquent la cible
+- [ ] `HuntMonsterBehavior` : patrouilles actives, chasse les monstres proches du village
+- [ ] Civils (`helpInAttacks = false`) : fuient vers le bâtiment central lors d'une attaque
+- [ ] Réaction joueur agressif :
+  - 1ère attaque → avertissement textuel
+  - Récidive → gardes agressifs
+  - Réputation < seuil → bannissement (refus de commerce et dialogue)
+
+### 6.7 — Gestion des ressources du village
+
+#### Points de ressource (définis dans les templates NBT des bâtiments)
+- [ ] `fishingspots` — blocs marqueurs dans l'eau adjacente au bâtiment de pêche
+- [ ] `sources` — blocs cibles à miner à la mine
+- [ ] `soils` — blocs de terre labourable à la ferme
+- [ ] `spawns` — points d'apparition animaux dans l'enclos
+- [ ] `stalls` — comptoirs de vente au marché
+- [ ] Les blocs marqueurs sont lus à l'initialisation du bâtiment et stockés dans `BuildingResManager`
+
+#### Stock du village
+- [ ] Items stockés dans les coffres des bâtiments (lus via `BuildingResManager.countGoods`)
+- [ ] `ResourceStock` agrège un résumé au niveau du village (accessible au Chef + joueur)
+- [ ] Limite `townhallLimit` pour éviter l'accumulation infinie
+- [ ] Alerte en log (puis dialogue chef) si stock critique descend sous un seuil
+- [ ] Commande debug : `/mna village stock <id>`
+
+### 6.8 — Système de quêtes (infrastructure)
+
+*Infrastructure complète ici. Contenu narratif et avancé en Phase 9.*
+
+#### Modèle de données (JSON/Codec)
+- [ ] `QuestDefinition` : `key`, `chancePerHour`, `maxSimultaneous`, `minReputation`, `steps[]`
+- [ ] `QuestStep` : durée, donneur, objectif, récompense (items + deniers + réputation), textes i18n
+- [ ] `QuestInstance` (runtime, CCA par joueur) : état, étape courante, deadline
+- [ ] Système de tags : `playerTags`, `globalTags`, `villagerTags` — permettent des chaînes de quêtes
+
+#### Types d'objectifs (`QuestObjective`)
+- [ ] `DELIVER_ITEMS` — apporter des items à un NPC précis
+- [ ] `BRING_BACK` — aller chercher des items et les rapporter
+- [ ] `KILL_MOBS` — éliminer des mobs dans une zone ou un rayon
+- [ ] `HELP_BUILD` — contribuer à la construction d'un bâtiment (poser N blocs)
+- [ ] `VISIT_LOCATION` — se rendre à un endroit (autre village, position)
+- [ ] `GATHER_RESOURCE` — récolter des ressources dans le monde
+
+#### Donneurs de quêtes
+- [ ] Flag `isQuestGiver = true` dans `VillagerTypeDef` désigne les donneurs
+- [ ] Dialogue d'offre intégré à l'interface de dialogue (Phase 11)
+- [ ] Filtrage par réputation minimum et tags requis
+
+#### Récompenses
+- [ ] Items + Deniers (monnaie normande)
+- [ ] Points de réputation
+- [ ] Tags globaux / joueur (débloquent la quête suivante dans une chaîne)
+
+#### Quêtes normandes initiales (8 quêtes de base)
+- [ ] "La première livraison" — apporter du blé au chef (DELIVER_ITEMS)
+- [ ] "La forge a besoin de charbon" — livrer charbon au forgeron (DELIVER_ITEMS)
+- [ ] "Bois pour construire" — ramener du bois de chêne (BRING_BACK)
+- [ ] "Le troupeau a faim" — livrer du blé au berger (DELIVER_ITEMS)
+- [ ] "Nuisibles au grenier" — tuer des monstres dans la cave (KILL_MOBS)
+- [ ] "La route est dangereuse" — escorter un marchand (KILL_MOBS dans un rayon mobile)
+- [ ] "Coup de main au chantier" — participer à la construction d'un bâtiment (HELP_BUILD)
+- [ ] "Exploration" — trouver et visiter un autre village normand (VISIT_LOCATION)
+
+### 6.9 — Cycle de vie
+- [ ] **Enfant** : spawn dans les maisons du village, scale réduit, consomme `foodsGrowth`
+- [ ] **Croissance** : grandit progressivement sur ~20 nuits MC
+- [ ] **Maturité** : cherche une maison + un emploi libres et déménage (`BecomeAdultBehavior`)
+- [ ] **Reproduction** : femme adulte + partenaire compatible + `foodsConception` → naissance
+- [ ] **Famille** : enfants héritent du `familyName` de la mère (noms historiques normands)
+- [ ] **Mort** : bâtiment libéré, slot de population disponible, remplacement éventuel
+
+### 6.10 — Interaction joueur de base
+- [ ] Clic droit → ouvre l'interface de dialogue (placeholder, implémentée en Phase 11)
+- [ ] Affichage : nom, profession, village d'appartenance
+- [ ] Réaction basique selon réputation (message de bienvenue / méfiance / hostilité)
+- [ ] Garde : réaction agressive si réputation < seuil critique (appel aux autres gardes)
+
+**Livrable :** Villageois pleinement vivants — routines complètes, commerce multi-bâtiments, défense active, quêtes de base jouables et cycle de vie fonctionnel.
 **Tag :** `v0.7.0-alpha`
 
 ---
@@ -809,13 +980,13 @@ Culture choisie : **Byzantins** (architecture distincte, commerce avancé).
 | 0 — Setup | 🟢 Terminé | v0.1.0 |
 | 1 — Architecture données | 🟢 Terminé | v0.2.0 |
 | 2 — Système cultures | 🟢 Terminé | v0.3.0 |
-| 3 — Types villages & génération | 🟡 En cours (3.1 ✅ 3.2 ✅ 3.3 ✅) | v0.4.0 |
-| 4 — Assets Normands | 🟡 En cours | v0.5.0 |
-| 5 — Entité Villageois & rendu | 🔴 À faire | v0.6.0 |
-| 6 — IA & comportements | 🔴 À faire | v0.7.0 |
-| 7 — Santé bâtiments & construction | 🔴 À faire | v0.8.0 |
-| 8 — Économie & commerce | 🔴 À faire | v0.9.0 |
-| 9 — Quêtes | 🔴 À faire | v0.10.0 |
+| 3 — Types villages & génération | 🟢 Terminé | v0.4.0 |
+| 4 — Assets Normands | 🟡 En cours (autre contrib.) | v0.5.0 |
+| 5 — Entité Villageois & rendu | 🟢 Terminé | v0.6.0 |
+| 6 — IA, Comportements, Commerce & Quêtes | 🔴 À faire | v0.7.0 |
+| 7 — Santé bâtiments & construction dyn. | 🔴 À faire | v0.8.0 |
+| 8 — Économie avancée (inter-villages) | 🔴 À faire | v0.9.0 |
+| 9 — Quêtes avancées & journal | 🔴 À faire | v0.10.0 |
 | 10 — Creator Mode | 🟡 En cours (Bloc A terminé) | v0.11.0 |
 | 11 — Interfaces utilisateur | 🔴 À faire | v0.12.0 |
 | 12 — Réseau & multijoueur | 🔴 À faire | v0.13.0 |

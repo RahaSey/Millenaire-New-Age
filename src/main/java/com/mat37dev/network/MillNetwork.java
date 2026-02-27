@@ -4,15 +4,20 @@ import com.mat37dev.MillenaireNewAge;
 import com.mat37dev.creator.StructurePlacerItem;
 import com.mat37dev.creator.StructureSaveManager;
 import com.mat37dev.init.MillItems;
+import com.mat37dev.culture.Culture;
+import com.mat37dev.culture.CultureRegistry;
+import com.mat37dev.culture.VillageType;
 import com.mat37dev.village.VillagePlacer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Centralise l'enregistrement de tous les {@link net.minecraft.network.protocol.common.custom.CustomPacketPayload}.
@@ -134,13 +139,33 @@ public class MillNetwork {
             return;
         }
 
+        // Vérifier la présence de blocs dangereux près du bâtiment principal
+        net.minecraft.network.chat.Component dangerError = com.mat37dev.village.VillagePlacer.checkDanger(
+            player.level().getServer(), level, cultureId, villageTypeId, goldPos);
+        if (dangerError != null) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(dangerError));
+            return;
+        }
+
         VillagePlacer.placeVillage(player.level().getServer(), level, cultureId, villageTypeId, goldPos)
             .ifPresentOrElse(
-                village -> player.sendSystemMessage(
-                    net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")
-                        .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.village.created",
-                            village.getName(), village.getBuildings().size()))
-                ),
+                village -> {
+                    player.sendSystemMessage(
+                        net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.success_prefix")
+                            .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.village.created",
+                                village.getName(), village.getBuildings().size()))
+                    );
+
+                    // Téléporter le joueur au nord du bâtiment central
+                    Optional<Culture> culture = CultureRegistry.get(cultureId);
+                    Optional<VillageType> vt = culture.flatMap(c -> c.getVillageType(villageTypeId));
+                    if (culture.isPresent() && vt.isPresent()) {
+                        BlockPos safePos = VillagePlacer.findSafeTeleportPos(
+                            player.level().getServer(), level, culture.get(), vt.get(), goldPos);
+                        player.teleportTo(safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5);
+                    }
+                },
                 () -> player.sendSystemMessage(
                     net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.error_prefix")
                         .append(net.minecraft.network.chat.Component.translatable("chat.millenaire-new-age.village.create_fail"))

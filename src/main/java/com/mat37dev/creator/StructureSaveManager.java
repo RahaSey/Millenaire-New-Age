@@ -12,6 +12,8 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Sauvegarde et chargement des structures créateur.
@@ -315,6 +318,50 @@ public class StructureSaveManager {
     public static Path creatorOutputDir() {
         return net.fabricmc.loader.api.FabricLoader.getInstance().getGameDir()
             .resolve("mods/MillenaireNewAge");
+    }
+
+    // ── Détection de structure à enfouir ─────────────────────────────────────
+
+    /** Blocs de sol naturel : si la couche Y=0 du template est majoritairement composée
+     *  de ces blocs, la structure doit être posée 1 bloc plus bas pour s'intégrer au terrain. */
+    private static final Set<Block> NATURAL_SOIL_BLOCKS = Set.of(
+        Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.COARSE_DIRT, Blocks.PODZOL,
+        Blocks.MYCELIUM, Blocks.DIRT_PATH, Blocks.MOSS_BLOCK,
+        Blocks.SAND, Blocks.RED_SAND, Blocks.GRAVEL, Blocks.MUD
+    );
+
+    /**
+     * Retourne {@code true} si la couche inférieure (Y=0) de la structure est
+     * majoritairement constituée de blocs de sol naturel.
+     *
+     * <p>Dans ce cas, la structure doit être placée 1 bloc plus bas que {@code targetY}
+     * afin que son sol se fonde dans le terrain plutôt que de flotter à la surface.</p>
+     */
+    public static boolean shouldEmbedInGround(MinecraftServer server, String structureId) {
+        StructureTemplate template = loadTemplate(server, structureId);
+        if (template == null) return false;
+        return shouldEmbedFromTemplate(template);
+    }
+
+    /**
+     * Variante qui accepte un template déjà chargé (évite un double chargement
+     * quand l'appelant a déjà le template en main, ex: baguette de placement).
+     */
+    public static boolean shouldEmbedFromTemplate(StructureTemplate template) {
+        var palettes = ((com.mat37dev.mixin.StructureTemplateAccessor) template).getPalettes();
+        if (palettes.isEmpty()) return false;
+
+        List<StructureTemplate.StructureBlockInfo> bottomRow = palettes.getFirst().blocks().stream()
+            .filter(info -> info.pos().getY() == 0 && !info.state().isAir())
+            .toList();
+
+        if (bottomRow.isEmpty()) return false;
+
+        long soilCount = bottomRow.stream()
+            .filter(info -> NATURAL_SOIL_BLOCKS.contains(info.state().getBlock()))
+            .count();
+
+        return (double) soilCount / bottomRow.size() > 0.5;
     }
 
     // Placement des structures ─────────────────────────────────────────────

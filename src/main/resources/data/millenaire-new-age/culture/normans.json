@@ -29,126 +29,102 @@
   ],
   "village_types": [
     {
-      "id": "normans:hamlet",
-      "display_name": "Hameau Normand",
-      "min_buildings": 3,
-      "max_buildings": 5,
-      "required_building_ids": ["normans:townhall"],
-      "optional_building_ids": ["normans:house", "normans:farm"],
-      "has_walls": false,
-      "villager_type_ids": ["normans:farmer", "normans:chief"]
-    },
-    {
-      "id": "normans:village",
-      "display_name": "Village Normand",
-      "min_buildings": 8,
-      "max_buildings": 15,
-      "required_building_ids": ["normans:townhall"],
-      "optional_building_ids": [
-        "normans:house", "normans:farm",
-        "normans:forge", "normans:chapel"
-      ],
-      "has_walls": false,
-      "villager_type_ids": [
-        "normans:farmer", "normans:blacksmith",
-        "normans:guard", "normans:chief"
-      ]
-    },
-    {
-      "id": "normans:fortress",
-      "display_name": "Forteresse Normande",
-      "min_buildings": 4,
-      "max_buildings": 4,
-      "required_building_ids": ["normans:keep", "normans:barracks", "normans:lumberjack_house", "normans:lumberjack_forest"],
+      "id": "normans:little_village",
+      "display_name": "Petit Village Normand",
+      "townhall_id": "townhall",
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
       "optional_building_ids": [],
-      "has_walls": true,
-      "villager_type_ids": ["normans:guard", "normans:chief", "normans:farmer"]
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
+      "has_walls": false,
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
+      "spawn_weight": 10
+    },
+    {
+      "id": "normans:big_village",
+      "display_name": "Grand Village Normand",
+      "townhall_id": "townhall",
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
+      "has_walls": false,
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
+      "spawn_weight": 5
+    },
+    {
+      "id": "normans:xl_big_village",
+      "display_name": "Grand Village Normand",
+      "townhall_id": "townhall",
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
+      "has_walls": false,
+      "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
+      "spawn_weight": 2
     }
   ],
   "building_types": [
     {
       "id": "normans:townhall",
       "display_name": "Mairie Normande",
-      "structure_id": "millenaire-new-age:normans/townhall",
-      "max_health": 200,
-      "max_residents": 2,
-      "required": true
-    },
-    {
-      "id": "normans:house",
-      "display_name": "Maison Normande",
-      "structure_id": "millenaire-new-age:normans/house",
-      "max_health": 100,
-      "max_residents": 4,
-      "required": false
-    },
-    {
-      "id": "normans:farm",
-      "display_name": "Ferme Normande",
-      "structure_id": "millenaire-new-age:normans/farm",
-      "max_health": 80,
-      "max_residents": 2,
-      "required": false
-    },
-    {
-      "id": "normans:forge",
-      "display_name": "Forge Normande",
-      "structure_id": "millenaire-new-age:normans/forge",
-      "max_health": 120,
-      "max_residents": 1,
-      "required": false
-    },
-    {
-      "id": "normans:chapel",
-      "display_name": "Chapelle Normande",
-      "structure_id": "millenaire-new-age:normans/chapel",
-      "max_health": 150,
-      "max_residents": 1,
-      "required": false
-    },
-    {
-      "id": "normans:keep",
-      "display_name": "Donjon Normand",
       "structure_id": "normans/castel_t1",
-      "max_health": 400,
-      "max_residents": 4,
-      "required": false,
-      "proximity": "CENTER"
+      "max_health": 200,
+      "sleeping_capacity": 2,
+      "workplace_for": ["chief"],
+      "role": "CENTER"
     },
     {
       "id": "normans:barracks",
       "display_name": "Caserne Normande",
       "structure_id": "normans/guard_t1",
       "max_health": 200,
-      "max_residents": 6,
-      "required": false,
-      "proximity": "NEAR"
+      "sleeping_capacity": 2,
+      "workplace_for": ["guard"],
+      "role": "REQUIRED",
+      "min_distance_factor": 0.1,
+      "max_distance_factor": 0.55
     },
     {
       "id": "normans:lumberjack_house",
       "display_name": "Maison du Bûcheron",
       "structure_id": "normans/lumberjack_t1",
       "max_health": 100,
-      "max_residents": 2,
-      "required": false,
-      "proximity": "FAR"
+      "sleeping_capacity": 2,
+      "role": "REQUIRED",
+      "min_distance_factor": 0,
+      "max_distance_factor": 0.65
     },
     {
       "id": "normans:lumberjack_forest",
       "display_name": "Zone de Forêt",
       "structure_id": "normans/forest_t1",
       "max_health": 50,
-      "max_residents": 0,
-      "required": false,
-      "proximity": "FAR"
+      "workplace_for": ["lumberjack"],
+      "role": "REQUIRED",
+      "min_distance_factor": 0.85,
+      "max_distance_factor": 1.0
+    },
+    {
+      "id": "normans:farmer_house",
+      "display_name": "Ferme Normande",
+      "structure_id": "normans/farmer_t1",
+      "max_health": 100,
+      "sleeping_capacity": 2,
+      "workplace_for": ["farmer"],
+      "role": "REQUIRED",
+      "min_distance_factor": 0.65,
+      "max_distance_factor": 0.85
     },
     {
       "id": "normans:corner",
       "display_name": "Coin de Délimitation Normand",
       "structure_id": "normans/corner",
       "max_health": 150,
-      "max_residents": 0,
-      "required": false,
       "perimeter_placement": "CORNER"
     },
     {
@@ -156,8 +132,6 @@
       "display_name": "Entrée Normande",
       "structure_id": "normans/entrance",
       "max_health": 200,
-      "max_residents": 0,
-      "required": false,
       "perimeter_placement": "ENTRANCE"
     },
     {
@@ -165,36 +139,79 @@
       "display_name": "Pilier de Délimitation Normand",
       "structure_id": "normans/pillar",
       "max_health": 80,
-      "max_residents": 0,
-      "required": false,
       "perimeter_placement": "PILLAR"
     }
   ],
   "villager_types": [
     {
+      "id": "normans:housewife",
+      "display_name": "Dame",
+      "behaviors": ["housework", "wander", "sleep"],
+      "base_health": 16,
+      "movement_speed": 0.5,
+      "clothing_texture": "female/clothes/nor_housewife_0.png",
+      "male": false,
+      "spawn_count": 0
+    },
+    {
       "id": "normans:farmer",
       "display_name": "Paysan",
-      "behaviors": ["farm", "wander", "sleep"]
+      "behaviors": ["farm", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_farmer_0.png",
+      "male": true,
+      "spawn_count": 1
+    },
+    {
+      "id": "normans:lumberjack",
+      "display_name": "Bûcheron",
+      "behaviors": ["lumberjack", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_lumberman_0.png",
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:blacksmith",
       "display_name": "Forgeron",
-      "behaviors": ["smith", "wander", "sleep"]
+      "behaviors": ["smith", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.5,
+      "clothing_texture": "male/clothes/nor_smith_0.png",
+      "male": true,
+      "spawn_count": 0
     },
     {
       "id": "normans:guard",
       "display_name": "Garde",
-      "behaviors": ["patrol", "defend", "sleep"]
+      "behaviors": ["patrol", "defend", "sleep"],
+      "base_health": 30,
+      "movement_speed": 0.6,
+      "clothing_texture": "male/clothes/nor_guard_0.png",
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:chief",
       "display_name": "Chef de Village",
-      "behaviors": ["supervise", "wander", "sleep"]
+      "behaviors": ["supervise", "wander", "sleep"],
+      "base_health": 25,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_baron_0.png",
+      "male": true,
+      "spawn_count": 1
     },
     {
       "id": "normans:merchant",
       "display_name": "Marchand",
-      "behaviors": ["trade", "wander", "sleep"]
+      "behaviors": ["trade", "wander", "sleep"],
+      "base_health": 20,
+      "movement_speed": 0.55,
+      "clothing_texture": "male/clothes/nor_merchant_0.png",
+      "male": true,
+      "spawn_count": 0
     }
   ],
   "trade_goods": [

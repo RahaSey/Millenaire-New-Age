@@ -1,5 +1,6 @@
 package com.mat37dev.command;
 
+import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.CreatorSession;
 import com.mat37dev.creator.StructurePlacerItem;
 import com.mat37dev.creator.StructureSaveManager;
@@ -84,6 +85,16 @@ public class CreatorCommands {
                             .executes(CreatorCommands::clearSelection))
                         .then(Commands.literal("info")
                             .executes(CreatorCommands::selectionInfo))
+                    )
+
+                    // ── /mna creator generation ────────────────────────────
+                    .then(Commands.literal("generation")
+                        .then(Commands.literal("on")
+                            .executes(ctx -> setGeneration(ctx, true)))
+                        .then(Commands.literal("off")
+                            .executes(ctx -> setGeneration(ctx, false)))
+                        .then(Commands.literal("status")
+                            .executes(CreatorCommands::generationStatus))
                     )
                 )
         );
@@ -283,6 +294,34 @@ public class CreatorCommands {
         player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_size",
             size.getX(), size.getY(), size.getZ(), (size.getX() * size.getY() * size.getZ())));
         return 1;
+    }
+
+    // ── Generation ────────────────────────────────────────────────────────────
+
+    private static int setGeneration(CommandContext<CommandSourceStack> ctx, boolean enabled) {
+        VillageConfig.naturalVillageGeneration = enabled;
+        VillageConfig.save();
+        String stateKey = enabled
+            ? "chat.millenaire-new-age.creator.generation_on"
+            : "chat.millenaire-new-age.creator.generation_off";
+        ctx.getSource().sendSuccess(
+            () -> Component.translatable("chat.millenaire-new-age.success_prefix")
+                    .append(Component.translatable(stateKey)),
+            true);
+        return 1;
+    }
+
+    private static int generationStatus(CommandContext<CommandSourceStack> ctx) {
+        boolean enabled = VillageConfig.naturalVillageGeneration;
+        String stateKey = enabled
+            ? "chat.millenaire-new-age.creator.generation_on"
+            : "chat.millenaire-new-age.creator.generation_off";
+        ctx.getSource().sendSuccess(
+            () -> Component.translatable("chat.millenaire-new-age.prefix")
+                    .append(Component.translatable("chat.millenaire-new-age.creator.generation_status",
+                            Component.translatable(stateKey))),
+            false);
+        return enabled ? 1 : 0;
     }
 
     // ── Helper ────────────────────────────────────────────────────────────────

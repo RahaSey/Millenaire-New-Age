@@ -1,6 +1,7 @@
 package com.mat37dev.client.creator;
 
 import com.mat37dev.creator.StructurePlacerItem;
+import com.mat37dev.creator.StructureSaveManager;
 import com.mat37dev.mixin.StructureTemplateAccessor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -84,6 +85,12 @@ public class StructurePreviewRenderer {
         String structureId = CreatorClientState.getPreviewStructureId();
         StructureTemplate template = tryLoadTemplate(mc, structureId);
 
+        // Embed : si la couche basse est du sol naturel, descendre d'un bloc
+        // (cohérent avec StructurePlacerItem qui fait origin.below())
+        if (template != null && StructureSaveManager.shouldEmbedFromTemplate(template)) {
+            originPos = originPos.below();
+        }
+
         if (template != null) {
             renderRealBlocks(mc, template, originPos, rotation, camPos, poseStack, consumers);
         } else {
@@ -94,7 +101,14 @@ public class StructurePreviewRenderer {
         }
 
         // ── Boîte englobante (toujours affichée) ─────────────────────────────
-        Vec3i rotatedSize = applyRotationToSize(size, rotation);
+        // Recalculer les bornes réelles après rotation (coordonnées négatives possibles)
+        BlockPos c0 = applyRotation(BlockPos.ZERO, rotation);
+        BlockPos c1 = applyRotation(new BlockPos(size.getX() - 1, size.getY() - 1, size.getZ() - 1), rotation);
+        int minX = Math.min(c0.getX(), c1.getX());
+        int maxX = Math.max(c0.getX(), c1.getX()) + 1;
+        int minZ = Math.min(c0.getZ(), c1.getZ());
+        int maxZ = Math.max(c0.getZ(), c1.getZ()) + 1;
+
         VertexConsumer lines = consumers.getBuffer(RenderType.lines());
         double ox = originPos.getX() - camPos.x;
         double oy = originPos.getY() - camPos.y;
@@ -102,8 +116,8 @@ public class StructurePreviewRenderer {
         poseStack.pushPose();
         poseStack.translate(ox, oy, oz);
         ShapeRenderer.renderLineBox(poseStack.last(), lines,
-            0.0, 0.0, 0.0,
-            rotatedSize.getX(), rotatedSize.getY(), rotatedSize.getZ(),
+            minX, 0.0, minZ,
+            maxX, size.getY(), maxZ,
             1.0f, 1.0f, 0.0f, 1.0f);
         poseStack.popPose();
     }
@@ -131,10 +145,7 @@ public class StructurePreviewRenderer {
             if (state.isAir()) continue;
 
             BlockPos relPos   = info.pos();
-            BlockPos rotated  = applyRotation(relPos, rotation,
-                new Vec3i(template.getSize().getX(),
-                          template.getSize().getY(),
-                          template.getSize().getZ()));
+            BlockPos rotated  = applyRotation(relPos, rotation);
             BlockPos worldPos = originPos.offset(rotated);
 
             double dx = worldPos.getX() - camPos.x;
@@ -169,7 +180,7 @@ public class StructurePreviewRenderer {
         VertexConsumer lines = consumers.getBuffer(RenderType.lines());
 
         for (BlockPos rel : blocks) {
-            BlockPos rotated  = applyRotation(rel, rotation, size);
+            BlockPos rotated  = applyRotation(rel, rotation);
             BlockPos worldPos = originPos.offset(rotated);
             double dx = worldPos.getX() - camPos.x;
             double dy = worldPos.getY() - camPos.y;
@@ -221,19 +232,19 @@ public class StructurePreviewRenderer {
 
     // ── Rotation ─────────────────────────────────────────────────────────────
 
-    private static BlockPos applyRotation(BlockPos rel, int rotation, Vec3i size) {
+    /**
+     * Applique la rotation MC (pivot à l'origine 0,0,0).
+     * Les formules sont synchronisées avec net.minecraft.world.level.block.Rotation
+     */
+    private static BlockPos applyRotation(BlockPos rel, int rotation) {
         return switch (rotation & 3) {
-            case 1 -> new BlockPos(size.getZ() - 1 - rel.getZ(), rel.getY(), rel.getX());
-            case 2 -> new BlockPos(size.getX() - 1 - rel.getX(), rel.getY(), size.getZ() - 1 - rel.getZ());
-            case 3 -> new BlockPos(rel.getZ(), rel.getY(), size.getX() - 1 - rel.getX());
+            case 1 -> // CLOCKWISE_90: (x, z) -> (-z, x)
+                new BlockPos(-rel.getZ(), rel.getY(), rel.getX());
+            case 2 -> // CLOCKWISE_180: (x, z) -> (-x, -z)
+                new BlockPos(-rel.getX(), rel.getY(), -rel.getZ());
+            case 3 -> // COUNTERCLOCKWISE_90 (ou 270 CW): (x, z) -> (z, -x)
+                new BlockPos(rel.getZ(), rel.getY(), -rel.getX());
             default -> rel;
-        };
-    }
-
-    private static Vec3i applyRotationToSize(Vec3i size, int rotation) {
-        return switch (rotation & 3) {
-            case 1, 3 -> new Vec3i(size.getZ(), size.getY(), size.getX());
-            default   -> size;
         };
     }
 
