@@ -66,6 +66,9 @@
   "chat.millenaire-new-age.creator.pos1": "Pos1 → %s",
   "chat.millenaire-new-age.creator.pos2": "Pos2 → %s",
   "chat.millenaire-new-age.creator.selection": "Selection: %s × %s × %s blocks",
+  "chat.millenaire-new-age.creator.generation_on": "§aEnabled",
+  "chat.millenaire-new-age.creator.generation_off": "§cDisabled",
+  "chat.millenaire-new-age.creator.generation_status": "Natural village generation: %s",
 
   "chat.millenaire-new-age.command.no_culture_loaded": "§eNo culture loaded.",
   "chat.millenaire-new-age.command.culture_list_title": "§6=== Loaded Cultures (%s) ===",
@@ -118,5 +121,6 @@
   "structure.millenaire-new-age.normans.guard_t1": "Norman Guard (Tier 1)",
   "structure.millenaire-new-age.normans.castle_t1": "Norman Castle (Tier 1)",
   "structure.millenaire-new-age.normans.lumberjack_t1": "Norman Lumberjack (Tier 1)",
-  "structure.millenaire-new-age.normans.forest_t1": "Norman Forest (Tier 1)"
+  "structure.millenaire-new-age.normans.forest_t1": "Norman Forest (Tier 1)",
+  "structure.millenaire-new-age.normans.farmer_t1": "Normans Farmer (Tier 1)"
 }

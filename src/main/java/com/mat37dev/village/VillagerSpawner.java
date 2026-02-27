@@ -7,6 +7,7 @@ import com.mat37dev.culture.Culture;
 import com.mat37dev.culture.VillagerTypeDef;
 import com.mat37dev.culture.VillageType;
 import com.mat37dev.entity.MillVillagerEntity;
+import com.mat37dev.entity.ai.MillMemories;
 import com.mat37dev.init.MillEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -131,9 +132,13 @@ public class VillagerSpawner {
         if (home != null) {
             villager.setHomeId(home.getId());
             home.addResident(villager.getUUID());
+            // Injecter HOME_POS directement dans le Brain (disponible dès le 1er tick)
+            villager.getBrain().setMemory(MillMemories.HOME_POS, home.getOrigin());
         }
         if (workplace != null) {
             villager.setWorkplaceId(workplace.getId());
+            // Injecter WORK_POS directement dans le Brain
+            villager.getBrain().setMemory(MillMemories.WORK_POS, workplace.getOrigin());
         }
 
         villager.setCustomNameVisible(true);

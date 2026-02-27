@@ -32,11 +32,11 @@
       "id": "normans:little_village",
       "display_name": "Petit Village Normand",
       "townhall_id": "townhall",
-      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
       "optional_building_ids": [],
-      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "min_starter_buildings": 4,
-      "max_starter_buildings": 4,
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
       "has_walls": false,
       "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 10
@@ -45,11 +45,11 @@
       "id": "normans:big_village",
       "display_name": "Grand Village Normand",
       "townhall_id": "townhall",
-      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "min_starter_buildings": 4,
-      "max_starter_buildings": 4,
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
       "has_walls": false,
       "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 5
@@ -58,11 +58,11 @@
       "id": "normans:xl_big_village",
       "display_name": "Grand Village Normand",
       "townhall_id": "townhall",
-      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest"],
-      "min_starter_buildings": 4,
-      "max_starter_buildings": 4,
+      "required_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "optional_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "available_building_ids": ["barracks", "lumberjack_house", "lumberjack_forest", "farmer_house"],
+      "min_starter_buildings": 5,
+      "max_starter_buildings": 5,
       "has_walls": false,
       "villager_type_ids": ["guard", "chief", "lumberjack", "farmer"],
       "spawn_weight": 2
@@ -110,6 +110,17 @@
       "max_distance_factor": 1.0
     },
     {
+      "id": "normans:farmer_house",
+      "display_name": "Ferme Normande",
+      "structure_id": "normans/farmer_t1",
+      "max_health": 100,
+      "sleeping_capacity": 2,
+      "workplace_for": ["farmer"],
+      "role": "REQUIRED",
+      "min_distance_factor": 0.65,
+      "max_distance_factor": 0.85
+    },
+    {
       "id": "normans:corner",
       "display_name": "Coin de Délimitation Normand",
       "structure_id": "normans/corner",
@@ -150,7 +161,7 @@
       "movement_speed": 0.55,
       "clothing_texture": "male/clothes/nor_farmer_0.png",
       "male": true,
-      "spawn_count": 0
+      "spawn_count": 1
     },
     {
       "id": "normans:lumberjack",

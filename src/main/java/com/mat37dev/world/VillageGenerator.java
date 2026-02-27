@@ -64,6 +64,7 @@ public class VillageGenerator {
      * <b>Doit rester ultra-léger</b> — aucune opération bloc ici.
      */
     public static void onChunkLoad(ServerLevel level, ChunkPos chunkPos) {
+        if (!VillageConfig.naturalVillageGeneration) return;
         if (!level.dimension().equals(Level.OVERWORLD)) return;
 
         WorldVillageData data = VillageManager.getData(level);

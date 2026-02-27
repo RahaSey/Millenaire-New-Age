@@ -5,6 +5,8 @@ import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureScannerItem;
 import com.mat37dev.data.CultureLoader;
 import com.mat37dev.entity.MillVillagerEntity;
+import com.mat37dev.entity.ai.MillMemories;
+import com.mat37dev.entity.ai.MillSensors;
 import com.mat37dev.init.MillBlocks;
 import com.mat37dev.init.MillEntities;
 import com.mat37dev.init.MillItemGroups;
@@ -30,6 +32,10 @@ public class MillenaireNewAge implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // IA Brain — mémoires et capteurs enregistrés avant les entités
+        MillMemories.init();
+        MillSensors.init();
+
         // Registres (l'ordre compte : blocs → items → groupes → entités)
         MillBlocks.initialize();
         MillItems.initialize();
