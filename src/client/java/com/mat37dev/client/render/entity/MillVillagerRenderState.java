@@ -12,4 +12,7 @@ public class MillVillagerRenderState extends HumanoidRenderState {
 
     /** Chemin relatif de la texture de vêtements (peut être vide = pas de layer). */
     public String clothingTexturePath = "";
+
+    /** Chemin relatif de la texture des cheveux (peut être vide = pas de layer). */
+    public String hairTexturePath = "";
 }

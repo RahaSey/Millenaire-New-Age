@@ -18,6 +18,7 @@ public class MillVillagerEntityRenderer extends HumanoidMobRenderer<MillVillager
     public MillVillagerEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new MillVillagerModel(ctx.bakeLayer(MillVillagerModel.LAYER_LOCATION)), 0.5F);
         this.addLayer(new MillVillagerClothingLayer(this, ctx.getModelSet()));
+        this.addLayer(new MillVillagerHairLayer(this, ctx.getModelSet()));
     }
 
     @Override
@@ -47,5 +48,6 @@ public class MillVillagerEntityRenderer extends HumanoidMobRenderer<MillVillager
         }
 
         renderState.clothingTexturePath = entity.getClothingTexture();
+        renderState.hairTexturePath = entity.getHairTexture();
     }
 }

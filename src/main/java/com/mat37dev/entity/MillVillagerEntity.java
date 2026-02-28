@@ -310,6 +310,19 @@ public class MillVillagerEntity extends PathfinderMob {
                 .orElse("");
     }
 
+    /** Chemin relatif de la texture des cheveux (peut être vide si non assigné). */
+    public String getHairTexture() {
+        String typeId = getEntityData().get(VILLAGER_TYPE_ID);
+        String cultureId = getEntityData().get(CULTURE_ID);
+        if (typeId.isEmpty() || cultureId.isEmpty()) return "";
+        return CultureRegistry.get(cultureId)
+                .flatMap(c -> c.villagerTypes().stream()
+                        .filter(t -> t.id().equals(typeId))
+                        .findFirst())
+                .map(VillagerTypeDef::hairTexture)
+                .orElse("");
+    }
+    
     // ── Setters ───────────────────────────────────────────────────────────────
 
     public void assignType(String cultureId, String typeId, boolean male, int bodyVariant) {
