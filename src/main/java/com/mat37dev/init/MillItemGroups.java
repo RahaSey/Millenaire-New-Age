@@ -23,7 +23,17 @@ public class MillItemGroups {
                         entries.accept(MillItems.PATH_GRAVEL_SLAB);
                         entries.accept(MillItems.PATH_DIRT);
                         entries.accept(MillItems.PATH_DIRT_SLAB);
+                        entries.accept(MillItems.PATH_SLABS);
+                        entries.accept(MillItems.PATH_SLABS_SLAB);
                         entries.accept(MillItems.DIRT_WALL);
+                        entries.accept(MillItems.TIMBER_FRAME_PLAIN);
+                        entries.accept(MillItems.TIMBER_FRAME_CROSS);
+                        entries.accept(MillItems.STAINED_GLASS_WHITE);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW_RED);
+                        entries.accept(MillItems.STAINED_GLASS_RED_BLUE);
+                        entries.accept(MillItems.STAINED_GLASS_GREEN_BLUE);
+                        entries.accept(MillItems.BED_STRAW);
 
                         // ── Outils ────────────────────────────────────────────
                         entries.accept(MillItems.WAND_OF_SUMMONING);

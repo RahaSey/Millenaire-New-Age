@@ -150,6 +150,7 @@
       "base_health": 16,
       "movement_speed": 0.5,
       "clothing_texture": "female/clothes/nor_housewife_0.png",
+      "hair_texture": "female/hair/nor_blond.png",
       "male": false,
       "spawn_count": 0
     },

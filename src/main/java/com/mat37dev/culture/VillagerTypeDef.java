@@ -12,6 +12,7 @@ public record VillagerTypeDef(
         int baseHealth,
         double movementSpeed,
         String clothingTexture,
+        String hairTexture,
         boolean male,
         int spawnCount
 ) {
@@ -23,6 +24,7 @@ public record VillagerTypeDef(
                     Codec.INT.optionalFieldOf("base_health", 20).forGetter(VillagerTypeDef::baseHealth),
                     Codec.DOUBLE.optionalFieldOf("movement_speed", 0.55).forGetter(VillagerTypeDef::movementSpeed),
                     Codec.STRING.optionalFieldOf("clothing_texture", "").forGetter(VillagerTypeDef::clothingTexture),
+                    Codec.STRING.optionalFieldOf("hair_texture", "").forGetter(VillagerTypeDef::hairTexture),
                     Codec.BOOL.optionalFieldOf("male", true).forGetter(VillagerTypeDef::male),
                     Codec.INT.optionalFieldOf("spawn_count", 0).forGetter(VillagerTypeDef::spawnCount)
             ).apply(instance, VillagerTypeDef::new)

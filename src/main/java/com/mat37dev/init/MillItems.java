@@ -26,6 +26,16 @@ public class MillItems {
     public static final Item PATH_DIRT        = registerBlockItem("path_dirt",        MillBlocks.PATH_DIRT);
     public static final Item PATH_DIRT_SLAB   = registerBlockItem("path_dirt_slab",   MillBlocks.PATH_DIRT_SLAB);
     public static final Item DIRT_WALL        = registerBlockItem("dirt_wall",        MillBlocks.DIRT_WALL);
+    public static final Item PATH_SLABS        = registerBlockItem("path_slabs",        MillBlocks.PATH_SLABS);
+    public static final Item PATH_SLABS_SLAB   = registerBlockItem("path_slabs_slab",   MillBlocks.PATH_SLABS_SLAB);
+    public static final Item BED_STRAW        = registerBlockItem("bed_straw",        MillBlocks.BED_STRAW);
+    public static final Item TIMBER_FRAME_PLAIN   = registerBlockItem("timber_frame_plain",   MillBlocks.TIMBER_FRAME_PLAIN);
+    public static final Item TIMBER_FRAME_CROSS   = registerBlockItem("timber_frame_cross",   MillBlocks.TIMBER_FRAME_CROSS);
+    public static final Item STAINED_GLASS_WHITE   = registerBlockItem("stained_glass_white",   MillBlocks.STAINED_GLASS_WHITE);
+    public static final Item STAINED_GLASS_YELLOW   = registerBlockItem("stained_glass_yellow",   MillBlocks.STAINED_GLASS_YELLOW);
+    public static final Item STAINED_GLASS_YELLOW_RED   = registerBlockItem("stained_glass_yellow_red",   MillBlocks.STAINED_GLASS_YELLOW_RED);
+    public static final Item STAINED_GLASS_RED_BLUE   = registerBlockItem("stained_glass_red_blue",   MillBlocks.STAINED_GLASS_RED_BLUE);
+    public static final Item STAINED_GLASS_GREEN_BLUE   = registerBlockItem("stained_glass_green_blue",   MillBlocks.STAINED_GLASS_GREEN_BLUE);
 
     // =========================================================================
     // TOOLS — Wands (pure Items)

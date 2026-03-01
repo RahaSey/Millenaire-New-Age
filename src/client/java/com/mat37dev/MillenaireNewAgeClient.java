@@ -1,5 +1,4 @@
 package com.mat37dev;
-
 import com.mat37dev.client.creator.CreatorClientState;
 import com.mat37dev.client.creator.StructureListScreen;
 import com.mat37dev.client.creator.StructurePreviewRenderer;
@@ -15,7 +14,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
 public class MillenaireNewAgeClient implements ClientModInitializer {
 
@@ -40,6 +41,19 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
             )
         );
 
+        // Besoin de ça pour render les textures transparente
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_DIRT_SLAB, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_GRAVEL_SLAB, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_SLABS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_SLABS_SLAB, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_WHITE, ChunkSectionLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_YELLOW, ChunkSectionLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_YELLOW_RED, ChunkSectionLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_RED_BLUE, ChunkSectionLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_GREEN_BLUE, ChunkSectionLayer.TRANSLUCENT);
+        
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->
             ctx.client().execute(() -> CreatorClientState.setRotation(payload.rotation()))
