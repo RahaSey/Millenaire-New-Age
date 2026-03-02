@@ -18,21 +18,16 @@ import java.util.Optional;
  * Phase 2 :
  *   /mna culture list — liste toutes les cultures chargées
  *   /mna culture info <id>      — détails d'une culture
- * <p>
- * Futur (Phase 3+):
- *   /mna village list | spawn | tp | info
- *   /mna reputation set ...
- *   /mna creator ...
  */
 public class MillCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        // Sous-commandes creator et village (arbres séparés mais même racine /mna)
-        CreatorCommands.register(dispatcher);
-        VillageCommands.register(dispatcher);
-
         dispatcher.register(
             Commands.literal("mna")
+                .then(Commands.literal("help")
+                    .executes(MillCommands::sendHelp))
+                .then(CreatorCommands.build())
+                .then(VillageCommands.build())
                 .then(Commands.literal("culture")
                     .then(Commands.literal("list")
                         .requires(src -> src.hasPermission(2))
@@ -43,6 +38,30 @@ public class MillCommands {
                             .executes(ctx ->
                                 cultureInfo(ctx, StringArgumentType.getString(ctx, "id"))))))
         );
+    }
+
+    // ── /mna help ─────────────────────────────────────────────────────────────
+
+    private static int sendHelp(CommandContext<CommandSourceStack> ctx) {
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.title"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_help"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_culture_list"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_culture_info"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_village_list"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_village_info"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_village_tp"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_village_remove"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_tool_scanner"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_tool_placer"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_structure_save"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_structure_list"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_structure_place"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_structure_delete"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_structure_info"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_selection_clear"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_selection_info"), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("chat.millenaire-new-age.command.help.mna_creator_generation"), false);
+        return 1;
     }
 
     // ── /mna culture list ─────────────────────────────────────────────────────

@@ -77,6 +77,37 @@ Pour générer un village et tester votre configuration :
 
 ---
 
+## 📜 6. Commandes du Mod
+
+Le mod propose plusieurs commandes regroupées sous le préfixe `/mna`. La plupart de ces commandes nécessitent d'être OP (niveau de permission 2).
+
+### Aide
+*   `/mna help` : Affiche la liste des commandes disponibles et leur description.
+
+### Cultures
+*   `/mna culture list` : Liste toutes les cultures actuellement chargées par le mod.
+*   `/mna culture info <id>` : Affiche les détails techniques d'une culture (biomes, types de villages, bâtiments, etc.).
+
+### Villages
+*   `/mna village list` : Liste tous les villages actifs dans la dimension actuelle avec leurs coordonnées.
+*   `/mna village info [nom]` : Affiche les informations détaillées du village le plus proche ou d'un village spécifique.
+*   `/mna village tp <nom>` : Téléporte le joueur au centre du village spécifié.
+*   `/mna village remove <nom>` : Supprime un village (à utiliser pour le debug).
+
+### Mode Créateur (Structure Scanner/Placer)
+*   `/mna creator tool scanner` : Donne la Baguette d'Arpentage pour sélectionner des zones.
+*   `/mna creator tool placer` : Donne la Baguette de Placement (vierge).
+*   `/mna creator structure save <id>` : Sauvegarde la sélection actuelle dans un fichier NBT et génère le JSON de prévisualisation.
+*   `/mna creator structure list` : Ouvre une interface graphique listant toutes les structures sauvegardées dans le dossier `creator_output`.
+*   `/mna creator structure place <id>` : Configure la Baguette de Placement tenue en main pour la structure spécifiée et active la prévisualisation.
+*   `/mna creator structure delete <id>` : Supprime définitivement les fichiers d'une structure sauvegardée.
+*   `/mna creator structure info <id>` : Affiche les dimensions et les clés de traduction d'une structure.
+*   `/mna creator selection clear` : Réinitialise la sélection actuelle du scanner.
+*   `/mna creator selection info` : Affiche les coordonnées et la taille de la sélection actuelle.
+*   `/mna creator generation <on|off|status>` : Active, désactive ou affiche l'état de la génération naturelle des villages.
+
+---
+
 *Note : Pour toute nouvelle structure, n'oubliez pas d'ajouter les traductions correspondantes dans vos fichiers de 
 langue (ou vérifiez le fichier `lang_additions.json` généré par le mode creator).*
 

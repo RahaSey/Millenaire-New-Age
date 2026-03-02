@@ -38,10 +38,15 @@ public class MillMemories {
     public static final MemoryModuleType<Player> NEAREST_PLAYER = register(
             "nearest_player", new MemoryModuleType<>(Optional.empty()));
 
-    /**
-     * Entité hostile détectée à proximité (runtime uniquement).
-     * Quand cette mémoire est présente, le villageois passe en mode PANIC.
-     */
+    /** Position du centre du village. Persistée dans le Brain NBT. */
+    public static final MemoryModuleType<BlockPos> VILLAGE_CENTER_POS = register(
+            "village_center_pos", new MemoryModuleType<>(Optional.of(BlockPos.CODEC)));
+
+    /** Position de l'entrée (porte) de la maison assignée. Runtime — recalculée au besoin. */
+    public static final MemoryModuleType<BlockPos> HOME_ENTRANCE_POS = register(
+            "home_entrance_pos", new MemoryModuleType<>(Optional.empty()));
+
+    /** Menace la plus proche (monstre) détectée par ThreatSensor (runtime uniquement). */
     public static final MemoryModuleType<LivingEntity> ATTACK_TARGET = register(
             "attack_target", new MemoryModuleType<>(Optional.empty()));
 

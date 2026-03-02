@@ -2,8 +2,8 @@ package com.mat37dev.command;
 
 import com.mat37dev.village.Village;
 import com.mat37dev.village.VillageManager;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -36,10 +36,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class VillageCommands {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-            Commands.literal("mna")
-                .then(Commands.literal("village")
+    public static LiteralArgumentBuilder<CommandSourceStack> build() {
+        return Commands.literal("village")
                     .requires(src -> src.hasPermission(2))
                     .then(Commands.literal("list")
                         .executes(ctx -> listVillages(ctx.getSource())))
@@ -58,8 +56,7 @@ public class VillageCommands {
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                             .suggests(VillageCommands::suggestVillageNames)
                             .executes(ctx -> removeVillage(
-                                ctx.getSource(), StringArgumentType.getString(ctx, "name"))))))
-        );
+                                ctx.getSource(), StringArgumentType.getString(ctx, "name")))));
     }
 
     // ── Autocomplétion ────────────────────────────────────────────────────────

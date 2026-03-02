@@ -10,6 +10,7 @@ import com.mat37dev.network.OpenStructureListPayload;
 import com.mat37dev.network.StructurePreviewPayload;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
@@ -44,10 +45,8 @@ import java.util.List;
  */
 public class CreatorCommands {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-            Commands.literal("mna")
-                .then(Commands.literal("creator").requires(src -> src.hasPermission(2))
+    public static LiteralArgumentBuilder<CommandSourceStack> build() {
+        return Commands.literal("creator").requires(src -> src.hasPermission(2))
 
                     // ── /mna creator tool ──────────────────────────────────
                     .then(Commands.literal("tool")
@@ -95,9 +94,7 @@ public class CreatorCommands {
                             .executes(ctx -> setGeneration(ctx, false)))
                         .then(Commands.literal("status")
                             .executes(CreatorCommands::generationStatus))
-                    )
-                )
-        );
+                    );
     }
 
     // ── Tool ─────────────────────────────────────────────────────────────────

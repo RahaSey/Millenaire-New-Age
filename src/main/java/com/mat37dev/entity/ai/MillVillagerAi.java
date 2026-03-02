@@ -2,8 +2,8 @@ package com.mat37dev.entity.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.mat37dev.entity.MillVillagerEntity;
-import com.mat37dev.entity.ai.behavior.*;
-import com.mojang.datafixers.util.Pair;
+import com.mat37dev.entity.ai.profile.BehaviorProfile;
+import com.mat37dev.entity.ai.profile.BehaviorProfileRegistry;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -19,15 +19,14 @@ import java.util.Set;
  *
  * <h3>Schedule (géré manuellement dans customServerAiStep)</h3>
  * <pre>
- *   0 ticks    (6h00)  → Activity.WORK   : va au travail
- *   11000 ticks (17h00) → Activity.IDLE  : loisir, balade
- *   14000 ticks (20h00) → Activity.REST  : rentre, dort
- *   PANIC (priorité absolue)             : fuit les monstres
+ *   0 ticks     (6h00)  → Activity.WORK : va au travail (rôle-spécifique)
+ *   11000 ticks (17h00) → Activity.MEET : socialise au centre du village
+ *   14000 ticks (20h00) → Activity.REST : rentre, dort
  * </pre>
  *
  * <h3>Extensibilité</h3>
- * <p>Pour ajouter un behavior : créer une sous-classe de {@code Behavior<MillVillagerEntity>}
- * et l'ajouter dans la méthode d'enregistrement de l'activity correspondante.</p>
+ * <p>Pour ajouter un behavior : créer une sous-classe de {@code Behavior<MillVillagerEntity>},
+ * l'enregistrer dans {@link BehaviorProfileRegistry}, et l'utiliser dans le JSON.</p>
  */
 public class MillVillagerAi {
 
@@ -36,96 +35,54 @@ public class MillVillagerAi {
             MillMemories.HOME_POS,
             MillMemories.WORK_POS,
             MillMemories.HOME_BED_POS,
+            MillMemories.HOME_ENTRANCE_POS,
             MillMemories.WANDER_TARGET,
             MillMemories.NEAREST_PLAYER,
-            MillMemories.ATTACK_TARGET
+            MillMemories.VILLAGE_CENTER_POS
     );
 
     /** Types de capteurs actifs pour tous les villageois. */
     public static final List<SensorType<? extends Sensor<? super MillVillagerEntity>>> SENSOR_TYPES = List.of(
-            MillSensors.NEAREST_PLAYER,
-            MillSensors.THREAT
+            MillSensors.NEAREST_PLAYER
     );
 
     // ── Ticks pour le schedule manuel (en ticks MC, 0 = lever du soleil = 6h) ─
 
     /** Tick de début de journée de travail (6h00 = 0 ticks). */
-    public static final long WORK_START   = 0L;
-    /** Tick de début de loisir (17h00 ≈ 11000 ticks). */
-    public static final long IDLE_START   = 11000L;
+    public static final long WORK_START = 0L;
+    /** Tick de début de socialisation (17h00 ≈ 11000 ticks). */
+    public static final long MEET_START = 11000L;
     /** Tick de début du repos nocturne (20h00 ≈ 14000 ticks). */
-    public static final long REST_START   = 14000L;
+    public static final long REST_START = 14000L;
 
     // ── Configuration du Brain ────────────────────────────────────────────────
 
     /**
-     * Construit et configure un Brain pour un villageois.
-     * Appelé depuis .
+     * Construit et configure un Brain pour un villageois avec un profil basé sur ses behaviors.
+     *
+     * @param provider    le provider de Brain (mémoires + capteurs)
+     * @param dynamic     les données NBT du Brain
+     * @param behaviorIds liste des identifiants de behavior du JSON (ex: ["farm", "wander", "sleep"])
      */
     public static Brain<MillVillagerEntity> makeBrain(
-            Brain.Provider<MillVillagerEntity> provider, Dynamic<?> dynamic) {
+            Brain.Provider<MillVillagerEntity> provider, Dynamic<?> dynamic,
+            List<String> behaviorIds) {
 
         Brain<MillVillagerEntity> brain = provider.makeBrain(dynamic);
 
-        registerCoreActivity(brain);
-        registerWorkActivity(brain);
-        registerIdleActivity(brain);
-        registerRestActivity(brain);
-        registerPanicActivity(brain);
+        BehaviorProfile profile = BehaviorProfileRegistry.buildProfile(behaviorIds);
 
-        // IDLE est l'activity par défaut au démarrage
+        brain.addActivity(Activity.CORE, ImmutableList.copyOf(profile.core()));
+        brain.addActivity(Activity.WORK, ImmutableList.copyOf(profile.work()));
+        brain.addActivity(Activity.MEET, ImmutableList.copyOf(profile.meet()));
+        brain.addActivity(Activity.REST, ImmutableList.copyOf(profile.rest()));
+        brain.addActivity(Activity.PANIC, ImmutableList.copyOf(profile.panic()));
+        brain.addActivity(Activity.IDLE, ImmutableList.copyOf(profile.idle()));
+
         brain.setCoreActivities(Set.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
 
         return brain;
-    }
-
-    // ── Enregistrement des activities ─────────────────────────────────────────
-
-    /** CORE — comportements de base toujours actifs (portes, etc.). */
-    private static void registerCoreActivity(Brain<MillVillagerEntity> brain) {
-        brain.addActivity(Activity.CORE, ImmutableList.of(
-                Pair.of(0, new MillDoorInteractBehavior())
-        ));
-    }
-
-    /** WORK — journée de travail : se rend sur le lieu de travail. */
-    private static void registerWorkActivity(Brain<MillVillagerEntity> brain) {
-        brain.addActivity(Activity.WORK, ImmutableList.of(
-                Pair.of(0, new GoToWorkplaceBehavior())
-        ));
-    }
-
-    /**
-     * IDLE — loisir / soirée : se promène dans le village.
-     * Les futures versions ajouteront ici la socialisation, les visites, etc.
-     */
-    private static void registerIdleActivity(Brain<MillVillagerEntity> brain) {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
-                Pair.of(0, new WanderAroundVillageBehavior())
-        ));
-    }
-
-    /**
-     * REST — repos nocturne : rentre chez soi, puis dort.
-     * GoHome a priorité 0, Sleep a priorité 1 (démarre une fois GoHome terminé).
-     */
-    private static void registerRestActivity(Brain<MillVillagerEntity> brain) {
-        brain.addActivity(Activity.REST, ImmutableList.of(
-                Pair.of(0, new GoHomeBehavior()),
-                Pair.of(1, new SleepAtHomeBehavior())
-        ));
-    }
-
-    /**
-     * PANIC — fuite : priorité absolue, déclenché par la présence de
-     * {@link MillMemories#ATTACK_TARGET}.
-     * Dans les phases futures, les gardes auront un DefendVillageBehavior ici.
-     */
-    private static void registerPanicActivity(Brain<MillVillagerEntity> brain) {
-        brain.addActivity(Activity.PANIC, ImmutableList.of(
-                Pair.of(0, new FleeFromThreatBehavior())
-        ));
     }
 }

@@ -134,6 +134,18 @@ public class VillagerSpawner {
             home.addResident(villager.getUUID());
             // Injecter HOME_POS directement dans le Brain (disponible dès le 1er tick)
             villager.getBrain().setMemory(MillMemories.HOME_POS, home.getOrigin());
+            // Injecter l'entrée depuis les données du Building (scannées au placement)
+            if (home.getEntrancePos() != null) {
+                villager.getBrain().setMemory(MillMemories.HOME_ENTRANCE_POS, home.getEntrancePos());
+            }
+            // Injecter le lit assigné par index de résident
+            int residentIndex = home.getResidentIds().indexOf(villager.getUUID());
+            if (residentIndex >= 0) {
+                net.minecraft.core.BlockPos bed = home.getBedForResident(residentIndex);
+                if (bed != null) {
+                    villager.getBrain().setMemory(MillMemories.HOME_BED_POS, bed);
+                }
+            }
         }
         if (workplace != null) {
             villager.setWorkplaceId(workplace.getId());

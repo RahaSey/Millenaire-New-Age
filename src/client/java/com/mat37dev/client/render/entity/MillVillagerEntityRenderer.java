@@ -2,10 +2,15 @@ package com.mat37dev.client.render.entity;
 
 import com.mat37dev.MillenaireNewAge;
 import com.mat37dev.entity.MillVillagerEntity;
+import com.mat37dev.entity.ai.status.VillagerStatus;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,5 +54,42 @@ public class MillVillagerEntityRenderer extends HumanoidMobRenderer<MillVillager
 
         renderState.clothingTexturePath = entity.getClothingTexture();
         renderState.hairTexturePath = entity.getHairTexture();
+
+        // Statut pour la 2ème ligne du nametag
+        VillagerStatus status = entity.getStatus();
+        renderState.statusLine = Component.translatable(status.getTranslationKey())
+                .withStyle(status.getColor());
+    }
+
+    @Override
+    protected void submitNameTag(
+            MillVillagerRenderState renderState, PoseStack poseStack,
+            SubmitNodeCollector collector, CameraRenderState cameraState) {
+        // Ligne 1 : nom + rôle (au-dessus, Y offset = -10 pour laisser de la place)
+        if (renderState.nameTag != null) {
+            collector.submitNameTag(
+                    poseStack,
+                    renderState.nameTagAttachment,
+                    -10,
+                    renderState.nameTag,
+                    !renderState.isDiscrete,
+                    renderState.lightCoords,
+                    renderState.distanceToCameraSq,
+                    cameraState
+            );
+        }
+        // Ligne 2 : statut (en dessous du nom, Y offset = 0)
+        if (renderState.statusLine != null && renderState.nameTag != null) {
+            collector.submitNameTag(
+                    poseStack,
+                    renderState.nameTagAttachment,
+                    0,
+                    renderState.statusLine,
+                    !renderState.isDiscrete,
+                    renderState.lightCoords,
+                    renderState.distanceToCameraSq,
+                    cameraState
+            );
+        }
     }
 }

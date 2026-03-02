@@ -2,11 +2,17 @@ package com.mat37dev.entity;
 
 import com.mat37dev.culture.CultureRegistry;
 import com.mat37dev.culture.VillagerTypeDef;
+import com.mat37dev.entity.ai.BuildingHelper;
 import com.mat37dev.entity.ai.MillMemories;
+import com.mat37dev.entity.ai.navigation.MillPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.core.BlockPos;
 import com.mat37dev.entity.ai.MillVillagerAi;
+import com.mat37dev.entity.ai.status.VillagerStatus;
 import com.mat37dev.village.Village;
 import com.mat37dev.village.VillageManager;
 import com.mojang.serialization.Dynamic;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,6 +34,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,6 +57,9 @@ public class MillVillagerEntity extends PathfinderMob {
     /** Vrai quand le villageois est en train de dormir (pose couchée côté renderer). */
     private static final EntityDataAccessor<Boolean> IS_SLEEPING =
             SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Statut courant du villageois (ordinal de {@link VillagerStatus}). */
+    private static final EntityDataAccessor<Byte> STATUS =
+            SynchedEntityData.defineId(MillVillagerEntity.class, EntityDataSerializers.BYTE);
 
     // ── Champs serveur (NBT uniquement) ──────────────────────────────────────
 
@@ -68,7 +78,27 @@ public class MillVillagerEntity extends PathfinderMob {
 
     public MillVillagerEntity(EntityType<? extends MillVillagerEntity> type, Level level) {
         super(type, level);
-        this.getNavigation().setCanOpenDoors(true);
+        // Navigation configurée dans createNavigation() via MillPathNavigation
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(Level level) {
+        MillPathNavigation nav = new MillPathNavigation(this, level);
+        nav.setCanOpenDoors(true);
+        nav.setCanFloat(true);
+        return nav;
+    }
+
+    // ── Collision ────────────────────────────────────────────────────────────
+
+    /**
+     * Les villageois Millénaire ne se poussent pas entre eux pour éviter
+     * les embouteillages aux portes et passages étroits.
+     */
+    @Override
+    protected void doPush(net.minecraft.world.entity.Entity other) {
+        if (other instanceof MillVillagerEntity) return;
+        super.doPush(other);
     }
 
     // ── Attributs ────────────────────────────────────────────────────────────
@@ -90,7 +120,38 @@ public class MillVillagerEntity extends PathfinderMob {
 
     @Override
     protected @NotNull Brain<?> makeBrain(Dynamic<?> dynamic) {
-        return MillVillagerAi.makeBrain(brainProvider(), dynamic);
+        return MillVillagerAi.makeBrain(brainProvider(), dynamic, resolveBehaviorIds());
+    }
+
+    /**
+     * Reconstruit le Brain avec les behaviors adaptés au type de villageois.
+     * Appelé après assignation du type (finalizeSpawn, readAdditionalSaveData).
+     */
+    private void rebuildBrain() {
+        Brain<MillVillagerEntity> oldBrain = getBrain();
+        // Sérialiser le Brain existant puis recréer avec les bons behaviors
+        Dynamic<?> serialized = oldBrain.serializeStart(NbtOps.INSTANCE)
+                .resultOrPartial(err -> {})
+                .map(tag -> new Dynamic<>(NbtOps.INSTANCE, tag))
+                .orElse(new Dynamic<>(NbtOps.INSTANCE));
+        Brain<MillVillagerEntity> newBrain = MillVillagerAi.makeBrain(
+                brainProvider(), serialized, resolveBehaviorIds());
+        this.brain = newBrain;
+    }
+
+    /**
+     * Résout les behaviorIds depuis le CultureRegistry pour le type de villageois courant.
+     */
+    private List<String> resolveBehaviorIds() {
+        String cultureId = getEntityData().get(CULTURE_ID);
+        String typeId = getEntityData().get(VILLAGER_TYPE_ID);
+        if (cultureId.isEmpty() || typeId.isEmpty()) return List.of();
+        return CultureRegistry.get(cultureId)
+                .flatMap(c -> c.villagerTypes().stream()
+                        .filter(t -> t.id().equals(typeId))
+                        .findFirst())
+                .map(VillagerTypeDef::behaviors)
+                .orElse(List.of());
     }
 
     @Override
@@ -105,14 +166,13 @@ public class MillVillagerEntity extends PathfinderMob {
      * <h3>Schedule (ticks MC, 0 = lever du soleil = 6h)</h3>
      * <ul>
      *   <li>0–11000   : WORK (journée)</li>
-     *   <li>11000–14000 : IDLE (loisir)</li>
+     *   <li>11000–14000 : MEET (socialisation)</li>
      *   <li>14000–24000 : REST (nuit)</li>
-     *   <li>PANIC : priorité absolue si ATTACK_TARGET présent</li>
      * </ul>
      */
     @Override
     protected void customServerAiStep(ServerLevel level) {
-        // Injection différée des mémoires HOME_POS/WORK_POS.
+        // Injection différée des mémoires HOME_POS/WORK_POS/VILLAGE_CENTER_POS.
         if (nextBrainInitAttempt >= 0 && level.getGameTime() >= nextBrainInitAttempt) {
             if (initBrainMemoriesIfNeeded(level)) {
                 nextBrainInitAttempt = -1L;
@@ -126,13 +186,10 @@ public class MillVillagerEntity extends PathfinderMob {
         Activity previousActivity = brain.getActiveNonCoreActivity().orElse(null);
         Activity newActivity;
 
-        // Détermination de la nouvelle activité
-        if (brain.getMemory(MillMemories.ATTACK_TARGET).isPresent()) {
-            newActivity = Activity.PANIC;
-        } else if (dayTime < MillVillagerAi.IDLE_START) {
+        if (dayTime < MillVillagerAi.MEET_START) {
             newActivity = Activity.WORK;
         } else if (dayTime < MillVillagerAi.REST_START) {
-            newActivity = Activity.IDLE;
+            newActivity = Activity.MEET;
         } else {
             newActivity = Activity.REST;
         }
@@ -163,13 +220,39 @@ public class MillVillagerEntity extends PathfinderMob {
         if (villageOpt.isEmpty()) return false; // village pas encore chargé — réessayer
 
         Village village = villageOpt.get();
-        if (homeId != null && brain.getMemory(MillMemories.HOME_POS).isEmpty()) {
-            village.getBuilding(homeId).ifPresent(b ->
-                    brain.setMemory(MillMemories.HOME_POS, b.getOrigin()));
+        if (homeId != null) {
+            village.getBuilding(homeId).ifPresent(b -> {
+                if (brain.getMemory(MillMemories.HOME_POS).isEmpty()) {
+                    brain.setMemory(MillMemories.HOME_POS, b.getOrigin());
+                }
+                // Entrée : utiliser la position enregistrée dans le Building, fallback sur scan
+                if (brain.getMemory(MillMemories.HOME_ENTRANCE_POS).isEmpty()) {
+                    BlockPos entrance = b.getEntrancePos();
+                    if (entrance == null) {
+                        entrance = BuildingHelper.findNearestDoor(level, b.getOrigin());
+                    }
+                    if (entrance != null) {
+                        brain.setMemory(MillMemories.HOME_ENTRANCE_POS, entrance);
+                    }
+                }
+                // Lit : assigné par index de résident dans le Building
+                if (brain.getMemory(MillMemories.HOME_BED_POS).isEmpty()) {
+                    int residentIndex = b.getResidentIds().indexOf(this.getUUID());
+                    if (residentIndex >= 0) {
+                        BlockPos bed = b.getBedForResident(residentIndex);
+                        if (bed != null) {
+                            brain.setMemory(MillMemories.HOME_BED_POS, bed);
+                        }
+                    }
+                }
+            });
         }
         if (workplaceId != null && brain.getMemory(MillMemories.WORK_POS).isEmpty()) {
             village.getBuilding(workplaceId).ifPresent(b ->
                     brain.setMemory(MillMemories.WORK_POS, b.getOrigin()));
+        }
+        if (brain.getMemory(MillMemories.VILLAGE_CENTER_POS).isEmpty()) {
+            brain.setMemory(MillMemories.VILLAGE_CENTER_POS, village.getCenter());
         }
         return true;
     }
@@ -186,6 +269,7 @@ public class MillVillagerEntity extends PathfinderMob {
         builder.define(FIRST_NAME, "");
         builder.define(FAMILY_NAME, "");
         builder.define(IS_SLEEPING, false);
+        builder.define(STATUS, VillagerStatus.IDLE.toByte());
     }
 
     // ── Sérialisation ─────────────────────────────────────────────────────────
@@ -234,6 +318,9 @@ public class MillVillagerEntity extends PathfinderMob {
 
         // Réinitialiser pour forcer un rechargement des mémoires Brain au prochain tick
         nextBrainInitAttempt = 0L;
+
+        // Reconstruire le Brain avec les behaviors adaptés au type chargé
+        rebuildBrain();
     }
 
     // ── Spawn initial ─────────────────────────────────────────────────────────
@@ -257,6 +344,9 @@ public class MillVillagerEntity extends PathfinderMob {
             boolean male = getEntityData().get(SEX);
             getEntityData().set(BODY_VARIANT, level.getRandom().nextInt(male ? 11 : 4));
         }
+
+        // Reconstruire le Brain avec les behaviors adaptés au type assigné
+        rebuildBrain();
 
         return data;
     }
@@ -296,6 +386,16 @@ public class MillVillagerEntity extends PathfinderMob {
 
     /** Retourne {@code true} si le villageois est en train de dormir (pose couchée). */
     public boolean isVillagerSleeping() { return getEntityData().get(IS_SLEEPING); }
+
+    /** Retourne le statut courant du villageois. */
+    public VillagerStatus getStatus() {
+        return VillagerStatus.fromByte(getEntityData().get(STATUS));
+    }
+
+    /** Définit le statut courant du villageois (synchronisé client). */
+    public void setStatus(VillagerStatus status) {
+        getEntityData().set(STATUS, status.toByte());
+    }
 
     /** Chemin relatif de la texture de vêtement (peut être vide si non assigné). */
     public String getClothingTexture() {

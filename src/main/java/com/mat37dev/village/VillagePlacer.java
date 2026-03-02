@@ -7,6 +7,7 @@ import com.mat37dev.culture.CultureRegistry;
 import com.mat37dev.culture.VillageType;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.StructureSaveManager;
+import com.mat37dev.entity.ai.BuildingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -196,6 +197,13 @@ public class VillagePlacer {
             // Enregistrer le bâtiment dans le village
             Building building = new Building(UUID.randomUUID(), village.getId(),
                 bt.id(), origin, Direction.NORTH, bt.maxHealth());
+
+            // Scanner la structure placée pour trouver lits et entrée
+            BuildingHelper.scanBuilding(level, building, size);
+            MillenaireNewAge.LOGGER.info("[MNA] Scan '{}' : {} lits, entrée={}",
+                bt.id(), building.getBedPositions().size(),
+                building.getEntrancePos() != null ? building.getEntrancePos().toShortString() : "aucune");
+
             village.addBuilding(building);
             placed.add(new PlacedBuilding(xzPos.getX(), xzPos.getZ(), size.getX(), size.getZ()));
 
