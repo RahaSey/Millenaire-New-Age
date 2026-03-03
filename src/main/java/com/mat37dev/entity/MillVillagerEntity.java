@@ -34,6 +34,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.world.phys.Vec3;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,6 +101,19 @@ public class MillVillagerEntity extends PathfinderMob {
     protected void doPush(net.minecraft.world.entity.Entity other) {
         if (other instanceof MillVillagerEntity) return;
         super.doPush(other);
+    }
+
+    // ── Blocage du mouvement pendant le sommeil ─────────────────────────────
+
+    /**
+     * Empêche tout déplacement physique quand le villageois dort.
+     * C'est le verrou principal : même si un behavior lance un {@code moveTo()},
+     * le villageois ne bougera pas tant qu'il est en état sleeping.
+     */
+    @Override
+    public void travel(Vec3 movementInput) {
+        if (this.isSleeping()) return;
+        super.travel(movementInput);
     }
 
     // ── Attributs ────────────────────────────────────────────────────────────
@@ -196,6 +211,11 @@ public class MillVillagerEntity extends PathfinderMob {
 
         // Si l'activité change, on nettoie les intentions de mouvement précédentes
         if (newActivity != previousActivity) {
+            // Réveiller le villageois si on quitte REST
+            if (this.isSleeping()) {
+                this.stopSleeping();
+                this.setSleeping(false);
+            }
             brain.eraseMemory(MemoryModuleType.WALK_TARGET);
             brain.eraseMemory(MemoryModuleType.PATH);
             brain.eraseMemory(MemoryModuleType.LOOK_TARGET);

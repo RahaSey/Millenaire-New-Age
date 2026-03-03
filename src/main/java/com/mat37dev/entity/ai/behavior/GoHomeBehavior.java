@@ -2,6 +2,7 @@ package com.mat37dev.entity.ai.behavior;
 
 import com.mat37dev.entity.MillVillagerEntity;
 import com.mat37dev.entity.ai.MillMemories;
+import com.mat37dev.entity.ai.MillVillagerAi;
 import com.mat37dev.entity.ai.status.VillagerStatus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -39,6 +40,12 @@ public class GoHomeBehavior extends Behavior<MillVillagerEntity> {
     protected boolean checkExtraStartConditions(ServerLevel level, MillVillagerEntity entity) {
         if (entity.isSleeping()) return false;
 
+        // Ne pas interférer avec SleepAtHomeBehavior quand c'est l'heure de dormir
+        // et que le villageois a un lit assigné — SleepAtHome gère toute la navigation
+        if (isSleepTime(level) && entity.getBrain().hasMemoryValue(MillMemories.HOME_BED_POS)) {
+            return false;
+        }
+
         BlockPos target = getTargetPos(entity);
         if (target == null) return false;
         return !target.closerThan(entity.blockPosition(), ARRIVAL_DIST);
@@ -56,6 +63,11 @@ public class GoHomeBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean canStillUse(ServerLevel level, MillVillagerEntity entity, long gameTime) {
         if (entity.isSleeping()) return false;
+
+        // Céder la place à SleepAtHomeBehavior
+        if (isSleepTime(level) && entity.getBrain().hasMemoryValue(MillMemories.HOME_BED_POS)) {
+            return false;
+        }
 
         BlockPos target = getTargetPos(entity);
         if (target == null) return false;
@@ -96,6 +108,11 @@ public class GoHomeBehavior extends Behavior<MillVillagerEntity> {
     protected void stop(ServerLevel level, MillVillagerEntity entity, long gameTime) {
         entity.getNavigation().stop();
         entity.setStatus(VillagerStatus.IDLE);
+    }
+
+    private static boolean isSleepTime(ServerLevel level) {
+        long dayTime = level.getDayTime() % 24000L;
+        return dayTime >= MillVillagerAi.REST_START || dayTime < MillVillagerAi.WORK_START;
     }
 
     private BlockPos getTargetPos(MillVillagerEntity entity) {

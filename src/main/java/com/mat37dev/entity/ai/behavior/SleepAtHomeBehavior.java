@@ -31,12 +31,15 @@ public class SleepAtHomeBehavior extends Behavior<MillVillagerEntity> {
     private static final int    BED_SEARCH_RADIUS  = 12;
     private static final int    BED_SEARCH_HEIGHT  = 4;
     private static final double WALK_SPEED         = 0.6;
+    /** Distance max au lit pour déclencher le coucher (doit être petit pour éviter le flottement). */
     private static final double SLEEP_DIST         = 2.0;
+    /** Distance à l'entrée pour considérer qu'on y est arrivé. */
+    private static final double ENTRANCE_ARRIVAL_DIST = 2.5;
     private static final int    STUCK_TICKS        = 40;
     private static final double MIN_MOVE_DIST_SQ   = 0.5 * 0.5;
     private static final int    PATH_FAIL_COOLDOWN = 60;
     /** Intervalle (ticks) entre les tentatives de chemin direct vers le lit en mode entrée. */
-    private static final int    RETRY_DIRECT_PATH_INTERVAL = 40;
+    private static final int    RETRY_DIRECT_PATH_INTERVAL = 30;
 
     private BlockPos lastCheckPos = BlockPos.ZERO;
     private int ticksSinceLastMove = 0;
@@ -82,12 +85,12 @@ public class SleepAtHomeBehavior extends Behavior<MillVillagerEntity> {
 
         if (bedPos == null) return;
 
-        // Essayer de naviguer directement vers le lit
+        // Essayer de naviguer directement vers le lit (même chemin tronqué = ok)
         Path pathToBed = entity.getNavigation().createPath(bedPos, 1);
-        if (pathToBed != null && pathToBed.canReach()) {
+        if (pathToBed != null) {
             entity.getNavigation().moveTo(pathToBed, WALK_SPEED);
         } else {
-            // Pas de chemin direct complet → naviguer vers l'entrée d'abord
+            // Aucun chemin du tout → naviguer vers l'entrée d'abord
             navigatingToEntrance = true;
             navigateTo(entity, getEntrancePos(entity), gameTime);
         }
@@ -110,8 +113,13 @@ public class SleepAtHomeBehavior extends Behavior<MillVillagerEntity> {
 
         // Phase 1 : naviguer vers l'entrée, retenter le lit régulièrement
         if (navigatingToEntrance) {
+            BlockPos entrancePos = getEntrancePos(entity);
+
             // Tenter un chemin direct vers le lit à intervalles réguliers
-            if (gameTime - lastDirectPathAttempt >= RETRY_DIRECT_PATH_INTERVAL) {
+            // (ou immédiatement si on est arrivé à l'entrée)
+            boolean atEntrance = entrancePos != null
+                    && entrancePos.closerThan(entity.blockPosition(), ENTRANCE_ARRIVAL_DIST);
+            if (atEntrance || gameTime - lastDirectPathAttempt >= RETRY_DIRECT_PATH_INTERVAL) {
                 lastDirectPathAttempt = gameTime;
                 Path directPath = entity.getNavigation().createPath(bedPos, 1);
                 if (directPath != null) {
@@ -122,15 +130,22 @@ public class SleepAtHomeBehavior extends Behavior<MillVillagerEntity> {
                     lastPathFailTick = -1000L;
                     return;
                 }
+                // À l'entrée mais pas de chemin vers le lit → rester immobile, réessayer
+                if (atEntrance) {
+                    entity.getNavigation().stop();
+                    return;
+                }
             }
 
-            handleIdempotentNavigation(entity, getEntrancePos(entity), gameTime);
+            handleIdempotentNavigation(entity, entrancePos, gameTime);
             return;
         }
 
         // Phase 2 : naviguer vers le lit
         if (bedPos.closerThan(entity.blockPosition(), SLEEP_DIST)) {
             entity.getNavigation().stop();
+            // Téléporter le villageois sur le lit pour éviter le flottement
+            entity.setPos(bedPos.getX() + 0.5, bedPos.getY() + 0.5625, bedPos.getZ() + 0.5);
             entity.startSleeping(bedPos);
             entity.setSleeping(true);
             return;

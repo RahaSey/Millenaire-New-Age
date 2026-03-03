@@ -23,8 +23,12 @@ import java.util.Optional;
  */
 public class SocializeAtCenterBehavior extends Behavior<MillVillagerEntity> {
 
-    private static final int ACTIVATION_DIST = 6;
-    private static final int LOOK_RANGE      = 8;
+    private static final int ACTIVATION_DIST       = 6;
+    private static final int LOOK_RANGE            = 8;
+    /** Durée (ticks) pendant laquelle le villageois regarde la même cible. */
+    private static final int LOOK_DURATION_TICKS   = 60;
+
+    private int lookCooldown = 0;
 
     public SocializeAtCenterBehavior() {
         super(Map.of(MillMemories.VILLAGE_CENTER_POS, MemoryStatus.VALUE_PRESENT), 200, 600);
@@ -40,6 +44,7 @@ public class SocializeAtCenterBehavior extends Behavior<MillVillagerEntity> {
     protected void start(ServerLevel level, MillVillagerEntity entity, long gameTime) {
         entity.getNavigation().stop();
         entity.setStatus(VillagerStatus.SOCIALIZING);
+        lookCooldown = 0;
     }
 
     @Override
@@ -50,13 +55,19 @@ public class SocializeAtCenterBehavior extends Behavior<MillVillagerEntity> {
 
     @Override
     protected void tick(ServerLevel level, MillVillagerEntity entity, long gameTime) {
-        // Regarder vers une entité proche (joueur ou villageois)
+        if (lookCooldown > 0) {
+            lookCooldown--;
+            return;
+        }
+
+        // Choisir une nouvelle cible à regarder
         AABB lookBox = entity.getBoundingBox().inflate(LOOK_RANGE);
         List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, lookBox,
                 e -> e != entity && !e.isDeadOrDying());
         if (!nearby.isEmpty()) {
             LivingEntity target = nearby.get(level.random.nextInt(nearby.size()));
             entity.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            lookCooldown = LOOK_DURATION_TICKS;
         }
     }
 

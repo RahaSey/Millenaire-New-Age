@@ -32,7 +32,7 @@ import java.util.Random;
  * automatiquement une compagne ({@code normans:housewife} ou équivalent féminin de la culture).
  *
  * <h3>Positions de spawn</h3>
- * Tous les villageois spawent au sol près du centre du village (positions décalées par index)
+ * Tous les villageois spawn au sol près du centre du village (positions décalées par index)
  * pour éviter de se retrouver sur les toits des bâtiments.
  */
 public class VillagerSpawner {
