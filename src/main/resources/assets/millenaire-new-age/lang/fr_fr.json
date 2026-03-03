@@ -30,6 +30,12 @@
   "block.millenaire-new-age.stained_glass_green_blue": "Vitraux Verts et Bleus",
   "item.millenaire-new-age.stained_glass_green_blue": "Vitraux Verts et Bleus",
 
+  "block.millenaire-new-age.mill_chest":       "Coffre Millénaire",
+  "item.millenaire-new-age.mill_chest":        "Coffre Millénaire",
+  "container.millenaire-new-age.mill_chest":        "Coffre Millénaire",
+  "container.millenaire-new-age.mill_chest_locked": "Coffre Verrouillé",
+  "container.millenaire-new-age.mill_chest_double": "Grand Coffre Millénaire",
+
   "item.millenaire-new-age.wand_of_summoning": "Baguette d'invocation",
   "item.millenaire-new-age.wand_of_negation":  "Baguette de négation",
 

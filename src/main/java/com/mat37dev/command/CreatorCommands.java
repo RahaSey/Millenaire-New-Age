@@ -1,5 +1,6 @@
 package com.mat37dev.command;
 
+import com.mat37dev.block.MillChestBlockEntity;
 import com.mat37dev.config.VillageConfig;
 import com.mat37dev.creator.CreatorSession;
 import com.mat37dev.creator.StructurePlacerItem;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
@@ -38,6 +40,9 @@ import java.util.List;
  *
  * /mna creator selection clear       → réinitialise la sélection
  * /mna creator selection info        → affiche pos1/pos2/taille
+ *
+ * /mna creator chest unlock          → déverrouille le coffre visé
+ * /mna creator chest lock            → verrouille le coffre visé
  * </pre>
  *
  * <p>Toutes ces commandes nécessitent le niveau de permission 2 (op).</p>
@@ -83,6 +88,14 @@ public class CreatorCommands {
                             .executes(CreatorCommands::clearSelection))
                         .then(Commands.literal("info")
                             .executes(CreatorCommands::selectionInfo))
+                    )
+
+                    // ── /mna creator chest ─────────────────────────────────
+                    .then(Commands.literal("chest")
+                        .then(Commands.literal("unlock")
+                            .executes(CreatorCommands::unlockChest))
+                        .then(Commands.literal("lock")
+                            .executes(CreatorCommands::lockChest))
                     )
 
                     // ── /mna creator generation ────────────────────────────
@@ -289,6 +302,49 @@ public class CreatorCommands {
         player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_pos2", max.toShortString()));
         player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.creator.selection_size",
             size.getX(), size.getY(), size.getZ(), (size.getX() * size.getY() * size.getZ())));
+        return 1;
+    }
+
+    // ── Chest ─────────────────────────────────────────────────────────────────
+
+    private static int unlockChest(CommandContext<CommandSourceStack> ctx) {
+        return setChestLock(ctx, false);
+    }
+
+    private static int lockChest(CommandContext<CommandSourceStack> ctx) {
+        return setChestLock(ctx, true);
+    }
+
+    private static int setChestLock(CommandContext<CommandSourceStack> ctx, boolean lock) {
+        ServerPlayer player = getPlayer(ctx);
+        if (player == null) return 0;
+
+        // Trouver le coffre que le joueur regarde (rayon 5 blocs)
+        var hitResult = player.pick(5.0, 1.0f, false);
+        if (!(hitResult instanceof net.minecraft.world.phys.BlockHitResult blockHit)) {
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.literal("No block in sight.")));
+            return 0;
+        }
+
+        BlockPos pos = blockHit.getBlockPos();
+        BlockEntity be = player.level().getBlockEntity(pos);
+        if (!(be instanceof MillChestBlockEntity chest)) {
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.literal("Not a Millenaire chest.")));
+            return 0;
+        }
+
+        if (lock) {
+            player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.error_prefix")
+                .append(Component.literal("Cannot lock chest from command (use building scan).")));
+            return 0;
+        }
+
+        // Déverrouiller : retirer le lien au bâtiment
+        chest.setBuildingId(null);
+        player.sendSystemMessage(Component.translatable("chat.millenaire-new-age.success_prefix")
+            .append(Component.literal("Chest unlocked.")));
         return 1;
     }
 

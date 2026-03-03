@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "millenaire-new-age:block/mill_chest_top",
+    "front": "millenaire-new-age:block/mill_chest_front",
+    "side": "millenaire-new-age:block/mill_chest_side"
+  }
+}

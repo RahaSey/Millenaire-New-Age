@@ -7,6 +7,7 @@ import com.mat37dev.data.CultureLoader;
 import com.mat37dev.entity.MillVillagerEntity;
 import com.mat37dev.entity.ai.MillMemories;
 import com.mat37dev.entity.ai.MillSensors;
+import com.mat37dev.init.MillBlockEntities;
 import com.mat37dev.init.MillBlocks;
 import com.mat37dev.init.MillEntities;
 import com.mat37dev.init.MillItemGroups;
@@ -36,10 +37,11 @@ public class MillenaireNewAge implements ModInitializer {
         MillMemories.init();
         MillSensors.init();
 
-        // Registres (l'ordre compte : blocs → items → groupes → entités)
+        // Registres (l'ordre compte : blocs → items → groupes → block entities → entités)
         MillBlocks.initialize();
         MillItems.initialize();
         MillItemGroups.initialize();
+        MillBlockEntities.initialize();
         MillEntities.initialize();
         FabricDefaultAttributeRegistry.register(MillEntities.VILLAGER, MillVillagerEntity.createAttributes());
 

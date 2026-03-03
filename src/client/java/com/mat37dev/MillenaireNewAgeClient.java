@@ -1,21 +1,27 @@
 package com.mat37dev;
+
 import com.mat37dev.client.creator.CreatorClientState;
 import com.mat37dev.client.creator.StructureListScreen;
 import com.mat37dev.client.creator.StructurePreviewRenderer;
+import com.mat37dev.client.gui.MillChestScreen;
 import com.mat37dev.client.gui.VillageCreationScreen;
 import com.mat37dev.client.render.entity.MillVillagerEntityRenderer;
 import com.mat37dev.client.render.entity.MillVillagerModel;
+import com.mat37dev.init.MillBlockEntities;
 import com.mat37dev.init.MillEntities;
 import com.mat37dev.network.OpenStructureListPayload;
 import com.mat37dev.network.OpenVillageCreationPayload;
 import com.mat37dev.network.StructurePreviewPayload;
 import com.mat37dev.network.StructureRotationPayload;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
 public class MillenaireNewAgeClient implements ClientModInitializer {
@@ -26,6 +32,12 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(MillVillagerModel.LAYER_LOCATION,
                 MillVillagerModel::createBodyLayer);
         EntityRendererRegistry.register(MillEntities.VILLAGER, MillVillagerEntityRenderer::new);
+
+        // Block Entity Renderer — MillChestBlock utilise ChestRenderer (coffre vanilla animé)
+        BlockEntityRendererRegistry.register(MillBlockEntities.MILL_CHEST_ENTITY, ChestRenderer::new);
+
+        // Screen handlers
+        MenuScreens.register(MillBlockEntities.MILL_CHEST_MENU, MillChestScreen::new);
 
         // Rendu ghost preview
         StructurePreviewRenderer.init();

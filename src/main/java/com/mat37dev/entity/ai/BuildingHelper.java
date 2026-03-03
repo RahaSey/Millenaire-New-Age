@@ -1,7 +1,9 @@
 package com.mat37dev.entity.ai;
 
+import com.mat37dev.block.MillChestBlock;
 import com.mat37dev.village.Building;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -11,6 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utilitaires pour scanner et enregistrer les points d'intérêt d'un bâtiment.
@@ -46,6 +51,7 @@ public class BuildingHelper {
 
         BlockPos nearestDoor = null;
         double nearestDoorDistSq = Double.MAX_VALUE;
+        List<BlockPos> foundChests = new ArrayList<>();
 
         for (BlockPos pos : BlockPos.betweenClosed(new BlockPos(x0, y0, z0), new BlockPos(x1, y1, z1))) {
             BlockState state = level.getBlockState(pos);
@@ -68,11 +74,73 @@ public class BuildingHelper {
                     nearestDoor = pos.immutable();
                 }
             }
+
+            // Détecter les coffres millénaires
+            if (state.getBlock() instanceof MillChestBlock) {
+                foundChests.add(pos.immutable());
+            }
         }
 
         if (nearestDoor != null) {
             building.setEntrancePos(nearestDoor);
         }
+
+        // Enregistrer les coffres et calculer la sellingPos
+        for (BlockPos chestPos : foundChests) {
+            building.addChestPosition(chestPos);
+        }
+
+        if (!foundChests.isEmpty()) {
+            BlockPos sellingPos = computeSellingPos(level, foundChests, building.getEntrancePos());
+            building.setSellingPos(sellingPos);
+        }
+    }
+
+    /**
+     * Calcule la position de dépôt (sellingPos) pour les coffres d'un bâtiment.
+     *
+     * <p>Pour chaque coffre, on cherche parmi ses 4 voisins horizontaux
+     * le premier qui est non-solide ET a un sol solide en-dessous,
+     * en préférant le voisin le plus proche de l'entrée du bâtiment.</p>
+     *
+     * @param level      monde serveur
+     * @param chests     positions des coffres du bâtiment
+     * @param entrance   position de l'entrée, peut être null
+     * @return la meilleure position de dépôt, ou null si aucune trouvée
+     */
+    @Nullable
+    private static BlockPos computeSellingPos(ServerLevel level, List<BlockPos> chests,
+                                              @Nullable BlockPos entrance) {
+        BlockPos best = null;
+        double bestDistSq = Double.MAX_VALUE;
+
+        for (BlockPos chest : chests) {
+            for (Direction dir : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+                BlockPos candidate = chest.relative(dir);
+                BlockState candidateState = level.getBlockState(candidate);
+                BlockState floorState = level.getBlockState(candidate.below());
+
+                // Le candidat doit être traversable (pas de collision) et avoir un sol solide
+                if (!candidateState.getCollisionShape(level, candidate).isEmpty()) {
+                    continue; // bloc solide = mur ou obstacle, rejeter
+                }
+                if (!floorState.isFaceSturdy(level, candidate.below(), Direction.UP)) {
+                    continue; // pas de sol praticable
+                }
+
+                // Position non-solide avec sol : candidat valide
+                // Priorité : plus proche de l'entrée
+                double distSq = entrance != null
+                        ? candidate.distSqr(entrance)
+                        : candidate.distSqr(chests.get(0));
+
+                if (distSq < bestDistSq) {
+                    bestDistSq = distSq;
+                    best = candidate.immutable();
+                }
+            }
+        }
+        return best;
     }
 
     /**

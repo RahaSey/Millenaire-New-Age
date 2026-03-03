@@ -30,6 +30,12 @@
   "block.millenaire-new-age.stained_glass_green_blue": "Green & Blue Stained Glass Windows",
   "item.millenaire-new-age.stained_glass_green_blue": "Green & Blue Stained Glass Windows",
 
+  "block.millenaire-new-age.mill_chest":       "Millenaire Chest",
+  "item.millenaire-new-age.mill_chest":        "Millenaire Chest",
+  "container.millenaire-new-age.mill_chest":        "Millenaire Chest",
+  "container.millenaire-new-age.mill_chest_locked": "Locked Chest",
+  "container.millenaire-new-age.mill_chest_double": "Large Millenaire Chest",
+
   "item.millenaire-new-age.wand_of_summoning": "Wand of Summoning",
   "item.millenaire-new-age.wand_of_negation":  "Wand of Negation",
 

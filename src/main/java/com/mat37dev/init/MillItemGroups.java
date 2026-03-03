@@ -35,6 +35,9 @@ public class MillItemGroups {
                         entries.accept(MillItems.STAINED_GLASS_GREEN_BLUE);
                         entries.accept(MillItems.BED_STRAW);
 
+                        // ── Stockage ──────────────────────────────────────────
+                        entries.accept(MillItems.MILL_CHEST);
+
                         // ── Outils ────────────────────────────────────────────
                         entries.accept(MillItems.WAND_OF_SUMMONING);
                         entries.accept(MillItems.WAND_OF_NEGATION);

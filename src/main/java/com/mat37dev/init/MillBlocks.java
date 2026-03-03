@@ -1,6 +1,7 @@
 package com.mat37dev.init;
 
 import com.mat37dev.MillenaireNewAge;
+import com.mat37dev.block.MillChestBlock;
 import com.mat37dev.init.custom_classes.MillPathBlock;
 import com.mat37dev.init.custom_classes.MillPathSlab;
 
@@ -108,11 +109,22 @@ public class MillBlocks {
                     .noOcclusion());       
 
     // TODO Make this block an EntityBlock
-    public static final Block BED_STRAW = register("bed_straw", 
+    public static final Block BED_STRAW = register("bed_straw",
                 BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DIRT)
                     .strength(1.0f, 2.0f)
                     .sound(SoundType.BAMBOO_WOOD));
+
+    // =========================================================================
+    // Storage — Coffre millénaire
+    // =========================================================================
+
+    public static final MillChestBlock MILL_CHEST = register("mill_chest", MillChestBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .strength(2.5f)
+                    .sound(SoundType.WOOD)
+                    .noOcclusion()); // les coffres n'occupent pas tout le volume du bloc
 
     // =========================================================================
     // Helpers
