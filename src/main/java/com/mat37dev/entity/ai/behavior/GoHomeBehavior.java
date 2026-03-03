@@ -100,8 +100,7 @@ public class GoHomeBehavior extends Behavior<MillVillagerEntity> {
 
     private BlockPos getTargetPos(MillVillagerEntity entity) {
         Optional<BlockPos> entrance = entity.getBrain().getMemory(MillMemories.HOME_ENTRANCE_POS);
-        if (entrance.isPresent()) return entrance.get();
-        return entity.getBrain().getMemory(MillMemories.HOME_POS).orElse(null);
+        return entrance.orElseGet(() -> entity.getBrain().getMemory(MillMemories.HOME_POS).orElse(null));
     }
 
     /**

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class NearestPlayerSensor extends Sensor<MillVillagerEntity> {
     }
 
     @Override
-    public Set<MemoryModuleType<?>> requires() {
+    public @NotNull Set<MemoryModuleType<?>> requires() {
         return Set.of(MillMemories.NEAREST_PLAYER);
     }
 }

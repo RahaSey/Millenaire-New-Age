@@ -3,7 +3,6 @@ package com.mat37dev.entity.ai.behavior;
 import com.mat37dev.entity.MillVillagerEntity;
 import com.mat37dev.entity.ai.MillMemories;
 import com.mat37dev.entity.ai.status.VillagerStatus;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;

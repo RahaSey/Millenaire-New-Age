@@ -202,8 +202,7 @@ public class SleepAtHomeBehavior extends Behavior<MillVillagerEntity> {
 
     private BlockPos getEntrancePos(MillVillagerEntity entity) {
         Optional<BlockPos> entrance = entity.getBrain().getMemory(MillMemories.HOME_ENTRANCE_POS);
-        if (entrance.isPresent()) return entrance.get();
-        return entity.getBrain().getMemory(MillMemories.HOME_POS).orElse(null);
+        return entrance.orElseGet(() -> entity.getBrain().getMemory(MillMemories.HOME_POS).orElse(null));
     }
 
     private BlockPos findFreeBed(ServerLevel level, MillVillagerEntity owner, BlockPos origin) {

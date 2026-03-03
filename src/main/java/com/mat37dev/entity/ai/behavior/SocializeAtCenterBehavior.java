@@ -5,12 +5,10 @@ import com.mat37dev.entity.ai.MillMemories;
 import com.mat37dev.entity.ai.status.VillagerStatus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Map;
@@ -35,8 +33,7 @@ public class SocializeAtCenterBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, MillVillagerEntity entity) {
         Optional<BlockPos> centerPos = entity.getBrain().getMemory(MillMemories.VILLAGE_CENTER_POS);
-        if (centerPos.isEmpty()) return false;
-        return centerPos.get().distSqr(entity.blockPosition()) <= (long) ACTIVATION_DIST * ACTIVATION_DIST;
+        return centerPos.filter(blockPos -> blockPos.distSqr(entity.blockPosition()) <= (long) ACTIVATION_DIST * ACTIVATION_DIST).isPresent();
     }
 
     @Override
@@ -48,8 +45,7 @@ public class SocializeAtCenterBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean canStillUse(ServerLevel level, MillVillagerEntity entity, long gameTime) {
         Optional<BlockPos> centerPos = entity.getBrain().getMemory(MillMemories.VILLAGE_CENTER_POS);
-        if (centerPos.isEmpty()) return false;
-        return centerPos.get().distSqr(entity.blockPosition()) <= (long) ACTIVATION_DIST * ACTIVATION_DIST;
+        return centerPos.filter(blockPos -> blockPos.distSqr(entity.blockPosition()) <= (long) ACTIVATION_DIST * ACTIVATION_DIST).isPresent();
     }
 
     @Override

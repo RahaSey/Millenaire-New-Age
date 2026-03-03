@@ -20,10 +20,11 @@ public class BehaviorProfileBuilder {
 
     private final List<Pair<Integer, Behavior<? super MillVillagerEntity>>> workBehaviors = new ArrayList<>();
 
-    /** Ajoute un behavior à l'activité WORK avec une priorité donnée. */
-    public BehaviorProfileBuilder addWorkBehavior(int priority, Behavior<? super MillVillagerEntity> behavior) {
+    /**
+     * Ajoute un behavior à l'activité WORK avec une priorité donnée.
+     */
+    public void addWorkBehavior(int priority, Behavior<? super MillVillagerEntity> behavior) {
         workBehaviors.add(Pair.of(priority, behavior));
-        return this;
     }
 
     /**

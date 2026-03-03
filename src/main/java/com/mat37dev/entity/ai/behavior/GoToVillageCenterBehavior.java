@@ -38,8 +38,7 @@ public class GoToVillageCenterBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, MillVillagerEntity entity) {
         Optional<BlockPos> centerPos = entity.getBrain().getMemory(MillMemories.VILLAGE_CENTER_POS);
-        if (centerPos.isEmpty()) return false;
-        return centerPos.get().distSqr(entity.blockPosition()) > (long) (ARRIVAL_DIST + SPREAD_RADIUS) * (ARRIVAL_DIST + SPREAD_RADIUS);
+        return centerPos.filter(blockPos -> blockPos.distSqr(entity.blockPosition()) > (long) (ARRIVAL_DIST + SPREAD_RADIUS) * (ARRIVAL_DIST + SPREAD_RADIUS)).isPresent();
     }
 
     @Override

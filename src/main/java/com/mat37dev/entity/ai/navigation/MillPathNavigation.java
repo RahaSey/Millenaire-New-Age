@@ -5,6 +5,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Navigation au sol pour les villageois Millénaire.
@@ -21,7 +22,7 @@ public class MillPathNavigation extends GroundPathNavigation {
     }
 
     @Override
-    protected PathFinder createPathFinder(int maxVisitedNodes) {
+    protected @NotNull PathFinder createPathFinder(int maxVisitedNodes) {
         this.nodeEvaluator = new WalkNodeEvaluator();
         this.nodeEvaluator.setCanPassDoors(true);
         this.nodeEvaluator.setCanOpenDoors(true);

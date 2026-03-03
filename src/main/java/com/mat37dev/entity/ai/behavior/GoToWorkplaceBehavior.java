@@ -37,8 +37,7 @@ public class GoToWorkplaceBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, MillVillagerEntity entity) {
         Optional<BlockPos> workPos = entity.getBrain().getMemory(MillMemories.WORK_POS);
-        if (workPos.isEmpty()) return false;
-        return workPos.get().distSqr(entity.blockPosition()) > (long) ARRIVAL_DIST * ARRIVAL_DIST;
+        return workPos.filter(blockPos -> blockPos.distSqr(entity.blockPosition()) > (long) ARRIVAL_DIST * ARRIVAL_DIST).isPresent();
     }
 
     @Override
@@ -54,8 +53,7 @@ public class GoToWorkplaceBehavior extends Behavior<MillVillagerEntity> {
     @Override
     protected boolean canStillUse(ServerLevel level, MillVillagerEntity entity, long gameTime) {
         Optional<BlockPos> workPos = entity.getBrain().getMemory(MillMemories.WORK_POS);
-        if (workPos.isEmpty()) return false;
-        return workPos.get().distSqr(entity.blockPosition()) > (long) ARRIVAL_DIST * ARRIVAL_DIST;
+        return workPos.filter(blockPos -> blockPos.distSqr(entity.blockPosition()) > (long) ARRIVAL_DIST * ARRIVAL_DIST).isPresent();
     }
 
     @Override

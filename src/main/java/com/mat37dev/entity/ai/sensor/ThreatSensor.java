@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -16,8 +17,7 @@ import java.util.Set;
  * Détecte les monstres (et futurs raiders) proches du villageois.
  *
  * <p>Quand une menace est détectée, la mémoire {@link MillMemories#ATTACK_TARGET}
- * est mise à jour, ce qui déclenche l'activity {@code PANIC} dans
- * {@link com.mat37dev.entity.MillVillagerEntity#customServerAiStep}.</p>
+ * est mise à jour, ce qui déclenche l'activity {@code PANIC} dans </p>
  *
  * <p>Le rayon de détection est intentionnellement plus grand que le rayon de vision
  * standard (12 blocs) pour que les villageois réagissent avant d'être au contact.</p>
@@ -52,7 +52,7 @@ public class ThreatSensor extends Sensor<MillVillagerEntity> {
     }
 
     @Override
-    public Set<MemoryModuleType<?>> requires() {
+    public @NotNull Set<MemoryModuleType<?>> requires() {
         return Set.of(MillMemories.ATTACK_TARGET);
     }
 }

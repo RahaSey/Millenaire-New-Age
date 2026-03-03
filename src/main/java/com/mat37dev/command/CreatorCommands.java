@@ -8,7 +8,6 @@ import com.mat37dev.init.MillItems;
 import com.mat37dev.network.MillNetwork;
 import com.mat37dev.network.OpenStructureListPayload;
 import com.mat37dev.network.StructurePreviewPayload;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
