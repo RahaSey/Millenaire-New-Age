@@ -9,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BedItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +29,7 @@ public class MillItems {
     public static final Item DIRT_WALL        = registerBlockItem("dirt_wall",        MillBlocks.DIRT_WALL);
     public static final Item PATH_SLABS        = registerBlockItem("path_slabs",        MillBlocks.PATH_SLABS);
     public static final Item PATH_SLABS_SLAB   = registerBlockItem("path_slabs_slab",   MillBlocks.PATH_SLABS_SLAB);
-    public static final Item BED_STRAW        = registerBlockItem("bed_straw",        MillBlocks.BED_STRAW);
+    public static final Item BED_STRAW        = registerItem("bed_straw", props -> new BedItem(MillBlocks.BED_STRAW, props));
     public static final Item MILL_CHEST       = registerBlockItem("mill_chest",       MillBlocks.MILL_CHEST);
     public static final Item TIMBER_FRAME_PLAIN   = registerBlockItem("timber_frame_plain",   MillBlocks.TIMBER_FRAME_PLAIN);
     public static final Item TIMBER_FRAME_CROSS   = registerBlockItem("timber_frame_cross",   MillBlocks.TIMBER_FRAME_CROSS);
@@ -51,6 +52,33 @@ public class MillItems {
 
     public static final Item STRUCTURE_SCANNER = registerItem("structure_scanner", StructureScannerItem::new);
     public static final Item STRUCTURE_PLACER  = registerItem("structure_placer",  StructurePlacerItem::new);
+    public static final Item PRESERVE_GROUND   = registerBlockItem("preserve_ground", MillBlocks.PRESERVE_GROUND);
+    public static final Item SLEEPING_POS      = registerBlockItem("sleeping_pos",    MillBlocks.SLEEPING_POS);
+    public static final Item SELLING_POS       = registerBlockItem("selling_pos",     MillBlocks.SELLING_POS);
+    public static final Item CRAFTING_POS      = registerBlockItem("crafting_pos",    MillBlocks.CRAFTING_POS);
+    public static final Item DEFENDING_POS     = registerBlockItem("defending_pos",   MillBlocks.DEFENDING_POS);
+    public static final Item SHELTER_POS       = registerBlockItem("shelter_pos",     MillBlocks.SHELTER_POS);
+    public static final Item LEISURE_POS       = registerBlockItem("leisure_pos",     MillBlocks.LEISURE_POS);
+    public static final Item STALL_POS         = registerBlockItem("stall_pos",       MillBlocks.STALL_POS);
+    public static final Item PATH_START_POS    = registerBlockItem("path_start_pos",  MillBlocks.PATH_START_POS);
+
+    public static final Item TREE_OAK_SPAWN       = registerBlockItem("tree_oak_spawn",       MillBlocks.TREE_OAK_SPAWN);
+    public static final Item TREE_DARK_OAK_SPAWN  = registerBlockItem("tree_dark_oak_spawn",  MillBlocks.TREE_DARK_OAK_SPAWN);
+    public static final Item TREE_SPRUCE_SPAWN    = registerBlockItem("tree_spruce_spawn",    MillBlocks.TREE_SPRUCE_SPAWN);
+
+    public static final Item SPAWN_COW      = registerBlockItem("spawn_cow",      MillBlocks.SPAWN_COW);
+    public static final Item SPAWN_SHEEP    = registerBlockItem("spawn_sheep",    MillBlocks.SPAWN_SHEEP);
+    public static final Item SPAWN_CHICKEN  = registerBlockItem("spawn_chicken",  MillBlocks.SPAWN_CHICKEN);
+    public static final Item SPAWN_PIG      = registerBlockItem("spawn_pig",      MillBlocks.SPAWN_PIG);
+
+    public static final Item SOURCE_ROCK = registerBlockItem("source_rock", MillBlocks.SOURCE_ROCK);
+    public static final Item SOURCE_SAND = registerBlockItem("source_sand", MillBlocks.SOURCE_SAND);
+    public static final Item SOIL_FLOWER = registerBlockItem("soil_flower", MillBlocks.SOIL_FLOWER);
+    public static final Item SOIL_WHEAT  = registerBlockItem("soil_wheat",  MillBlocks.SOIL_WHEAT);
+    public static final Item SOIL_CARROT = registerBlockItem("soil_carrot", MillBlocks.SOIL_CARROT);
+    public static final Item SOIL_POTATO = registerBlockItem("soil_potato", MillBlocks.SOIL_POTATO);
+
+    public static final Item IMPORT_TABLE      = registerBlockItem("import_table", MillBlocks.IMPORT_TABLE);
 
     // =========================================================================
     // Helpers

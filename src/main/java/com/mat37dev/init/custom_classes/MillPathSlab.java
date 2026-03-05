@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class MillPathSlab extends SlabBlock {
     public MillPathSlab(Properties properties) {
@@ -26,8 +27,8 @@ public class MillPathSlab extends SlabBlock {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
-            CollisionContext collisionContext) {
+    protected @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
+                                           CollisionContext collisionContext) {
         
         SlabType slabType = blockState.getValue(BlockStateProperties.SLAB_TYPE);
 
@@ -35,8 +36,8 @@ public class MillPathSlab extends SlabBlock {
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
-            CollisionContext collisionContext) {
+    protected @NotNull VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
+                                                    CollisionContext collisionContext) {
 
         SlabType slabType = blockState.getValue(BlockStateProperties.SLAB_TYPE);
 

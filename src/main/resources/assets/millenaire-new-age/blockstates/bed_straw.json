@@ -1,5 +1,12 @@
 {
-    "multipart": [
-        {   "apply": { "model": "millenaire-new-age:block/bed_straw" }}
-    ]
+  "variants": {
+    "facing=north,part=foot": { "model": "millenaire-new-age:block/bed_straw_foot" },
+    "facing=north,part=head": { "model": "millenaire-new-age:block/bed_straw_head" },
+    "facing=south,part=foot": { "model": "millenaire-new-age:block/bed_straw_foot", "y": 180 },
+    "facing=south,part=head": { "model": "millenaire-new-age:block/bed_straw_head", "y": 180 },
+    "facing=east,part=foot": { "model": "millenaire-new-age:block/bed_straw_foot", "y": 90 },
+    "facing=east,part=head": { "model": "millenaire-new-age:block/bed_straw_head", "y": 90 },
+    "facing=west,part=foot": { "model": "millenaire-new-age:block/bed_straw_foot", "y": 270 },
+    "facing=west,part=head": { "model": "millenaire-new-age:block/bed_straw_head", "y": 270 }
+  }
 }

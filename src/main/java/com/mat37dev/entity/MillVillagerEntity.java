@@ -149,9 +149,8 @@ public class MillVillagerEntity extends PathfinderMob {
                 .resultOrPartial(err -> {})
                 .map(tag -> new Dynamic<>(NbtOps.INSTANCE, tag))
                 .orElse(new Dynamic<>(NbtOps.INSTANCE));
-        Brain<MillVillagerEntity> newBrain = MillVillagerAi.makeBrain(
+        this.brain = MillVillagerAi.makeBrain(
                 brainProvider(), serialized, resolveBehaviorIds());
-        this.brain = newBrain;
     }
 
     /**

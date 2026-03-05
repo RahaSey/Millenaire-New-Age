@@ -132,7 +132,7 @@ public class BuildingHelper {
                 // Priorité : plus proche de l'entrée
                 double distSq = entrance != null
                         ? candidate.distSqr(entrance)
-                        : candidate.distSqr(chests.get(0));
+                        : candidate.distSqr(chests.getFirst());
 
                 if (distSq < bestDistSq) {
                     bestDistSq = distSq;

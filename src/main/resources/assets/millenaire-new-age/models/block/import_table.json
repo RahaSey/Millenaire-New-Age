@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "top":    "millenaire-new-age:block/import_table_top",
+    "bottom": "minecraft:block/oak_planks",
+    "front":  "millenaire-new-age:block/import_table_front",
+    "side":   "millenaire-new-age:block/import_table_side"
+  }
+}

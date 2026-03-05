@@ -41,7 +41,7 @@ public class MillChestBlock extends ChestBlock {
         MILL_MENU_PROVIDER_COMBINER = new DoubleBlockCombiner.Combiner<>() {
 
             @Override
-            public Optional<MenuProvider> acceptDouble(ChestBlockEntity e1, ChestBlockEntity e2) {
+            public @NotNull Optional<MenuProvider> acceptDouble(ChestBlockEntity e1, ChestBlockEntity e2) {
                 final var combined = new CompoundContainer(e1, e2);
                 return Optional.of(new SimpleMenuProvider(
                     (syncId, inventory, player) -> {
@@ -54,12 +54,12 @@ public class MillChestBlock extends ChestBlock {
             }
 
             @Override
-            public Optional<MenuProvider> acceptSingle(ChestBlockEntity entity) {
+            public @NotNull Optional<MenuProvider> acceptSingle(ChestBlockEntity entity) {
                 return Optional.of(entity);
             }
 
             @Override
-            public Optional<MenuProvider> acceptNone() {
+            public @NotNull Optional<MenuProvider> acceptNone() {
                 return Optional.empty();
             }
         };

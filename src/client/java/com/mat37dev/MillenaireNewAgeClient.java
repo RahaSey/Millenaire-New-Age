@@ -65,7 +65,28 @@ public class MillenaireNewAgeClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_YELLOW_RED, ChunkSectionLayer.TRANSLUCENT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_RED_BLUE, ChunkSectionLayer.TRANSLUCENT);
         BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STAINED_GLASS_GREEN_BLUE, ChunkSectionLayer.TRANSLUCENT);
+
+        // Positions (Tapis) — Toujours besoin du CUTOUT pour la forme
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SLEEPING_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SELLING_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.CRAFTING_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.DEFENDING_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SHELTER_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.LEISURE_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.STALL_POS, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.PATH_START_POS, ChunkSectionLayer.CUTOUT);
         
+        // Sources et Sols (Overlay transparent)
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOURCE_ROCK, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOURCE_SAND, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOIL_FLOWER, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOIL_WHEAT, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOIL_CARROT, ChunkSectionLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(com.mat37dev.init.MillBlocks.SOIL_POTATO, ChunkSectionLayer.CUTOUT);
+        
+        // NOTE: Les Plantations et Spawns d'animaux ne sont PAS dans le CUTOUT 
+        // pour garder leur fond noir opaque d'origine (couche SOLID par défaut).
+
         // S→C : sync rotation
         ClientPlayNetworking.registerGlobalReceiver(StructureRotationPayload.ID, (payload, ctx) ->
             ctx.client().execute(() -> CreatorClientState.setRotation(payload.rotation()))
