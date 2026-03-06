@@ -4,14 +4,22 @@ import com.mat37dev.MillenaireNewAge;
 import com.mat37dev.creator.StructurePlacerItem;
 import com.mat37dev.creator.StructureScannerItem;
 import com.mat37dev.creator.WandOfSummoningItem;
+import com.mat37dev.init.custom_classes.MillCustomMaterials;
+import com.mat37dev.init.custom_classes.MillFoodItemBuilder;
+import com.mat37dev.init.custom_classes.MillFoodItemBuilder.MillFoodType;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BedItem;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.Function;
@@ -79,6 +87,43 @@ public class MillItems {
     public static final Item SOIL_POTATO = registerBlockItem("soil_potato", MillBlocks.SOIL_POTATO);
 
     public static final Item IMPORT_TABLE      = registerBlockItem("import_table", MillBlocks.IMPORT_TABLE);
+
+    // =========================================================================
+    // NORMAN ITEMS
+    // =========================================================================
+        // Tools & Weapons
+        public static final Item NORMAN_PICKAXE 
+            = registerItem("norman_pickaxe", props -> new Item(props.pickaxe(MillCustomMaterials.NORMAN_TOOL_MATERIAL, 1, -2.8f)));
+        public static final Item NORMAN_AXE 
+            = registerItem("norman_axe", props -> new AxeItem(MillCustomMaterials.NORMAN_TOOL_MATERIAL, 4, -3, props));
+        public static final Item NORMAN_SHOVEL 
+            = registerItem("norman_shovel", props -> new ShovelItem(MillCustomMaterials.NORMAN_TOOL_MATERIAL, 1.5f, -3, props));
+        public static final Item NORMAN_HOE 
+            = registerItem("norman_hoe", props -> new HoeItem(MillCustomMaterials.NORMAN_TOOL_MATERIAL, -4, 1, props));
+        public static final Item NORMAN_BROADSWORD 
+            = registerItem("norman_broadsword", props -> new Item(props.sword(MillCustomMaterials.NORMAN_TOOL_MATERIAL, 3, -2.4f)));
+
+        // Armor
+        public static final Item NORMAN_HELMET 
+            = registerItem("norman_helmet", props -> new Item(props.humanoidArmor(MillCustomMaterials.NORMAN_ARMOR_MATERIAL, ArmorType.HELMET)));
+        public static final Item NORMAN_PLATE 
+            = registerItem("norman_plate", props -> new Item(props.humanoidArmor(MillCustomMaterials.NORMAN_ARMOR_MATERIAL, ArmorType.CHESTPLATE)));
+        public static final Item NORMAN_LEGS 
+            = registerItem("norman_legs", props -> new Item(props.humanoidArmor(MillCustomMaterials.NORMAN_ARMOR_MATERIAL, ArmorType.LEGGINGS)));
+        public static final Item NORMAN_BOOTS 
+            = registerItem("norman_boots", props -> new Item(props.humanoidArmor(MillCustomMaterials.NORMAN_ARMOR_MATERIAL, ArmorType.BOOTS)));
+
+        // Food
+        public static final Item CIDER_APPLE 
+            = registerItem("cider_apple", props -> MillFoodItemBuilder.CreateItem(props, MillFoodType.CIDER_APPLE));
+        public static final Item CIDER 
+            = registerItem("cider", props -> MillFoodItemBuilder.CreateItem(props, MillFoodType.CIDER));
+        public static final Item BOUDIN 
+            = registerItem("boudin", props -> MillFoodItemBuilder.CreateItem(props, MillFoodType.BOUDIN));
+        public static final Item CALVA 
+            = registerItem("calva", props -> MillFoodItemBuilder.CreateItem(props, MillFoodType.CALVA)); 
+        public static final Item TRIPES 
+            = registerItem("tripes", props -> MillFoodItemBuilder.CreateItem(props, MillFoodType.TRIPES));
 
     // =========================================================================
     // Helpers

@@ -1,0 +1,10 @@
+{
+  "layers": {
+    "humanoid": [
+      { "texture": "millenaire-new-age:norman" }
+    ],
+    "humanoid_leggings": [
+      { "texture": "millenaire-new-age:norman" }
+    ]
+  }
+}

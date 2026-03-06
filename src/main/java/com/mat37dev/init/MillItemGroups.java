@@ -26,13 +26,6 @@ public class MillItemGroups {
                         entries.accept(MillItems.PATH_SLABS);
                         entries.accept(MillItems.PATH_SLABS_SLAB);
                         entries.accept(MillItems.DIRT_WALL);
-                        entries.accept(MillItems.TIMBER_FRAME_PLAIN);
-                        entries.accept(MillItems.TIMBER_FRAME_CROSS);
-                        entries.accept(MillItems.STAINED_GLASS_WHITE);
-                        entries.accept(MillItems.STAINED_GLASS_YELLOW);
-                        entries.accept(MillItems.STAINED_GLASS_YELLOW_RED);
-                        entries.accept(MillItems.STAINED_GLASS_RED_BLUE);
-                        entries.accept(MillItems.STAINED_GLASS_GREEN_BLUE);
                         entries.accept(MillItems.BED_STRAW);
 
                         // ── Stockage ──────────────────────────────────────────
@@ -43,6 +36,45 @@ public class MillItemGroups {
                         entries.accept(MillItems.WAND_OF_NEGATION);
                     })
                     .build()
+    );
+
+    public static final CreativeModeTab MILLENAIRE_NORMAN = Registry.register(
+            BuiltInRegistries.CREATIVE_MODE_TAB,
+            ResourceLocation.fromNamespaceAndPath(MillenaireNewAge.MOD_ID, "norman"),
+            FabricItemGroup.builder()
+                    .icon(() -> new ItemStack(MillItems.NORMAN_BROADSWORD))
+                    .title(Component.literal("Norman"))
+                    .displayItems((context, entries) -> {
+
+                        // Norman Tools
+                        entries.accept(MillItems.NORMAN_PICKAXE);
+                        entries.accept(MillItems.NORMAN_AXE);
+                        entries.accept(MillItems.NORMAN_SHOVEL);
+                        entries.accept(MillItems.NORMAN_HOE);
+                        entries.accept(MillItems.NORMAN_BROADSWORD);
+
+                        // Norman Armor
+                        entries.accept(MillItems.NORMAN_HELMET);
+                        entries.accept(MillItems.NORMAN_PLATE);
+                        entries.accept(MillItems.NORMAN_LEGS);
+                        entries.accept(MillItems.NORMAN_BOOTS);
+
+                        // Norman Foods
+                        entries.accept(MillItems.CIDER_APPLE);
+                        entries.accept(MillItems.CIDER);
+                        entries.accept(MillItems.BOUDIN);
+                        entries.accept(MillItems.CALVA);
+                        entries.accept(MillItems.TRIPES);
+
+                        // Blocks
+                        entries.accept(MillItems.TIMBER_FRAME_PLAIN);
+                        entries.accept(MillItems.TIMBER_FRAME_CROSS);
+                        entries.accept(MillItems.STAINED_GLASS_WHITE);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW);
+                        entries.accept(MillItems.STAINED_GLASS_YELLOW_RED);
+                        entries.accept(MillItems.STAINED_GLASS_RED_BLUE);
+                        entries.accept(MillItems.STAINED_GLASS_GREEN_BLUE);
+                    }).build()
     );
 
     public static final CreativeModeTab CONTENT_CREATOR_GROUP = Registry.register(
